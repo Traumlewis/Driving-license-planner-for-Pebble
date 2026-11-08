@@ -22,7 +22,7 @@ One Diorite settings capture was repeated at slower button timing, and its credi
 ## Automated checks
 
 - `tests/check.py` passed in all five device projects: model, 24 entries, reminders, simultaneous alarms, snooze, completion/review, rules/DST, persistence and interrupted-write recovery, exactly-once booking, protected topic totals, translations and wakeup race.
-- `tests/release_validation.py` passed: package/visible version/credits, developer, targets, ZIP CRC, binary manifest sizes, shared phone HTML, SHA-256, native PNG sizes, 40 model-specific screenshots and the 9:4 banner.
+- `tests/release_validation.py` passed: package/visible version/credits, developer, targets, ZIP CRC, binary manifest sizes, shared phone HTML, SHA-256, native PNG sizes, 40 model-specific screenshots and the exact 720 × 320 banner.
 - Combined package validates UUID, version and developer agreement across inputs and rejects stale native builds.
 
 No tests were run on physical watches in this release preparation. Store screenshots are native emulator captures, not photographs. The banner is promotional generated artwork based on the phone settings design. Store submission itself has not been performed.

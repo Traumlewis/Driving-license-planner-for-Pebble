@@ -6,7 +6,7 @@
 - **Suggested category:** Tools & Utilities
 - **Keywords:** driving school, licence, lessons, theory, practice, reminder, Germany, Fahrschule, Führerschein
 - **Description:** description-en.md / description-de.md
-- **Marketing banner:** banner.png, 1881 × 836 PNG, exact 9:4 aspect ratio, based on the phone settings design. The banner is promotional artwork, not a screenshot.
+- **Marketing banner:** banner.png, 720 × 320 PNG, exact 9:4 aspect ratio, based on the phone settings design. The banner is promotional artwork, not a screenshot.
 - **Binary:** ../release/Fahrschul-Planer-v3.8.2.pbw
 
 ## Screenshots

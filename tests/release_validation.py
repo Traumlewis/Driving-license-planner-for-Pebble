@@ -36,5 +36,5 @@ manifest=json.loads((ROOT/'store/screenshot-manifest.json').read_text());assert 
 for model in manifest['models']:
  assert model['count']==5 and len(model['files'])==5
  for entry in model['files']:assert hashlib.sha256((ROOT/entry['path']).read_bytes()).hexdigest()==entry['sha256']
-data=(ROOT/'store/banner.png').read_bytes();w,h=struct.unpack('>II',data[16:24]);assert w*4==h*9
-print('PASS release metadata/version/credits, six-platform PBW/CRC/SHA, native resolutions, 40 model screenshots and 9:4 banner')
+data=(ROOT/'store/banner.png').read_bytes();w,h=struct.unpack('>II',data[16:24]);assert (w,h)==(720,320)
+print('PASS release metadata/version/credits, six-platform PBW/CRC/SHA, native resolutions, 40 model screenshots and exact 720x320 banner')
