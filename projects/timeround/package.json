@@ -1,0 +1,168 @@
+{
+  "name": "fahrschul-planer",
+  "version": "3.8.2",
+  "author": "Traumlewis",
+  "private": true,
+  "pebble": {
+    "displayName": "Fahrschul Planer",
+    "uuid": "7a1cd9f4-32ba-485c-ae41-605cc3d148eb",
+    "sdkVersion": "3",
+    "targetPlatforms": [
+      "chalk"
+    ],
+    "watchapp": {
+      "watchface": false
+    },
+    "resources": {
+      "media": [
+        {
+          "type": "bitmap",
+          "name": "APP_ICON",
+          "file": "images/app-icon.png",
+          "menuIcon": true
+        },
+        {
+          "type": "bitmap",
+          "name": "CLASS_0",
+          "file": "images/class-0.png",
+          "memoryFormat": "1bitpalette",
+          "storageFormat": "pbi"
+        },
+        {
+          "type": "bitmap",
+          "name": "CLASS_1",
+          "file": "images/class-1.png",
+          "memoryFormat": "1bitpalette",
+          "storageFormat": "pbi"
+        },
+        {
+          "type": "bitmap",
+          "name": "CLASS_2",
+          "file": "images/class-2.png",
+          "memoryFormat": "1bitpalette",
+          "storageFormat": "pbi"
+        },
+        {
+          "type": "bitmap",
+          "name": "CLASS_3",
+          "file": "images/class-3.png",
+          "memoryFormat": "1bitpalette",
+          "storageFormat": "pbi"
+        },
+        {
+          "type": "bitmap",
+          "name": "CLASS_4",
+          "file": "images/class-4.png",
+          "memoryFormat": "1bitpalette",
+          "storageFormat": "pbi"
+        },
+        {
+          "type": "bitmap",
+          "name": "CLASS_5",
+          "file": "images/class-5.png",
+          "memoryFormat": "1bitpalette",
+          "storageFormat": "pbi"
+        },
+        {
+          "type": "bitmap",
+          "name": "CLASS_6",
+          "file": "images/class-6.png",
+          "memoryFormat": "1bitpalette",
+          "storageFormat": "pbi"
+        },
+        {
+          "type": "bitmap",
+          "name": "CLASS_7",
+          "file": "images/class-7.png",
+          "memoryFormat": "1bitpalette",
+          "storageFormat": "pbi"
+        },
+        {
+          "type": "bitmap",
+          "name": "CLASS_8",
+          "file": "images/class-8.png",
+          "memoryFormat": "1bitpalette",
+          "storageFormat": "pbi"
+        },
+        {
+          "type": "bitmap",
+          "name": "CLASS_9",
+          "file": "images/class-9.png",
+          "memoryFormat": "1bitpalette",
+          "storageFormat": "pbi"
+        },
+        {
+          "type": "bitmap",
+          "name": "CLASS_10",
+          "file": "images/class-10.png",
+          "memoryFormat": "1bitpalette",
+          "storageFormat": "pbi"
+        },
+        {
+          "type": "bitmap",
+          "name": "CLASS_11",
+          "file": "images/class-11.png",
+          "memoryFormat": "1bitpalette",
+          "storageFormat": "pbi"
+        },
+        {
+          "type": "bitmap",
+          "name": "CLASS_12",
+          "file": "images/class-12.png",
+          "memoryFormat": "1bitpalette",
+          "storageFormat": "pbi"
+        },
+        {
+          "type": "bitmap",
+          "name": "CLASS_13",
+          "file": "images/class-13.png",
+          "memoryFormat": "1bitpalette",
+          "storageFormat": "pbi"
+        },
+        {
+          "type": "bitmap",
+          "name": "CLASS_14",
+          "file": "images/class-14.png",
+          "memoryFormat": "1bitpalette",
+          "storageFormat": "pbi"
+        },
+        {
+          "type": "bitmap",
+          "name": "CLASS_15",
+          "file": "images/class-15.png",
+          "memoryFormat": "1bitpalette",
+          "storageFormat": "pbi"
+        }
+      ]
+    },
+    "enableMultiJS": true,
+    "capabilities": [
+      "configurable"
+    ],
+    "messageKeys": {
+      "Op": 1,
+      "Rid": 2,
+      "Id": 3,
+      "Cls": 4,
+      "Kind": 5,
+      "When": 6,
+      "Lead1": 7,
+      "Lead2": 8,
+      "Units": 9,
+      "Topic": 10,
+      "Rev": 11,
+      "Status": 12,
+      "Payload": 13,
+      "Part": 14,
+      "Total": 15,
+      "Extra": 16,
+      "Language": 17,
+      "Reminder2": 18
+    },
+    "manifestVersion": 2,
+    "usesPermissions": [
+      "Timeline"
+    ],
+    "configPage": "phone/config.html"
+  }
+}

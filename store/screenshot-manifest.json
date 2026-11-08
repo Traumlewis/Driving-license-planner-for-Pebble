@@ -1,0 +1,223 @@
+{
+  "language": "en",
+  "source": "native Pebble SDK 4.44 emulator screenshots; unedited",
+  "model_variants_share_platform_captures": true,
+  "models": [
+    {
+      "model": "time-2",
+      "platform": "emery",
+      "count": 5,
+      "files": [
+        {
+          "path": "store/screenshots/models/time-2/01-home.png",
+          "sha256": "ef6746fd95a5103b4a027f6fff7bc8772c35b1fbd92bbabe04907c8dba075186"
+        },
+        {
+          "path": "store/screenshots/models/time-2/02-plan-appointment.png",
+          "sha256": "8f88deb3d4a42d4811ad22c83e8f950859d7ef60fc7a4afd43d774ad27b37459"
+        },
+        {
+          "path": "store/screenshots/models/time-2/03-required-lessons.png",
+          "sha256": "0da85db64987737264ca76939b7f81236187eb319a82e550075e5088b4a474e5"
+        },
+        {
+          "path": "store/screenshots/models/time-2/04-theory-topics.png",
+          "sha256": "620ca37ff9503294a8f38495d8368679ae737b6743b80b90c8374bbb88ef4b78"
+        },
+        {
+          "path": "store/screenshots/models/time-2/05-settings.png",
+          "sha256": "6f4bd97b77bb03dd529b77ea6778b7d685dadd567f2505fa6518600ac8c21ba8"
+        }
+      ]
+    },
+    {
+      "model": "core-2-duo",
+      "platform": "flint",
+      "count": 5,
+      "files": [
+        {
+          "path": "store/screenshots/models/core-2-duo/01-home.png",
+          "sha256": "7a94787a978cc00c9d2a8da8f33f0387672f90bf001418756367b2958e60427a"
+        },
+        {
+          "path": "store/screenshots/models/core-2-duo/02-plan-appointment.png",
+          "sha256": "6171d55bd82fef84c966d77b26c2e88b665eb307a9d92d7072dd69f9e1fe586f"
+        },
+        {
+          "path": "store/screenshots/models/core-2-duo/03-required-lessons.png",
+          "sha256": "b4eb6e6d545b55684a9b83540e17d8cdde5bbf2a854a378c392a689108338936"
+        },
+        {
+          "path": "store/screenshots/models/core-2-duo/04-theory-topics.png",
+          "sha256": "cd168c91057d1afd80e134199b50507af5c03f824604c5fcfd8e3edcd55669ab"
+        },
+        {
+          "path": "store/screenshots/models/core-2-duo/05-settings.png",
+          "sha256": "64e52ace8c98072888ec3c677a19e842eceb1d82c52d5678f6d13976087d19bd"
+        }
+      ]
+    },
+    {
+      "model": "round-2",
+      "platform": "gabbro",
+      "count": 5,
+      "files": [
+        {
+          "path": "store/screenshots/models/round-2/01-home.png",
+          "sha256": "ec9853dca4f4981c169420dda52e64ed48825ae26f98e828696a1c155597c768"
+        },
+        {
+          "path": "store/screenshots/models/round-2/02-plan-appointment.png",
+          "sha256": "37e23d3f5b6c5aa24c33c2c7b0bd97385748161ae9c7000de8e0e20dfaebd599"
+        },
+        {
+          "path": "store/screenshots/models/round-2/03-required-lessons.png",
+          "sha256": "73508990e6de692412a5fe0263aa97c4352647ca183443319133c6c34c2e85ab"
+        },
+        {
+          "path": "store/screenshots/models/round-2/04-theory-topics.png",
+          "sha256": "39602953a15f084e96bfac24da17769a6feaf46b9c74142cd8cb8f420a734e4b"
+        },
+        {
+          "path": "store/screenshots/models/round-2/05-settings.png",
+          "sha256": "bc7ed3678105b247e1361dc9c13376caaed40829ce43773f22ce83789f4aa157"
+        }
+      ]
+    },
+    {
+      "model": "time",
+      "platform": "basalt",
+      "count": 5,
+      "files": [
+        {
+          "path": "store/screenshots/models/time/01-home.png",
+          "sha256": "4899a1da83cc3034c4fec8202d53f55d7cfbfc1f2a78a7ee4ac78a4905300133"
+        },
+        {
+          "path": "store/screenshots/models/time/02-plan-appointment.png",
+          "sha256": "ebc4a96ff531430394954c73ce240f0930391d0299749252d3039459591c5c13"
+        },
+        {
+          "path": "store/screenshots/models/time/03-required-lessons.png",
+          "sha256": "efe713188e9a3badb7da0b4b95aa6a296daf84c05a7c061478bcfdc3f9467025"
+        },
+        {
+          "path": "store/screenshots/models/time/04-theory-topics.png",
+          "sha256": "43bc6f3fff4e30006b56b848f65281257320e14c53349caa9c3ce6e1ab7d5ffd"
+        },
+        {
+          "path": "store/screenshots/models/time/05-settings.png",
+          "sha256": "b59a19af842bd931e48dfa7c251d10c307f9644a42e5d23fef091a16bf19680d"
+        }
+      ]
+    },
+    {
+      "model": "time-steel",
+      "platform": "basalt",
+      "count": 5,
+      "files": [
+        {
+          "path": "store/screenshots/models/time-steel/01-home.png",
+          "sha256": "4899a1da83cc3034c4fec8202d53f55d7cfbfc1f2a78a7ee4ac78a4905300133"
+        },
+        {
+          "path": "store/screenshots/models/time-steel/02-plan-appointment.png",
+          "sha256": "ebc4a96ff531430394954c73ce240f0930391d0299749252d3039459591c5c13"
+        },
+        {
+          "path": "store/screenshots/models/time-steel/03-required-lessons.png",
+          "sha256": "efe713188e9a3badb7da0b4b95aa6a296daf84c05a7c061478bcfdc3f9467025"
+        },
+        {
+          "path": "store/screenshots/models/time-steel/04-theory-topics.png",
+          "sha256": "43bc6f3fff4e30006b56b848f65281257320e14c53349caa9c3ce6e1ab7d5ffd"
+        },
+        {
+          "path": "store/screenshots/models/time-steel/05-settings.png",
+          "sha256": "b59a19af842bd931e48dfa7c251d10c307f9644a42e5d23fef091a16bf19680d"
+        }
+      ]
+    },
+    {
+      "model": "pebble-2",
+      "platform": "diorite",
+      "count": 5,
+      "files": [
+        {
+          "path": "store/screenshots/models/pebble-2/01-home.png",
+          "sha256": "7a94787a978cc00c9d2a8da8f33f0387672f90bf001418756367b2958e60427a"
+        },
+        {
+          "path": "store/screenshots/models/pebble-2/02-plan-appointment.png",
+          "sha256": "6171d55bd82fef84c966d77b26c2e88b665eb307a9d92d7072dd69f9e1fe586f"
+        },
+        {
+          "path": "store/screenshots/models/pebble-2/03-required-lessons.png",
+          "sha256": "b4eb6e6d545b55684a9b83540e17d8cdde5bbf2a854a378c392a689108338936"
+        },
+        {
+          "path": "store/screenshots/models/pebble-2/04-theory-topics.png",
+          "sha256": "cd168c91057d1afd80e134199b50507af5c03f824604c5fcfd8e3edcd55669ab"
+        },
+        {
+          "path": "store/screenshots/models/pebble-2/05-settings.png",
+          "sha256": "64e52ace8c98072888ec3c677a19e842eceb1d82c52d5678f6d13976087d19bd"
+        }
+      ]
+    },
+    {
+      "model": "pebble-2-se",
+      "platform": "diorite",
+      "count": 5,
+      "files": [
+        {
+          "path": "store/screenshots/models/pebble-2-se/01-home.png",
+          "sha256": "7a94787a978cc00c9d2a8da8f33f0387672f90bf001418756367b2958e60427a"
+        },
+        {
+          "path": "store/screenshots/models/pebble-2-se/02-plan-appointment.png",
+          "sha256": "6171d55bd82fef84c966d77b26c2e88b665eb307a9d92d7072dd69f9e1fe586f"
+        },
+        {
+          "path": "store/screenshots/models/pebble-2-se/03-required-lessons.png",
+          "sha256": "b4eb6e6d545b55684a9b83540e17d8cdde5bbf2a854a378c392a689108338936"
+        },
+        {
+          "path": "store/screenshots/models/pebble-2-se/04-theory-topics.png",
+          "sha256": "cd168c91057d1afd80e134199b50507af5c03f824604c5fcfd8e3edcd55669ab"
+        },
+        {
+          "path": "store/screenshots/models/pebble-2-se/05-settings.png",
+          "sha256": "64e52ace8c98072888ec3c677a19e842eceb1d82c52d5678f6d13976087d19bd"
+        }
+      ]
+    },
+    {
+      "model": "time-round",
+      "platform": "chalk",
+      "count": 5,
+      "files": [
+        {
+          "path": "store/screenshots/models/time-round/01-home.png",
+          "sha256": "65a52e5eb6bd52cc9f72a9a2b892434c6fce752af3e0522eaed94c8f53c21099"
+        },
+        {
+          "path": "store/screenshots/models/time-round/02-plan-appointment.png",
+          "sha256": "ae4291796b6618c0570357ea7daa43dab2fbc2df1c307516a4cf8a6f4ada8ca9"
+        },
+        {
+          "path": "store/screenshots/models/time-round/03-required-lessons.png",
+          "sha256": "7a3be8c2d11892748eb879eae670aefd132cf70ec3aeed51f0f65b9f133d290b"
+        },
+        {
+          "path": "store/screenshots/models/time-round/04-theory-topics.png",
+          "sha256": "f762a8b407b583cadc63891dfe3822d6696f5929869c9437c37d228ddd30d92c"
+        },
+        {
+          "path": "store/screenshots/models/time-round/05-settings.png",
+          "sha256": "f6a35fb728cdbd60f83775299a986dee5c0598fd2a81fa0a37aaf76fcf09b878"
+        }
+      ]
+    }
+  ]
+}

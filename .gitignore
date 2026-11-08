@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+projects/*/build/
+projects/*/.lock-*
+projects/*/.waf-*
+output/
+*.log
+.DS_Store

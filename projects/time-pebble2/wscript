@@ -1,0 +1,18 @@
+top = '.'
+out = 'build'
+def options(ctx):
+    ctx.load('pebble_sdk')
+def configure(ctx):
+    ctx.load('pebble_sdk')
+def build(ctx):
+    ctx.load('pebble_sdk')
+    binaries = []
+    for platform in ctx.env.TARGET_PLATFORMS:
+        ctx.set_env(ctx.all_envs[platform])
+        ctx.set_group(ctx.env.PLATFORM_NAME)
+        sources = ctx.path.ant_glob('src/c/**/*.c', excl=['src/c/main.c', 'src/c/main_round.c'])
+        sources += [ctx.path.find_node('src/c/main_round.c' if platform == 'chalk' else 'src/c/main.c')]
+        app = ctx.pbl_program(source=sources, target='pebble-app-'+platform+'.elf', cflags=['-Oz','-flto'], linkflags=['-flto'])
+        binaries.append({'platform': platform, 'app_elf': 'pebble-app-'+platform+'.elf'})
+    ctx.set_group('bundle')
+    ctx.pbl_bundle(binaries=binaries, js=ctx.path.ant_glob(['src/pkjs/**/*.js']), js_entry_file='src/pkjs/index.js')
