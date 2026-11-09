@@ -17,6 +17,13 @@
         "file": "en/settings.json",
         "sha256": "b30deb6793527f221462581720cba23b04ca88a04872d4041d88b0fd4a04677f",
         "watchLanguage": 1
+      },
+      {
+        "locale": "es",
+        "name": "Español",
+        "file": "es/settings.json",
+        "sha256": "bd265687fc2458d89291d1a6fdba1589016f74fb295a96dd3bfebc833955df68",
+        "watchLanguage": null
       }
     ]
   }
