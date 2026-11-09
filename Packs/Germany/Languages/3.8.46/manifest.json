@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "trainingCountry": "DE",
+  "rulesetDirectory": "Germany",
+  "appVersion": "3.8.46",
+  "format": "LP3/swap128",
+  "scope": "menu",
+  "languages": [
+    {
+      "locale": "de",
+      "name": "Deutsch",
+      "file": "de.json",
+      "language": 0,
+      "packId": 2791773917,
+      "payloadBytes": 2359,
+      "crc32": 3118226134,
+      "sha256": "6608da191d258b5e67271b75175d613794855f5dc37b56d1b60c98049f4a3861"
+    },
+    {
+      "locale": "en",
+      "name": "English",
+      "file": "en.json",
+      "language": 1,
+      "packId": 3568887964,
+      "payloadBytes": 2314,
+      "crc32": 3113588313,
+      "sha256": "8aa60c4de7036e8db6e34c847dffb2a8478427248ef24a6ec51720b2921ba93a"
+    }
+  ]
+}
