@@ -1,0 +1,289 @@
+{
+  "productionVersion": "3.8.49",
+  "productionUnchanged": true,
+  "nativeWatchBuild": false,
+  "sanitizers": true,
+  "scope": "desktop prototype using original store.c and its regression suite",
+  "quotaBytes": 4096,
+  "scenarios": [
+    "empty",
+    "three appointments, one class",
+    "24 phone appointments, all class progress",
+    "24 appointments with all optional timestamps, all class progress"
+  ],
+  "projects": [
+    {
+      "project": "time2",
+      "scenarios": [
+        {
+          "mode": 0,
+          "before": 824,
+          "after": 38,
+          "savedBytes": 786,
+          "bookingPeakBefore": 844,
+          "bookingPeakAfter": 58,
+          "remainingForLanguageAndManifest": 4038
+        },
+        {
+          "mode": 1,
+          "before": 848,
+          "after": 111,
+          "savedBytes": 737,
+          "bookingPeakBefore": 868,
+          "bookingPeakAfter": 131,
+          "remainingForLanguageAndManifest": 3965
+        },
+        {
+          "mode": 2,
+          "before": 1208,
+          "after": 758,
+          "savedBytes": 450,
+          "bookingPeakBefore": 1228,
+          "bookingPeakAfter": 778,
+          "remainingForLanguageAndManifest": 3318
+        },
+        {
+          "mode": 3,
+          "before": 1208,
+          "after": 950,
+          "savedBytes": 258,
+          "bookingPeakBefore": 1228,
+          "bookingPeakAfter": 970,
+          "remainingForLanguageAndManifest": 3126
+        }
+      ],
+      "originalStoreTestsPassed": true,
+      "bookingFailureBoundaries": 8,
+      "migrationFailureBoundaries": 150,
+      "randomRoundtrips": 12000
+    },
+    {
+      "project": "core2duo",
+      "scenarios": [
+        {
+          "mode": 0,
+          "before": 824,
+          "after": 38,
+          "savedBytes": 786,
+          "bookingPeakBefore": 844,
+          "bookingPeakAfter": 58,
+          "remainingForLanguageAndManifest": 4038
+        },
+        {
+          "mode": 1,
+          "before": 848,
+          "after": 111,
+          "savedBytes": 737,
+          "bookingPeakBefore": 868,
+          "bookingPeakAfter": 131,
+          "remainingForLanguageAndManifest": 3965
+        },
+        {
+          "mode": 2,
+          "before": 1208,
+          "after": 758,
+          "savedBytes": 450,
+          "bookingPeakBefore": 1228,
+          "bookingPeakAfter": 778,
+          "remainingForLanguageAndManifest": 3318
+        },
+        {
+          "mode": 3,
+          "before": 1208,
+          "after": 950,
+          "savedBytes": 258,
+          "bookingPeakBefore": 1228,
+          "bookingPeakAfter": 970,
+          "remainingForLanguageAndManifest": 3126
+        }
+      ],
+      "originalStoreTestsPassed": true,
+      "bookingFailureBoundaries": 8,
+      "migrationFailureBoundaries": 150,
+      "randomRoundtrips": 12000
+    },
+    {
+      "project": "time-pebble2",
+      "scenarios": [
+        {
+          "mode": 0,
+          "before": 824,
+          "after": 38,
+          "savedBytes": 786,
+          "bookingPeakBefore": 844,
+          "bookingPeakAfter": 58,
+          "remainingForLanguageAndManifest": 4038
+        },
+        {
+          "mode": 1,
+          "before": 848,
+          "after": 111,
+          "savedBytes": 737,
+          "bookingPeakBefore": 868,
+          "bookingPeakAfter": 131,
+          "remainingForLanguageAndManifest": 3965
+        },
+        {
+          "mode": 2,
+          "before": 1208,
+          "after": 758,
+          "savedBytes": 450,
+          "bookingPeakBefore": 1228,
+          "bookingPeakAfter": 778,
+          "remainingForLanguageAndManifest": 3318
+        },
+        {
+          "mode": 3,
+          "before": 1208,
+          "after": 950,
+          "savedBytes": 258,
+          "bookingPeakBefore": 1228,
+          "bookingPeakAfter": 970,
+          "remainingForLanguageAndManifest": 3126
+        }
+      ],
+      "originalStoreTestsPassed": true,
+      "bookingFailureBoundaries": 8,
+      "migrationFailureBoundaries": 150,
+      "randomRoundtrips": 12000
+    },
+    {
+      "project": "round2",
+      "scenarios": [
+        {
+          "mode": 0,
+          "before": 824,
+          "after": 38,
+          "savedBytes": 786,
+          "bookingPeakBefore": 844,
+          "bookingPeakAfter": 58,
+          "remainingForLanguageAndManifest": 4038
+        },
+        {
+          "mode": 1,
+          "before": 848,
+          "after": 111,
+          "savedBytes": 737,
+          "bookingPeakBefore": 868,
+          "bookingPeakAfter": 131,
+          "remainingForLanguageAndManifest": 3965
+        },
+        {
+          "mode": 2,
+          "before": 1208,
+          "after": 758,
+          "savedBytes": 450,
+          "bookingPeakBefore": 1228,
+          "bookingPeakAfter": 778,
+          "remainingForLanguageAndManifest": 3318
+        },
+        {
+          "mode": 3,
+          "before": 1208,
+          "after": 950,
+          "savedBytes": 258,
+          "bookingPeakBefore": 1228,
+          "bookingPeakAfter": 970,
+          "remainingForLanguageAndManifest": 3126
+        }
+      ],
+      "originalStoreTestsPassed": true,
+      "bookingFailureBoundaries": 8,
+      "migrationFailureBoundaries": 150,
+      "randomRoundtrips": 12000
+    },
+    {
+      "project": "timeround",
+      "scenarios": [
+        {
+          "mode": 0,
+          "before": 824,
+          "after": 38,
+          "savedBytes": 786,
+          "bookingPeakBefore": 844,
+          "bookingPeakAfter": 58,
+          "remainingForLanguageAndManifest": 4038
+        },
+        {
+          "mode": 1,
+          "before": 848,
+          "after": 111,
+          "savedBytes": 737,
+          "bookingPeakBefore": 868,
+          "bookingPeakAfter": 131,
+          "remainingForLanguageAndManifest": 3965
+        },
+        {
+          "mode": 2,
+          "before": 1208,
+          "after": 758,
+          "savedBytes": 450,
+          "bookingPeakBefore": 1228,
+          "bookingPeakAfter": 778,
+          "remainingForLanguageAndManifest": 3318
+        },
+        {
+          "mode": 3,
+          "before": 1208,
+          "after": 950,
+          "savedBytes": 258,
+          "bookingPeakBefore": 1228,
+          "bookingPeakAfter": 970,
+          "remainingForLanguageAndManifest": 3126
+        }
+      ],
+      "originalStoreTestsPassed": true,
+      "bookingFailureBoundaries": 8,
+      "migrationFailureBoundaries": 150,
+      "randomRoundtrips": 12000
+    }
+  ],
+  "languageComparisons": [
+    {
+      "locale": "de",
+      "selfContainedBpeStored": 4622,
+      "bestDeflateStoredMinimum": 3381,
+      "remainingAfterWorstCaseAppAndJournal": 3126,
+      "bpeFitsWorstCase": false,
+      "deflateFitsWorstCase": false,
+      "deflateNote": "Size estimate only, including a minimal header/name/manifest; no native decoder or RAM feasibility claim."
+    },
+    {
+      "locale": "en",
+      "selfContainedBpeStored": 4390,
+      "bestDeflateStoredMinimum": 3168,
+      "remainingAfterWorstCaseAppAndJournal": 3126,
+      "bpeFitsWorstCase": false,
+      "deflateFitsWorstCase": false,
+      "deflateNote": "Size estimate only, including a minimal header/name/manifest; no native decoder or RAM feasibility claim."
+    },
+    {
+      "locale": "es",
+      "selfContainedBpeStored": 4799,
+      "bestDeflateStoredMinimum": 3488,
+      "remainingAfterWorstCaseAppAndJournal": 3126,
+      "bpeFitsWorstCase": false,
+      "deflateFitsWorstCase": false,
+      "deflateNote": "Size estimate only, including a minimal header/name/manifest; no native decoder or RAM feasibility claim."
+    },
+    {
+      "locale": "fr",
+      "selfContainedBpeStored": 4735,
+      "bestDeflateStoredMinimum": 3328,
+      "remainingAfterWorstCaseAppAndJournal": 3126,
+      "bpeFitsWorstCase": false,
+      "deflateFitsWorstCase": false,
+      "deflateNote": "Size estimate only, including a minimal header/name/manifest; no native decoder or RAM feasibility claim."
+    }
+  ],
+  "currentLanguageReserveInFaultTests": 2567,
+  "journalBytes": 20,
+  "testNotes": [
+    "Original store.c business logic and original regression tests are compiled for each project; only persistence transport is adapted in a temporary file.",
+    "The fake SDK enforces 4096 bytes of persisted values including the selected language reserve.",
+    "Fault tests interrupt writes/deletes at every mutation boundary and reboot, including migration with a pending booking journal.",
+    "When --sanitize is used: AddressSanitizer and UndefinedBehaviorSanitizer; disable LeakSanitizer under a traced executor.",
+    "Desktop prototype only; no change to app sources, live catalogue, runtime data or PBW.",
+    "Measurements concern persisted value sizes, not a native RAM/build footprint or flash-controller overhead."
+  ]
+}
