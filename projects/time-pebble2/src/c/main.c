@@ -26,8 +26,8 @@
 
 #define WAKE_COOKIE 321
 #define TEST_COOKIE 909
-static const char *const kinds[]={"Praxis | Übungsfahrt","Praxis | Landstraße","Praxis | Autobahn","Praxis | Nachtfahrt","Praxis | Grundausbildung","Theorie | Grundstoff","Theorie | Zusatzstoff"};
-static const char *const counters[]={"Landstraße [LA]","Autobahn [AU]","Nachtfahrt [NA]","Grundausbildung [GA]","Grundstoff [GS]","Zusatzstoff [ZS]"};
+static const char *const kinds[]={LK_Praxis_Ubungsfahrt_63e3fd80,LK_Praxis_Landstrasse_d030c0ca,LK_Praxis_Autobahn_028a72c7,LK_Praxis_Nachtfahrt_c290aa14,LK_Praxis_Grundausbildung_5a10f7a2,LK_Theorie_Grundstoff_4502013b,LK_Theorie_Zusatzstoff_8f17cabd};
+static const char *const counters[]={LK_Landstrasse_LA_d9046e5d,LK_Autobahn_AU_d31b4ca6,LK_Nachtfahrt_NA_b6610768,LK_Grundausbildung_GA_420dab61,LK_Grundstoff_GS_81ee2446,LK_Zusatzstoff_ZS_ec7bd61a};
 typedef enum {HOME,LIST,CLASSES,PROFILES,EDIT,KINDS,PROGRESS,ACTIONS,DELETE_CONFIRM,COMPLETE_CONFIRM,TOPICS,TOPIC_PICK,ALERT,PENDING,PROGRESS_ACTIONS,PROGRESS_RESET,SETTINGS,EXPLANATIONS} Page;
 static int progress_counter;
 static Page page;
@@ -43,6 +43,7 @@ static Window *status_window;
 static Layer *status_layer,*footer_layer,*info_header;
 static char info_title[64];
 static int info_symbol;
+static bool language_setup_notice;
 static AppTimer *status_timer;
 static char status_title[96],status_detail[96];
 static MenuLayer *menu;
@@ -112,7 +113,7 @@ static void build_list(void) {
  for(int i=1;i<list_count;i++){int value=list_map[i],j=i-1;while(j>=0&&entries[list_map[j]].when>entries[value].when){list_map[j+1]=list_map[j];j--;}list_map[j+1]=value;}
 }
 static void date_text(time_t when,char *buf,size_t n) {struct tm *t=localtime(&when);strftime(buf,n,T("%d.%m.%Y %H:%M"),t);}
-static void lead_text(int lead,char *buf,size_t n) {if(lead)snprintf(buf,n,T("%02d:%02d vorher"),lead/60,lead%60);else snprintf(buf,n,T("Aus"));}
+static void lead_text(int lead,char *buf,size_t n) {if(lead)snprintf(buf,n,T(LK_02d_02d_vorher_ff4a8bfd),lead/60,lead%60);else snprintf(buf,n,T(LK_Aus_6997e3eb));}
 static void dismiss_status(void){if(status_timer){app_timer_cancel(status_timer);status_timer=NULL;}if(status_window&&window_stack_contains_window(status_window))window_stack_remove(status_window,false);}
 static void status_timeout(void *context){(void)context;status_timer=NULL;if(window_stack_contains_window(status_window))window_stack_remove(status_window,false);}
 static void status_draw(Layer *layer,GContext *ctx){
@@ -121,7 +122,7 @@ static void status_draw(Layer *layer,GContext *ctx){
  graphics_draw_text(ctx,status_detail,fonts_get_system_font(FONT_KEY_GOTHIC_14),GRect(6,1,UI_WIDTH-12,32),GTextOverflowModeWordWrap,GTextAlignmentCenter,NULL);
  int x=UI_WIDTH/2;graphics_context_set_fill_color(ctx,GColorCyan);graphics_fill_circle(ctx,GPoint(x,63),18);graphics_context_set_stroke_color(ctx,GColorOxfordBlue);graphics_context_set_stroke_width(ctx,3);graphics_draw_line(ctx,GPoint(x-10,63),GPoint(x-2,71));graphics_draw_line(ctx,GPoint(x-2,71),GPoint(x+11,55));
  graphics_context_set_text_color(ctx,GColorWhite);graphics_draw_text(ctx,status_title,fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD),GRect(6,88,UI_WIDTH-12,52),GTextOverflowModeWordWrap,GTextAlignmentCenter,NULL);
- graphics_draw_text(ctx,T("Schließt nach 2 Sekunden"),fonts_get_system_font(FONT_KEY_GOTHIC_14),GRect(4,UI_HEIGHT-23,UI_WIDTH-8,22),GTextOverflowModeTrailingEllipsis,GTextAlignmentCenter,NULL);
+ graphics_draw_text(ctx,T(LK_Schliesst_nach_2_Sekunden_6a25d987),fonts_get_system_font(FONT_KEY_GOTHIC_14),GRect(4,UI_HEIGHT-23,UI_WIDTH-8,22),GTextOverflowModeTrailingEllipsis,GTextAlignmentCenter,NULL);
 }
 void show_status(const char *title,const char *detail){
  if(!ui_ready)return;
@@ -146,7 +147,7 @@ static void show_notice(const char *title,int symbol,const char *body){
  layer_set_hidden(info_header,false);layer_mark_dirty(info_header);
  if(!window_stack_contains_window(msg_window))window_stack_push(msg_window,true);
 }
-void show_message(const char *text){show_notice(T("Hinweis"),1,text);}
+void show_message(const char *text){show_notice(T(LK_Hinweis_ad6c499c),1,text);}
 static void info_header_draw(Layer *layer,GContext *ctx){
 
  (void)layer;graphics_context_set_fill_color(ctx,GColorOxfordBlue);graphics_fill_rect(ctx,GRect(0,0,UI_WIDTH,UI_INFO_HEADER),0,GCornerNone);graphics_context_set_stroke_color(ctx,GColorCyan);graphics_context_set_fill_color(ctx,GColorCyan);graphics_context_set_stroke_width(ctx,2);
@@ -236,9 +237,10 @@ static void process_events(bool show) {
  bool test_due=test_at&&test_at<=now;if(test_due){test_at=0;persist_delete(28);}
  schedule_next();processing=false;refresh();
  if(show&&new_event&&(alert_count||completion_count))surface_alerts();
- else if(show&&test_due){buzz();show_info(T("Alarmtest"),3,T("ALARMTEST\n\nAutomatisch gestartet.\n\nSo erinnert dich die Uhr auch bei geschlossener App."));}
+ else if(show&&test_due){buzz();show_info(T(LK_Alarmtest_c4d250b1),3,T("ALARMTEST\n\nAutomatisch gestartet.\n\nSo erinnert dich die Uhr auch bei geschlossener App."));}
 }
 void state_changed(void) {
+ if(ui_ready&&language_setup_notice&&language_pack_ready()){window_stack_remove(msg_window,false);language_setup_notice=false;}
  if(cfg.cls<0){for(int i=0;i<MAX_ENTRIES;i++)if(entries[i].active){cfg.cls=entries[i].cls;cfg.profile=profiles[cfg.cls];load_rules();store_config();break;}}
 
  // Preserve other simultaneous alerts and completion questions across one booking/edit.
@@ -254,26 +256,26 @@ static void wake_handler(WakeupId id,int32_t cookie) {(void)cookie;if(id==wake_i
 static void begin_edit(int index) {
  edit_id=index>=0?entries[index].id:0;
  if(index>=0)draft=entries[index];else{
-  if(free_slot(entries)<0){show_notice(T("Terminliste voll"),6,T("Alle 24 Terminplätze sind belegt. Bitte abgeschlossene Termine buchen oder entfernen."));return;}
+  if(free_slot(entries)<0){show_notice(T(LK_Terminliste_voll_56bbc00d),6,T(LK_Alle_24_Terminplatze_sind_belegt_Bitte_abgesc_6cdec1c7));return;}
   memset(&draft,0,sizeof(draft));draft=(Entry){.when=time(NULL)+90000,.lead={60,30},.units=1,.cls=cfg.cls,.topic=NO_TOPIC,.active=1,.kind=cfg.cls==14?5:0};
  }
  time_t t=draft.when;draft_tm=*localtime(&t);draft_tm.tm_sec=0;show_page(EDIT);
 }
 static bool save_draft(void) {
  time_t when;
- if(!valid_date(&draft_tm,&when)){show_notice(T("Datum prüfen"),4,T("Ungültiges Datum oder Uhrzeit. Bitte prüfen; auch die Zeitumstellung kann eine Uhrzeit ungültig machen."));return false;}
- if(when<=time(NULL)){show_notice(T("Datum prüfen"),4,T("Der Termin muss in der Zukunft liegen."));return false;}
- if(draft.lead[1]&&draft.lead[0]==draft.lead[1]){show_notice(T("Erinnerungen prüfen"),4,T("Bitte zwei unterschiedliche Erinnerungszeiten wählen oder Erinnerung 2 ausschalten."));return false;}
- if(edit_id&&find_id(entries,edit_id)<0){show_notice(T("Termin fehlt"),6,T("Der Termin wurde inzwischen gelöscht. Bitte neu anlegen."));return false;}
- int index=edit_id?find_id(entries,edit_id):free_slot(entries);if(index<0){show_notice(T("Terminliste voll"),6,T("Alle Terminplätze sind belegt."));return false;}
+ if(!valid_date(&draft_tm,&when)){show_notice(T(LK_Datum_prufen_bd0ee609),4,T("Ungültiges Datum oder Uhrzeit. Bitte prüfen; auch die Zeitumstellung kann eine Uhrzeit ungültig machen."));return false;}
+ if(when<=time(NULL)){show_notice(T(LK_Datum_prufen_bd0ee609),4,T(LK_Der_Termin_muss_in_der_Zukunft_liegen_d29418af));return false;}
+ if(draft.lead[1]&&draft.lead[0]==draft.lead[1]){show_notice(T(LK_Erinnerungen_prufen_86dde7cf),4,T(LK_Bitte_zwei_unterschiedliche_Erinnerungszeiten_17f19057));return false;}
+ if(edit_id&&find_id(entries,edit_id)<0){show_notice(T(LK_Termin_fehlt_c5e0c2c3),6,T(LK_Der_Termin_wurde_inzwischen_geloscht_Bitte_ne_9660c4ed));return false;}
+ int index=edit_id?find_id(entries,edit_id):free_slot(entries);if(index<0){show_notice(T(LK_Terminliste_voll_56bbc00d),6,T(LK_Alle_Terminplatze_sind_belegt_c29a2eea));return false;}
  draft.when=when;draft.snooze=0;draft.review=0;draft.flags=0;draft.token=0;
  if(!draft.id)draft.id=allocate_id();
- if(!entry_valid(&draft)||!draft.id){show_notice(T("Speicherfehler"),4,T("Termindaten ungültig oder Speicherfehler."));return false;}
+ if(!entry_valid(&draft)||!draft.id){show_notice(T(LK_Speicherfehler_71eed920),4,T(LK_Termindaten_ungultig_oder_Speicherfehler_5a95d9d9));return false;}
  bool skipped=false;for(int k=0;k<2;k++)if(draft.lead[k]&&draft.when-(int32_t)draft.lead[k]*60<=time(NULL)){draft.flags|=1<<k;skipped=true;}
  Entry old=entries[index];entries[index]=draft;
- if(!store_entry(index)){entries[index]=old;show_notice(T("Speicherfehler"),4,T("Speicherfehler: Termin nicht gespeichert. Bitte Uhr-App neu starten."));return false;}
+ if(!store_entry(index)){entries[index]=old;show_notice(T(LK_Speicherfehler_71eed920),4,T(LK_Speicherfehler_Termin_nicht_gespeichert_Bitte_4a235b6b));return false;}
  store_revision();state_changed();
- if(!alarm_ok)show_notice(T("Alarmstatus"),3,T("TERMIN GESPEICHERT\n\nAlarm konnte nicht aktiviert werden! Unter Einstellungen den Alarm erneut aktivieren."));else show_status(T("Termin gespeichert"),skipped?T("Vorwarnung übersprungen"):T("Terminplanung"));return true;
+ if(!alarm_ok)show_notice(T(LK_Alarmstatus_b0ff7d4e),3,T("TERMIN GESPEICHERT\n\nAlarm konnte nicht aktiviert werden! Unter Einstellungen den Alarm erneut aktivieren."));else show_status(T(LK_Termin_gespeichert_8224dbe3),skipped?T(LK_Vorwarnung_ubersprungen_ad5f6505):T(LK_Terminplanung_a6229b03));return true;
 }
 static void apply_number(void) {
  switch(number_field){
@@ -288,24 +290,24 @@ static void num_draw(Layer *l,GContext *ctx){
 
  (void)l;static char value[30],hint[70];hint[0]=0;graphics_context_set_fill_color(ctx,GColorOxfordBlue);graphics_fill_rect(ctx,GRect(0,0,UI_WIDTH,UI_HEIGHT),0,GCornerNone);graphics_context_set_text_color(ctx,GColorWhite);
  graphics_draw_text(ctx,T(number_title),fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD),GRect(6,1,UI_WIDTH-12,40),GTextOverflowModeWordWrap,GTextAlignmentCenter,NULL);
- if(number_field==5||number_field==6){if(number_value)snprintf(value,sizeof(value),T("%02d:%02d"),number_value/4,number_value%4*15);else snprintf(value,sizeof(value),T("Aus"));}else snprintf(value,sizeof(value),T("%d"),((number_field==7&&draft_uses_minutes())||number_field==17)?number_value*5:number_value);
+ if(number_field==5||number_field==6){if(number_value)snprintf(value,sizeof(value),T("%02d:%02d"),number_value/4,number_value%4*15);else snprintf(value,sizeof(value),T(LK_Aus_6997e3eb));}else snprintf(value,sizeof(value),T("%d"),((number_field==7&&draft_uses_minutes())||number_field==17)?number_value*5:number_value);
  graphics_context_set_text_color(ctx,GColorCyan);graphics_draw_text(ctx,value,fonts_get_system_font(FONT_KEY_BITHAM_30_BLACK),GRect(2,46,UI_WIDTH-4,43),GTextOverflowModeTrailingEllipsis,GTextAlignmentCenter,NULL);
- const char *unit=(number_field==5||number_field==6)?T("Vorwarnzeit"):((number_field==7&&draft_uses_minutes())||number_field==17)?T("Minuten"):T("Einheiten");graphics_context_set_text_color(ctx,GColorWhite);graphics_draw_text(ctx,unit,fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD),GRect(4,88,UI_WIDTH-8,24),GTextOverflowModeTrailingEllipsis,GTextAlignmentCenter,NULL);
- if(number_field==14||number_field==15)snprintf(hint,sizeof(hint),T("%u per Häkchen geschützt"),topic_units(cfg.cls,number_field-10));else if(number_field==17||(number_field==7&&draft_uses_minutes()))snprintf(hint,sizeof(hint),"%s",T("45 Min. = 1 Einheit"));else if(number_field==7)snprintf(hint,sizeof(hint),"%s",T(draft.kind>=5?"90 Min. = 1 Einheit":"45 Min. = 1 Einheit"));
+ const char *unit=(number_field==5||number_field==6)?T(LK_Vorwarnzeit_14c6b73f):((number_field==7&&draft_uses_minutes())||number_field==17)?T(LK_Minuten_497af2bf):T(LK_Einheiten_fa8cfe70);graphics_context_set_text_color(ctx,GColorWhite);graphics_draw_text(ctx,unit,fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD),GRect(4,88,UI_WIDTH-8,24),GTextOverflowModeTrailingEllipsis,GTextAlignmentCenter,NULL);
+ if(number_field==14||number_field==15)snprintf(hint,sizeof(hint),T(LK_u_per_Hakchen_geschutzt_c30f9880),topic_units(cfg.cls,number_field-10));else if(number_field==17||(number_field==7&&draft_uses_minutes()))snprintf(hint,sizeof(hint),"%s",T(LK_45_Min_1_Einheit_040553e8));else if(number_field==7)snprintf(hint,sizeof(hint),"%s",T(draft.kind>=5?LK_90_Min_1_Einheit_76e05804:LK_45_Min_1_Einheit_040553e8));
  graphics_draw_text(ctx,hint,fonts_get_system_font(FONT_KEY_GOTHIC_14),GRect(4,110,UI_WIDTH-8,28),GTextOverflowModeWordWrap,GTextAlignmentCenter,NULL);touch_controls(ctx,false);
 }
 static void num_up(ClickRecognizerRef r,void *c){(void)r;(void)c;if(++number_value>number_max)number_value=number_field>=14?number_max:number_min;layer_mark_dirty(num_layer);}
 static void num_down(ClickRecognizerRef r,void *c){(void)r;(void)c;if(--number_value<number_min)number_value=number_field>=14?number_min:number_max;layer_mark_dirty(num_layer);}
-static void num_select(ClickRecognizerRef r,void *c){(void)r;(void)c;apply_number();window_stack_pop(true);if(storage_error)show_notice(T("Fortschritt"),5,T("Fortschritt nicht gespeichert. Bitte App neu starten."));}
+static void num_select(ClickRecognizerRef r,void *c){(void)r;(void)c;apply_number();window_stack_pop(true);if(storage_error)show_notice(T(LK_Fortschritt_8dc68203),5,T(LK_Fortschritt_nicht_gespeichert_Bitte_App_neu_s_2095b54e));}
 static void num_clicks(void *ctx){(void)ctx;window_single_repeating_click_subscribe(BUTTON_ID_UP,100,num_up);window_single_repeating_click_subscribe(BUTTON_ID_DOWN,100,num_down);window_single_click_subscribe(BUTTON_ID_SELECT,num_select);}
 static void edit_number(int field,const char *title,int value,int min,int max){number_field=field;snprintf(number_title,sizeof(number_title),"%s",title);number_value=value;number_min=min;number_max=max;layer_mark_dirty(num_layer);window_stack_push(num_window,true);}
 static int month_days(int year,int month) {static const int days[]={31,28,31,30,31,30,31,31,30,31,30,31};return days[month]+(month==1&&year%4==0&&(year%100!=0||year%400==0));}
 static void date_draw(Layer *l,GContext *ctx){
 
- (void)l;static char value[32];graphics_context_set_fill_color(ctx,GColorOxfordBlue);graphics_fill_rect(ctx,GRect(0,0,UI_WIDTH,UI_HEIGHT),0,GCornerNone);graphics_context_set_text_color(ctx,GColorWhite);graphics_draw_text(ctx,date_mode?T("Uhrzeit"):T("Datum"),fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD),GRect(4,8,UI_WIDTH-8,34),GTextOverflowModeTrailingEllipsis,GTextAlignmentCenter,NULL);
+ (void)l;static char value[32];graphics_context_set_fill_color(ctx,GColorOxfordBlue);graphics_fill_rect(ctx,GRect(0,0,UI_WIDTH,UI_HEIGHT),0,GCornerNone);graphics_context_set_text_color(ctx,GColorWhite);graphics_draw_text(ctx,date_mode?T(LK_Uhrzeit_b0b30059):T(LK_Datum_df5c3008),fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD),GRect(4,8,UI_WIDTH-8,34),GTextOverflowModeTrailingEllipsis,GTextAlignmentCenter,NULL);
  if(date_mode)snprintf(value,sizeof(value),T("%02d:%02d"),date_value.tm_hour,date_value.tm_min);else snprintf(value,sizeof(value),T("%02d.%02d.%04d"),date_value.tm_mday,date_value.tm_mon+1,date_value.tm_year+1900);
  graphics_context_set_text_color(ctx,GColorCyan);graphics_draw_text(ctx,value,fonts_get_system_font(date_mode?FONT_KEY_BITHAM_30_BLACK:FONT_KEY_GOTHIC_24_BOLD),GRect(4,55,UI_WIDTH-8,43),GTextOverflowModeTrailingEllipsis,GTextAlignmentCenter,NULL);graphics_context_set_fill_color(ctx,GColorCyan);int fieldw=(UI_WIDTH-12)/(date_mode?2:3);graphics_fill_rect(ctx,GRect(6+date_field*fieldw,100,fieldw-4,2),0,GCornerNone);
- const char *label=date_mode?(date_field?T("Minuten"):T("Stunden")):(date_field==0?T("Tag"):date_field==1?T("Monat"):T("Jahr"));graphics_context_set_text_color(ctx,GColorWhite);graphics_draw_text(ctx,label,fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD),GRect(4,106,UI_WIDTH-8,28),GTextOverflowModeTrailingEllipsis,GTextAlignmentCenter,NULL);touch_controls(ctx,date_mode?date_field<1:date_field<2);
+ const char *label=date_mode?(date_field?T(LK_Minuten_497af2bf):T(LK_Stunden_f3bf6eff)):(date_field==0?T(LK_Tag_982963c1):date_field==1?T(LK_Monat_da13625e):T(LK_Jahr_956a6e5a));graphics_context_set_text_color(ctx,GColorWhite);graphics_draw_text(ctx,label,fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD),GRect(4,106,UI_WIDTH-8,28),GTextOverflowModeTrailingEllipsis,GTextAlignmentCenter,NULL);touch_controls(ctx,date_mode?date_field<1:date_field<2);
 }
 static void date_adjust(int delta){int *v,min,max;
  if(date_mode){v=date_field?&date_value.tm_min:&date_value.tm_hour;min=0;max=date_field?59:23;}
@@ -322,7 +324,7 @@ static void date_clicks(void *ctx){(void)ctx;window_single_repeating_click_subsc
 static void edit_datetime(int mode){date_mode=mode;date_field=0;date_value=draft_tm;layer_mark_dirty(date_layer);window_stack_push(date_window,true);}
 
 static void touch_controls(GContext *ctx,bool next){
- (void)next;graphics_context_set_text_color(ctx,GColorWhite);graphics_draw_text(ctx,T("Oben + | Unten -"),fonts_get_system_font(FONT_KEY_GOTHIC_14),GRect(30,UI_HEIGHT-30,UI_WIDTH-60,24),GTextOverflowModeTrailingEllipsis,GTextAlignmentCenter,NULL);
+ (void)next;graphics_context_set_text_color(ctx,GColorWhite);graphics_draw_text(ctx,T(LK_Oben_Unten_3f15d803),fonts_get_system_font(FONT_KEY_GOTHIC_14),GRect(30,UI_HEIGHT-30,UI_WIDTH-60,24),GTextOverflowModeTrailingEllipsis,GTextAlignmentCenter,NULL);
 }
 static void __attribute__((unused)) touch_handler(const TouchEvent *event,void *context) {
  TouchEvent local=*event;local.x-=UI_LEFT;local.y-=UI_TOP;event=&local;
@@ -393,7 +395,7 @@ static int16_t header_height(MenuLayer *m,uint16_t s,void *ctx){
 (void)m;(void)s;(void)ctx;return page==HOME?112:(page==PROGRESS||page==TOPICS||page==TOPIC_PICK)?48:36;
 }
 static void list_entry_title(const Entry *e,char *text,size_t size){
- const char *const names[]={"Übungsfahrt","Landstraße","Autobahn","Nachtfahrt","Grundausbildung","Grundstoff","Zusatzstoff"};
+ const char *const names[]={LK_Ubungsfahrt_0b8286c5,LK_Landstrasse_5984748c,LK_Autobahn_d2c9f448,LK_Nachtfahrt_ffa854d3,LK_Grundausbildung_4b389408,LK_Grundstoff_bae3ed52,LK_Zusatzstoff_614bd4e2};
  const char *name=e->kind>=5?T(kinds[e->kind]):T(names[e->kind]);
  if(e->cls!=cfg.cls)snprintf(text,size,"%s | %s",classes[e->cls],name);else snprintf(text,size,"%s",name);
 }
@@ -407,7 +409,7 @@ static int16_t row_height(MenuLayer *m,MenuIndex *i,void *ctx){
 }
 static void footer_draw(Layer *layer,GContext *ctx){
 
- (void)layer;graphics_context_set_fill_color(ctx,GColorOxfordBlue);graphics_fill_rect(ctx,GRect(0,0,UI_WIDTH,20),0,GCornerNone);graphics_context_set_text_color(ctx,GColorWhite);graphics_draw_text(ctx,T("Häkchen zählen als Einheit"),fonts_get_system_font(FONT_KEY_GOTHIC_14),GRect(3,0,UI_WIDTH-6,20),GTextOverflowModeTrailingEllipsis,GTextAlignmentCenter,NULL);
+ (void)layer;graphics_context_set_fill_color(ctx,GColorOxfordBlue);graphics_fill_rect(ctx,GRect(0,0,UI_WIDTH,20),0,GCornerNone);graphics_context_set_text_color(ctx,GColorWhite);graphics_draw_text(ctx,T(LK_Hakchen_zahlen_als_Einheit_c1616440),fonts_get_system_font(FONT_KEY_GOTHIC_14),GRect(3,0,UI_WIDTH-6,20),GTextOverflowModeTrailingEllipsis,GTextAlignmentCenter,NULL);
 }
 static void class_icon(GContext *ctx,int cls,GPoint point) {
  if(cls<0||cls>=16)return;
@@ -430,17 +432,17 @@ static void class_icon(GContext *ctx,int cls,GPoint point) {
 static void home_header_draw(GContext *ctx){
 
  graphics_context_set_fill_color(ctx,GColorOxfordBlue);graphics_fill_rect(ctx,GRect(0,0,UI_WIDTH,112),0,GCornerNone);graphics_context_set_text_color(ctx,GColorWhite);static char text[90],date[32],clock[12];int next=next_entry();
- graphics_draw_text(ctx,T("Fahrschul Planer"),fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD),GRect(3,0,UI_WIDTH-6,24),GTextOverflowModeTrailingEllipsis,GTextAlignmentCenter,NULL);snprintf(text,sizeof(text),T("Klasse %s"),cfg.cls>=0?classes[cfg.cls]:"?");graphics_draw_text(ctx,text,fonts_get_system_font(FONT_KEY_GOTHIC_14),GRect(4,22,UI_WIDTH-8,18),GTextOverflowModeTrailingEllipsis,GTextAlignmentCenter,NULL);
- const char *const lessons[]={"Übungsfahrt","Landstraße","Autobahn","Nachtfahrt","Grundausbildung","Grundstoff","Zusatzstoff"};
- if(next>=0){Entry *e=&entries[next];time_t when=e->when;snprintf(text,sizeof(text),"%s",T(lessons[e->kind]));strftime(date,sizeof(date),T("%d.%m.%Y"),localtime(&when));strftime(clock,sizeof(clock),"%H:%M",localtime(&when));}else{snprintf(text,sizeof(text),"%s",T("Noch kein Termin"));snprintf(date,sizeof(date),"%s",T("Plane deine Fahrstunde"));snprintf(clock,sizeof(clock),"--:--");}
- if(storage_error)snprintf(text,sizeof(text),"%s",T("Speicherfehler! Neu starten"));else if(!alarm_ok)snprintf(text,sizeof(text),"%s",T("Alarm fehlt! Erneut versuchen"));
+ graphics_draw_text(ctx,T(LK_Fahrschul_Planer_8d88df9a),fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD),GRect(3,0,UI_WIDTH-6,24),GTextOverflowModeTrailingEllipsis,GTextAlignmentCenter,NULL);snprintf(text,sizeof(text),T(LK_Klasse_s_8e6c0375),cfg.cls>=0?classes[cfg.cls]:"?");graphics_draw_text(ctx,text,fonts_get_system_font(FONT_KEY_GOTHIC_14),GRect(4,22,UI_WIDTH-8,18),GTextOverflowModeTrailingEllipsis,GTextAlignmentCenter,NULL);
+ const char *const lessons[]={LK_Ubungsfahrt_0b8286c5,LK_Landstrasse_5984748c,LK_Autobahn_d2c9f448,LK_Nachtfahrt_ffa854d3,LK_Grundausbildung_4b389408,LK_Grundstoff_bae3ed52,LK_Zusatzstoff_614bd4e2};
+ if(next>=0){Entry *e=&entries[next];time_t when=e->when;snprintf(text,sizeof(text),"%s",T(lessons[e->kind]));strftime(date,sizeof(date),T("%d.%m.%Y"),localtime(&when));strftime(clock,sizeof(clock),"%H:%M",localtime(&when));}else{snprintf(text,sizeof(text),"%s",T(LK_Noch_kein_Termin_13cfe16f));snprintf(date,sizeof(date),"%s",T(LK_Plane_deine_Fahrstunde_4a4fb061));snprintf(clock,sizeof(clock),"--:--");}
+ if(storage_error)snprintf(text,sizeof(text),"%s",T(LK_Speicherfehler_Neu_starten_607689d0));else if(!alarm_ok)snprintf(text,sizeof(text),"%s",T(LK_Alarm_fehlt_Erneut_versuchen_f0f5d684));
  graphics_draw_text(ctx,text,fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD),GRect(4,39,UI_WIDTH-8,20),GTextOverflowModeTrailingEllipsis,GTextAlignmentCenter,NULL);graphics_draw_text(ctx,date,fonts_get_system_font(FONT_KEY_GOTHIC_14),GRect(4,58,UI_WIDTH-8,20),GTextOverflowModeTrailingEllipsis,GTextAlignmentCenter,NULL);graphics_context_set_text_color(ctx,GColorCyan);graphics_draw_text(ctx,clock,fonts_get_system_font(FONT_KEY_BITHAM_30_BLACK),GRect(3,74,UI_WIDTH-6,38),GTextOverflowModeTrailingEllipsis,GTextAlignmentCenter,NULL);
 }
 static void header_draw(GContext *ctx,const Layer *l,uint16_t s,void *c){(void)s;(void)c;GRect b=layer_get_bounds(l);graphics_context_set_fill_color(ctx,GColorOxfordBlue);graphics_fill_rect(ctx,b,0,GCornerNone);graphics_context_set_text_color(ctx,GColorWhite);
- const char *title=T("Fahrschul Planer");switch(page){case HOME:break;case SETTINGS:title=T("Einstellungen");break;case EXPLANATIONS:title=T("Erklärungen");break;case LIST:title=T("Deine Termine");break;case PENDING:title=T("Stunden offen");break;case CLASSES:title=T("Deine Klasse");break;case PROFILES:title=T("Dein Vorbesitz");break;case EDIT:title=T("Termin planen");break;case KINDS:title=T("Unterrichtsart");break;case PROGRESS:title=T("Dein Fortschritt");break;case ACTIONS:title=T("Dein Termin");break;case DELETE_CONFIRM:title=T("Termin löschen?");break;case COMPLETE_CONFIRM:title=T("Unterricht erledigt?");break;case TOPICS:title=T("Theorie-Themen");break;case TOPIC_PICK:title=T("Thema wählen");break;case ALERT:title=T("Termin-Erinnerung");break;case PROGRESS_ACTIONS:title=T("Zusätze verwalten");break;case PROGRESS_RESET:title=T("Zusätze löschen?");break;}
+ const char *title=T(LK_Fahrschul_Planer_8d88df9a);switch(page){case HOME:break;case SETTINGS:title=T(LK_Einstellungen_3e5af3d1);break;case EXPLANATIONS:title=T(LK_Erklarungen_7478dc86);break;case LIST:title=T(LK_Deine_Termine_434b258a);break;case PENDING:title=T(LK_Stunden_offen_c03ff006);break;case CLASSES:title=T(LK_Deine_Klasse_a47f71c8);break;case PROFILES:title=T(LK_Dein_Vorbesitz_56d7a40b);break;case EDIT:title=T(LK_Termin_planen_7c23b5cd);break;case KINDS:title=T(LK_Unterrichtsart_d97b7c6c);break;case PROGRESS:title=T(LK_Dein_Fortschritt_91784f7a);break;case ACTIONS:title=T(LK_Dein_Termin_18955587);break;case DELETE_CONFIRM:title=T(LK_Termin_loschen_f7eb0937);break;case COMPLETE_CONFIRM:title=T(LK_Unterricht_erledigt_0214b13c);break;case TOPICS:title=T(LK_Theorie_Themen_e8712ee4);break;case TOPIC_PICK:title=T(LK_Thema_wahlen_00e51575);break;case ALERT:title=T(LK_Termin_Erinnerung_4c7140c4);break;case PROGRESS_ACTIONS:title=T(LK_Zusatze_verwalten_111554a0);break;case PROGRESS_RESET:title=T(LK_Zusatze_loschen_c505ae07);break;}
  if(page!=HOME){
   GFont font=fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD);GSize size=graphics_text_layout_get_content_size(title,font,GRect(0,0,UI_WIDTH-12,80),GTextOverflowModeWordWrap,GTextAlignmentCenter);int y=(36-size.h)/2-5;graphics_context_set_text_color(ctx,GColorWhite);graphics_draw_text(ctx,title,font,GRect(6,y,UI_WIDTH-12,36-y),GTextOverflowModeWordWrap,GTextAlignmentCenter,NULL);
-  static char subtitle[70];subtitle[0]=0;if(page==PROGRESS)snprintf(subtitle,sizeof(subtitle),"%s",T("OK halten: Zusätze"));else if(page==TOPICS)snprintf(subtitle,sizeof(subtitle),T("Klasse %s | %d Themen"),classes[cfg.cls],topic_count());else if(page==TOPIC_PICK)snprintf(subtitle,sizeof(subtitle),T("Klasse %s"),classes[draft.cls]);
+  static char subtitle[70];subtitle[0]=0;if(page==PROGRESS)snprintf(subtitle,sizeof(subtitle),"%s",T(LK_OK_halten_Zusatze_6fe498bb));else if(page==TOPICS)snprintf(subtitle,sizeof(subtitle),T(LK_Klasse_s_d_Themen_84450d4f),classes[cfg.cls],topic_count());else if(page==TOPIC_PICK)snprintf(subtitle,sizeof(subtitle),T(LK_Klasse_s_8e6c0375),classes[draft.cls]);
   if(subtitle[0])graphics_draw_text(ctx,subtitle,fonts_get_system_font(FONT_KEY_GOTHIC_14),GRect(4,29,UI_WIDTH-8,20),GTextOverflowModeTrailingEllipsis,GTextAlignmentCenter,NULL);
   return;
  }
@@ -458,7 +460,7 @@ static void standard_row(GContext *ctx,const Layer *layer,const char *title,cons
 static bool cell_selected(const Layer *layer){return menu_cell_layer_is_highlighted(layer);}
 static void progress_row(GContext *ctx,const Layer *layer,int row){
 
- const char *const labels[]={"Landstraße","Autobahn","Nachtfahrt","Grundausbildung","Grundstoff","Zusatzstoff","Übungsfahrten"};unsigned value=row<6?counts[cfg.cls][row]:practice[cfg.cls].exercise_units,goal=row<6?targets()[row]:0,rest=(row<4||row==6)?practice[cfg.cls].remainder[row<4?row:4]:0;static char count[32],note[64];if(goal)snprintf(count,sizeof(count),"%u/%u",value,goal);else snprintf(count,sizeof(count),"%u",value);
+ const char *const labels[]={LK_Landstrasse_5984748c,LK_Autobahn_d2c9f448,LK_Nachtfahrt_ffa854d3,LK_Grundausbildung_4b389408,LK_Grundstoff_bae3ed52,LK_Zusatzstoff_614bd4e2,LK_Ubungsfahrten_ad92b736};unsigned value=row<6?counts[cfg.cls][row]:practice[cfg.cls].exercise_units,goal=row<6?targets()[row]:0,rest=(row<4||row==6)?practice[cfg.cls].remainder[row<4?row:4]:0;static char count[32],note[64];if(goal)snprintf(count,sizeof(count),"%u/%u",value,goal);else snprintf(count,sizeof(count),"%u",value);
  int count_width=51;graphics_draw_text(ctx,T(labels[row]),fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD),GRect(6,1,UI_WIDTH-count_width-16,23),GTextOverflowModeTrailingEllipsis,GTextAlignmentLeft,NULL);graphics_draw_text(ctx,count,fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD),GRect(UI_WIDTH-6-count_width,0,count_width,25),GTextOverflowModeTrailingEllipsis,GTextAlignmentRight,NULL);
  
  bool selected=cell_selected(layer);
@@ -480,54 +482,54 @@ static void progress_row(GContext *ctx,const Layer *layer,int row){
  graphics_context_set_stroke_color(ctx,GColorOxfordBlue);
 #endif
  graphics_context_set_stroke_width(ctx,1);graphics_draw_rect(ctx,GRect(6,28,UI_WIDTH-12,7));graphics_context_set_text_color(ctx,selected?UI_SELECTION_TEXT:GColorOxfordBlue);
- if(rest)snprintf(note,sizeof(note),T("+ %u Minuten"),rest);else snprintf(note,sizeof(note),"%s",T(row==4||row==5?"90-Minuten-Einheiten":"45-Minuten-Einheiten"));graphics_draw_text(ctx,note,fonts_get_system_font(FONT_KEY_GOTHIC_14),GRect(6,35,UI_WIDTH-12,19),GTextOverflowModeTrailingEllipsis,GTextAlignmentLeft,NULL);
+ if(rest)snprintf(note,sizeof(note),T(LK_u_Minuten_6e6eddeb),rest);else snprintf(note,sizeof(note),"%s",T(row==4||row==5?LK_90_Minuten_Einheiten_95292d40:LK_45_Minuten_Einheiten_89b80737));graphics_draw_text(ctx,note,fonts_get_system_font(FONT_KEY_GOTHIC_14),GRect(6,35,UI_WIDTH-12,19),GTextOverflowModeTrailingEllipsis,GTextAlignmentLeft,NULL);
 }
 static void topic_row(GContext *ctx,int topic){
 
- static char text[96];if(topic>=12&&cfg.cls!=4)snprintf(text,sizeof(text),T("Zusatzstoff %d"),topic-11);else snprintf(text,sizeof(text),"%s",T(topic_label(cfg.cls,topic)));
+ static char text[96];if(topic>=12&&cfg.cls!=4)snprintf(text,sizeof(text),T(LK_Zusatzstoff_d_555ebbbd),topic-11);else snprintf(text,sizeof(text),"%s",T(topic_label(cfg.cls,topic)));
  graphics_context_set_stroke_width(ctx,2);graphics_draw_rect(ctx,GRect(5,17,14,14));if(topics[cfg.cls]&(1u<<topic)){graphics_draw_line(ctx,GPoint(7,23),GPoint(11,27));graphics_draw_line(ctx,GPoint(11,27),GPoint(17,20));}graphics_draw_text(ctx,text,fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD),GRect(25,0,UI_WIDTH-31,47),GTextOverflowModeWordWrap,GTextAlignmentLeft,NULL);
 }
 static void separator_draw(GContext *ctx,const Layer *layer,MenuIndex *index,void *context){(void)ctx;(void)layer;(void)index;(void)context;}
-static void row_draw(GContext *ctx,const Layer *l,MenuIndex *idx,void *c){(void)c;int r=idx->row;static char title[90],sub[100];title[0]=sub[0]=0;Entry *e=selected_valid()?&entries[selected]:NULL;
+static void row_draw(GContext *ctx,const Layer *l,MenuIndex *idx,void *c){(void)c;int r=idx->row;if(!language_pack_ready()&&page!=ALERT&&!(page==ACTIONS&&(r==2||r==3))){language_setup_notice=true;show_notice("Sprache / Language",1,"Bitte Sprache in den Handy-Einstellungen laden.\n\nLoad a language in the phone settings.\n\nTermine und Alarme bleiben gespeichert.");return;}static char title[90],sub[100];title[0]=sub[0]=0;Entry *e=selected_valid()?&entries[selected]:NULL;
  switch(page){
  case HOME:switch(r){
- case 0:snprintf(title,sizeof(title),T("+ Neuer Termin"));break;
- case 1:snprintf(title,sizeof(title),T("Alle Termine (%d)"),active_count());break;
- case 2:snprintf(title,sizeof(title),T("Stunden buchen (%d)"),pending_count());break;
- case 3:snprintf(title,sizeof(title),T("Pflichtstunden"));break;
- case 4:snprintf(title,sizeof(title),T("Theorie-Themen"));break;
- case 5:snprintf(title,sizeof(title),T("Einstellungen"));break;
- case 6:snprintf(title,sizeof(title),T("Erklärungen"));break;}break;
+ case 0:snprintf(title,sizeof(title),T(LK_Neuer_Termin_39e943e7));break;
+ case 1:snprintf(title,sizeof(title),T(LK_Alle_Termine_d_f64ff486),active_count());break;
+ case 2:snprintf(title,sizeof(title),T(LK_Stunden_buchen_d_dae17580),pending_count());break;
+ case 3:snprintf(title,sizeof(title),T(LK_Pflichtstunden_85cf0708));break;
+ case 4:snprintf(title,sizeof(title),T(LK_Theorie_Themen_e8712ee4));break;
+ case 5:snprintf(title,sizeof(title),T(LK_Einstellungen_3e5af3d1));break;
+ case 6:snprintf(title,sizeof(title),T(LK_Erklarungen_7478dc86));break;}break;
  case SETTINGS:switch(r){
- case 0:snprintf(title,sizeof(title),T("Klasse %s"),classes[cfg.cls]);snprintf(sub,sizeof(sub),T("Termine aller Klassen bleiben"));break;
- case 1:snprintf(title,sizeof(title),T("Ausbildungsprofil"));snprintf(sub,sizeof(sub),T("%s"),T(rules[cfg.profile].label));break;
- case 2:snprintf(title,sizeof(title),T("%s"),alarm_ok?T("Alarm testen"):T("Alarm erneut aktivieren"));snprintf(sub,sizeof(sub),T("%s"),alarm_ok?T("App schließen: Test in 1 Min."):T("Alle gespeicherten Termine prüfen"));break;}break;
+ case 0:snprintf(title,sizeof(title),T(LK_Klasse_s_8e6c0375),classes[cfg.cls]);snprintf(sub,sizeof(sub),T(LK_Termine_aller_Klassen_bleiben_1a97c507));break;
+ case 1:snprintf(title,sizeof(title),T(LK_Ausbildungsprofil_fe95ffc9));snprintf(sub,sizeof(sub),T("%s"),T(rules[cfg.profile].label));break;
+ case 2:snprintf(title,sizeof(title),T("%s"),alarm_ok?T(LK_Alarm_testen_9c4a140c):T(LK_Alarm_erneut_aktivieren_f18225d8));snprintf(sub,sizeof(sub),T("%s"),alarm_ok?T(LK_App_schliessen_Test_in_1_Min_bbc128d6):T(LK_Alle_gespeicherten_Termine_prufen_3317064f));break;}break;
  case EXPLANATIONS:switch(r){
- case 0:snprintf(title,sizeof(title),T("Rechtliche Vorgaben"));snprintf(sub,sizeof(sub),T("FahrschAusbO / Stand 06.11.26"));break;
- case 1:snprintf(title,sizeof(title),T("Bedingungen & Kürzel"));snprintf(sub,sizeof(sub),T("Fahrschul Planer 3.8.42"));break;
- case 2:snprintf(title,sizeof(title),T("Handy-Eingabe"));snprintf(sub,sizeof(sub),T("Einstellungen in der Pebble-App"));break;}break;
- case LIST:case PENDING:{if(page==LIST&&r==0){snprintf(title,sizeof(title),T("+ Neuer Termin"));snprintf(sub,sizeof(sub),T("%d von 24 Plätzen belegt"),active_count());break;}int pos=page==LIST?r-1:r;if(pos>=list_count){snprintf(title,sizeof(title),T("Alles erledigt!"));break;}Entry *x=&entries[list_map[pos]];list_entry_title(x,title,sizeof(title));char dt[32];time_t when=x->when;strftime(dt,sizeof(dt),T("%d.%m. · %H:%M"),localtime(&when));snprintf(sub,sizeof(sub),T("%s%s"),end_time(x)<=time(NULL)?T("Offen: "):T(""),dt);break;}
- case CLASSES:snprintf(title,sizeof(title),T("Klasse %s"),classes[r]);snprintf(sub,sizeof(sub),T("%s"),r==cfg.cls?T("Aktuell ausgewählt"):T("Termine und Fortschritt behalten"));break;
+ case 0:snprintf(title,sizeof(title),T(LK_Rechtliche_Vorgaben_88580760));snprintf(sub,sizeof(sub),T(LK_FahrschAusbO_Stand_06_11_26_f99f7725));break;
+ case 1:snprintf(title,sizeof(title),T(LK_Bedingungen_Kurzel_dd2d41c3));snprintf(sub,sizeof(sub),T(LK_Fahrschul_Planer_3_8_43_2c3f3ee7));break;
+ case 2:snprintf(title,sizeof(title),T(LK_Handy_Eingabe_ded1a7d1));snprintf(sub,sizeof(sub),T(LK_Einstellungen_in_der_Pebble_App_3f190208));break;}break;
+ case LIST:case PENDING:{if(page==LIST&&r==0){snprintf(title,sizeof(title),T(LK_Neuer_Termin_39e943e7));snprintf(sub,sizeof(sub),T(LK_d_von_24_Platzen_belegt_3ea313e3),active_count());break;}int pos=page==LIST?r-1:r;if(pos>=list_count){snprintf(title,sizeof(title),T(LK_Alles_erledigt_99db5fa9));break;}Entry *x=&entries[list_map[pos]];list_entry_title(x,title,sizeof(title));char dt[32];time_t when=x->when;strftime(dt,sizeof(dt),T(LK_d_m_H_M_191558b7),localtime(&when));snprintf(sub,sizeof(sub),T("%s%s"),end_time(x)<=time(NULL)?T(LK_Offen_708ea52e):T(""),dt);break;}
+ case CLASSES:snprintf(title,sizeof(title),T(LK_Klasse_s_8e6c0375),classes[r]);snprintf(sub,sizeof(sub),T("%s"),r==cfg.cls?T(LK_Aktuell_ausgewahlt_70d8c2da):T(LK_Termine_und_Fortschritt_behalten_e899ec9f));break;
  case PROFILES:snprintf(title,sizeof(title),T("%s"),T(rules[r].label));snprintf(sub,sizeof(sub),T("LA %u | AU %u | NA %u"),rules[r].target[0],rules[r].target[1],rules[r].target[2]);break;
  case EDIT:switch(r){
  case 0:snprintf(title,sizeof(title),T("%s"),T(kinds[draft.kind]));break;
- case 1:snprintf(title,sizeof(title),T("Datum"));snprintf(sub,sizeof(sub),T("%02d.%02d.%04d"),draft_tm.tm_mday,draft_tm.tm_mon+1,draft_tm.tm_year+1900);break;
- case 2:snprintf(title,sizeof(title),T("Uhrzeit"));snprintf(sub,sizeof(sub),T("%02d:%02d"),draft_tm.tm_hour,draft_tm.tm_min);break;
- case 3:case 4:snprintf(title,sizeof(title),T("Erinnerung %d"),r-2);lead_text(draft.lead[r-3],sub,sizeof(sub));break;
- case 5:if(draft_uses_minutes())snprintf(title,sizeof(title),T("Dauer: %d Minuten"),duration_minutes(&draft));else snprintf(title,sizeof(title),T("Einheiten: %d"),draft.units);snprintf(sub,sizeof(sub),"%s",T(draft.kind>=5?"Theorie: 90-Minuten-Einheiten":draft_uses_minutes()?"In 5-Minuten-Schritten":"45-Minuten-Einheiten"));break;
- case 6:snprintf(title,sizeof(title),T("Theorie-Thema"));snprintf(sub,sizeof(sub),T("%s"),draft.topic==NO_TOPIC?T("Optional / keine Zuordnung"):T(topic_label(draft.cls,draft.topic)));break;
- case 7:snprintf(title,sizeof(title),T("Termin speichern"));snprintf(sub,sizeof(sub),T("Klasse %s | Abschlussfrage aktiv"),classes[draft.cls]);break;
- case 8:snprintf(title,sizeof(title),T("Abbrechen"));break;}break;
+ case 1:snprintf(title,sizeof(title),T(LK_Datum_df5c3008));snprintf(sub,sizeof(sub),T("%02d.%02d.%04d"),draft_tm.tm_mday,draft_tm.tm_mon+1,draft_tm.tm_year+1900);break;
+ case 2:snprintf(title,sizeof(title),T(LK_Uhrzeit_b0b30059));snprintf(sub,sizeof(sub),T("%02d:%02d"),draft_tm.tm_hour,draft_tm.tm_min);break;
+ case 3:case 4:snprintf(title,sizeof(title),T(LK_Erinnerung_d_530934a0),r-2);lead_text(draft.lead[r-3],sub,sizeof(sub));break;
+ case 5:if(draft_uses_minutes())snprintf(title,sizeof(title),T(LK_Dauer_d_Minuten_2207b039),duration_minutes(&draft));else snprintf(title,sizeof(title),T(LK_Einheiten_d_ad88f070),draft.units);snprintf(sub,sizeof(sub),"%s",T(draft.kind>=5?LK_Theorie_90_Minuten_Einheiten_1ca5e72f:draft_uses_minutes()?LK_In_5_Minuten_Schritten_5baac6b7:LK_45_Minuten_Einheiten_89b80737));break;
+ case 6:snprintf(title,sizeof(title),T(LK_Theorie_Thema_0f0e1da9));snprintf(sub,sizeof(sub),T("%s"),draft.topic==NO_TOPIC?T(LK_Optional_keine_Zuordnung_d3f3e089):T(topic_label(draft.cls,draft.topic)));break;
+ case 7:snprintf(title,sizeof(title),T(LK_Termin_speichern_aa17f0d9));snprintf(sub,sizeof(sub),T(LK_Klasse_s_Abschlussfrage_aktiv_80957490),classes[draft.cls]);break;
+ case 8:snprintf(title,sizeof(title),T(LK_Abbrechen_07af7cb3));break;}break;
  case KINDS:snprintf(title,sizeof(title),T("%s"),T(kinds[draft.cls==14?r+5:r]));break;
  case PROGRESS:break;
- case ACTIONS:if(!e){snprintf(title,sizeof(title),T("Termin nicht mehr vorhanden"));break;}switch(r){case 0:snprintf(title,sizeof(title),T("Termin bearbeiten"));date_text(e->when,sub,sizeof(sub));break;case 1:snprintf(title,sizeof(title),T("Erledigt / Stunden buchen"));snprintf(sub,sizeof(sub),T("%d Minuten | Klasse %s"),duration_minutes(e),classes[e->cls]);break;case 2:snprintf(title,sizeof(title),T("Details & Erinnerungen"));snprintf(sub,sizeof(sub),T("%s"),T(kinds[e->kind]));break;case 3:snprintf(title,sizeof(title),T("In 10 Minuten erinnern"));snprintf(sub,sizeof(sub),T("Zusätzliche Erinnerung"));break;case 4:snprintf(title,sizeof(title),T("Termin löschen"));break;}break;
- case DELETE_CONFIRM:snprintf(title,sizeof(title),T("%s"),r?T("Ja, Termin löschen"):T("Abbrechen"));break;
- case COMPLETE_CONFIRM:if(!e){snprintf(title,sizeof(title),T("Termin nicht mehr vorhanden"));break;}switch(r){case 0:snprintf(title,sizeof(title),T("Ja, Stunden buchen"));snprintf(sub,sizeof(sub),T("%s: %d Min."),T(kinds[e->kind]),duration_minutes(e));break;case 1:snprintf(title,sizeof(title),T("In 30 Minuten fragen"));snprintf(sub,sizeof(sub),T("Noch nicht abgeschlossen"));break;case 2:snprintf(title,sizeof(title),T("Später manuell buchen"));snprintf(sub,sizeof(sub),T("Bleibt unter Stunden buchen"));break;}break;
- case PROGRESS_ACTIONS:{bool theory=progress_counter==4||progress_counter==5;if(r==0){snprintf(title,sizeof(title),T("%s"),theory?T("Manuell bearbeiten"):T("Einheiten bearbeiten"));snprintf(sub,sizeof(sub),T("%s"),theory?T("Häkchen bleiben geschützt"):T("Ganze 45-Minuten-Einheiten"));}else if(!theory&&r==1){snprintf(title,sizeof(title),T("Minuten bearbeiten"));snprintf(sub,sizeof(sub),T("In 5-Minuten-Schritten"));}else{snprintf(title,sizeof(title),T("%s"),theory?T("Manuell löschen"):T("Minuten löschen"));snprintf(sub,sizeof(sub),T("%s"),theory?T("Häkchen bleiben geschützt"):T("Ganze Einheiten bleiben"));}break;}
- case PROGRESS_RESET:snprintf(title,sizeof(title),T("%s"),r?T("Ja, Zusätze löschen"):T("Abbrechen"));break;
+ case ACTIONS:if(!e){snprintf(title,sizeof(title),T(LK_Termin_nicht_mehr_vorhanden_a62acf37));break;}switch(r){case 0:snprintf(title,sizeof(title),T(LK_Termin_bearbeiten_3f6ebbb4));date_text(e->when,sub,sizeof(sub));break;case 1:snprintf(title,sizeof(title),T(LK_Erledigt_Stunden_buchen_ecc5c235));snprintf(sub,sizeof(sub),T(LK_d_Minuten_Klasse_s_dc3ad3c7),duration_minutes(e),classes[e->cls]);break;case 2:snprintf(title,sizeof(title),T(LK_Details_Erinnerungen_7a6a64d6));snprintf(sub,sizeof(sub),T("%s"),T(kinds[e->kind]));break;case 3:snprintf(title,sizeof(title),T(LK_In_10_Minuten_erinnern_43087abe));snprintf(sub,sizeof(sub),T(LK_Zusatzliche_Erinnerung_2263a43a));break;case 4:snprintf(title,sizeof(title),T(LK_Termin_loschen_9bfb61ae));break;}break;
+ case DELETE_CONFIRM:snprintf(title,sizeof(title),T("%s"),r?T(LK_Ja_Termin_loschen_e0ba48da):T(LK_Abbrechen_07af7cb3));break;
+ case COMPLETE_CONFIRM:if(!e){snprintf(title,sizeof(title),T(LK_Termin_nicht_mehr_vorhanden_a62acf37));break;}switch(r){case 0:snprintf(title,sizeof(title),T(LK_Ja_Stunden_buchen_2d1d1f56));snprintf(sub,sizeof(sub),T(LK_s_d_Min_3298839c),T(kinds[e->kind]),duration_minutes(e));break;case 1:snprintf(title,sizeof(title),T(LK_In_30_Minuten_fragen_75fcd236));snprintf(sub,sizeof(sub),T(LK_Noch_nicht_abgeschlossen_980e3738));break;case 2:snprintf(title,sizeof(title),T(LK_Spater_manuell_buchen_58d2bb4f));snprintf(sub,sizeof(sub),T(LK_Bleibt_unter_Stunden_buchen_1ab7aff2));break;}break;
+ case PROGRESS_ACTIONS:{bool theory=progress_counter==4||progress_counter==5;if(r==0){snprintf(title,sizeof(title),T("%s"),theory?T(LK_Manuell_bearbeiten_36c9c1ae):T(LK_Einheiten_bearbeiten_b9c71b65));snprintf(sub,sizeof(sub),T("%s"),theory?T(LK_Hakchen_bleiben_geschutzt_9fd983c9):T(LK_Ganze_45_Minuten_Einheiten_0c307db1));}else if(!theory&&r==1){snprintf(title,sizeof(title),T(LK_Minuten_bearbeiten_c3d8ba37));snprintf(sub,sizeof(sub),T(LK_In_5_Minuten_Schritten_5baac6b7));}else{snprintf(title,sizeof(title),T("%s"),theory?T(LK_Manuell_loschen_07c7e580):T(LK_Minuten_loschen_ed408384));snprintf(sub,sizeof(sub),T("%s"),theory?T(LK_Hakchen_bleiben_geschutzt_9fd983c9):T(LK_Ganze_Einheiten_bleiben_0d6249a0));}break;}
+ case PROGRESS_RESET:snprintf(title,sizeof(title),T("%s"),r?T(LK_Ja_Zusatze_loschen_e89189c5):T(LK_Abbrechen_07af7cb3));break;
  case TOPICS:break;
- case TOPIC_PICK:if(!r){snprintf(title,sizeof(title),T("Keine Zuordnung"));break;}int t=draft.kind==5?r-1:r+11;snprintf(title,sizeof(title),T("%s %d"),draft.kind==5?T("Grundstoff"):T("Zusatzstoff"),r);snprintf(sub,sizeof(sub),T("%s"),T(topic_label(draft.cls,t)));break;
- case ALERT:if(r<alert_count){Entry *x=&entries[alert_queue[r]];list_entry_title(x,title,sizeof(title));date_text(x->when,sub,sizeof(sub));}else if(r==alert_count){snprintf(title,sizeof(title),T("Alle in 10 Min. erinnern"));snprintf(sub,sizeof(sub),T("%d Termin(e)"),alert_count);}else snprintf(title,sizeof(title),T("Erinnerung schließen"));break;
+ case TOPIC_PICK:if(!r){snprintf(title,sizeof(title),T(LK_Keine_Zuordnung_af83cfb5));break;}int t=draft.kind==5?r-1:r+11;snprintf(title,sizeof(title),T("%s %d"),draft.kind==5?T(LK_Grundstoff_bae3ed52):T(LK_Zusatzstoff_614bd4e2),r);snprintf(sub,sizeof(sub),T("%s"),T(topic_label(draft.cls,t)));break;
+ case ALERT:if(r<alert_count){Entry *x=&entries[alert_queue[r]];list_entry_title(x,title,sizeof(title));date_text(x->when,sub,sizeof(sub));}else if(r==alert_count){snprintf(title,sizeof(title),T(LK_Alle_in_10_Min_erinnern_17d35f7f));snprintf(sub,sizeof(sub),T(LK_d_Termin_e_ed32968f),alert_count);}else snprintf(title,sizeof(title),T(LK_Erinnerung_schliessen_a7551e14));break;
  }
  graphics_context_set_text_color(ctx,cell_selected(l)?UI_SELECTION_TEXT:GColorOxfordBlue);graphics_context_set_stroke_color(ctx,cell_selected(l)?UI_SELECTION_TEXT:GColorOxfordBlue);
  if(page==HOME){GFont font=fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD);GSize size=graphics_text_layout_get_content_size(title,font,GRect(0,0,1000,30),GTextOverflowModeWordWrap,GTextAlignmentLeft);if(size.w>UI_WIDTH-26)font=fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD);graphics_draw_text(ctx,title,font,GRect(6,3,UI_WIDTH-23,30),GTextOverflowModeTrailingEllipsis,GTextAlignmentLeft,NULL);row_chevron(ctx,34);}
@@ -542,7 +544,7 @@ static void row_draw(GContext *ctx,const Layer *l,MenuIndex *idx,void *c){(void)
 static void clear_alerts(void){alert_count=0;memset(alert_seen,0,sizeof(alert_seen));}
 static void clear_completion(int index){completion_seen[index]=false;for(int i=0;i<completion_count;i++)if(completion_queue[i]==index){for(int j=i+1;j<completion_count;j++)completion_queue[j-1]=completion_queue[j];completion_count--;break;}}
 static void snooze_entry(int index){entries[index].snooze=time(NULL)+600;store_entry(index);store_revision();}
-static void details(Entry *e){static char text[650],dt[32],end[32],a[32],b[32];date_text(e->when,dt,sizeof(dt));date_text(end_time(e),end,sizeof(end));lead_text(e->lead[0],a,sizeof(a));lead_text(e->lead[1],b,sizeof(b));snprintf(text,sizeof(text),T("KLASSE %s\n%s\n%s\n\n%d Minuten\nGeplantes Ende:\n%s\n\nErinnerung 1: %s\nErinnerung 2: %s\n\n%s\n\nThema: %s"),classes[e->cls],T(kinds[e->kind]),dt,duration_minutes(e),end,a,b,alarm_ok?T("Systemalarm aktiv"):T("Alarmfehler! Erneut aktivieren"),e->topic==NO_TOPIC?T("Keine Zuordnung"):T(topic_label(e->cls,e->topic)));show_notice(T("Termindetails"),6,text);}
+static void details(Entry *e){static char text[650],dt[32],end[32],a[32],b[32];date_text(e->when,dt,sizeof(dt));date_text(end_time(e),end,sizeof(end));lead_text(e->lead[0],a,sizeof(a));lead_text(e->lead[1],b,sizeof(b));snprintf(text,sizeof(text),T("KLASSE %s\n%s\n%s\n\n%d Minuten\nGeplantes Ende:\n%s\n\nErinnerung 1: %s\nErinnerung 2: %s\n\n%s\n\nThema: %s"),classes[e->cls],T(kinds[e->kind]),dt,duration_minutes(e),end,a,b,alarm_ok?T(LK_Systemalarm_aktiv_53c692bd):T(LK_Alarmfehler_Erneut_aktivieren_0148dc48),e->topic==NO_TOPIC?T(LK_Keine_Zuordnung_af83cfb5):T(topic_label(e->cls,e->topic)));show_notice(T(LK_Termindetails_e5ad8bb2),6,text);}
 static void choose_class(int cls){
  bool first_setup=cfg.cls<0;
  cfg.cls=cls;cfg.profile=profiles[cls];load_rules();store_config();store_revision();
@@ -554,26 +556,26 @@ static void select_row(MenuLayer *m,MenuIndex *idx,void *ctx){(void)m;(void)ctx;
  case 0:begin_edit(-1);break;
  case 1:show_page(LIST);break;case 2:show_page(PENDING);break;case 3:show_page(PROGRESS);break;case 4:show_page(TOPICS);break;case 5:show_page(SETTINGS);break;case 6:show_page(EXPLANATIONS);break;}break;
  case SETTINGS:switch(r){case 0:show_page(CLASSES);break;case 1:show_page(PROFILES);break;
- case 2:if(!alarm_ok){process_events(false);show_notice(T("Alarmstatus"),3,alarm_ok?T("Alle Alarme sind wieder aktiv."):T("Alarme weiter blockiert. Bitte Uhr neu starten und hier erneut versuchen. Termine bleiben gespeichert."));}else{test_at=time(NULL)+60;persist_write_int(28,test_at);schedule_next();show_info(T("Alarmtest"),3,alarm_ok?T("ALARMTEST\n\nApp jetzt schließen. In einer Minute öffnet sich die App mit Vibration. Deine Termine bleiben erhalten."):T("Testalarm konnte nicht aktiviert werden."));}break;
+ case 2:if(!alarm_ok){process_events(false);show_notice(T(LK_Alarmstatus_b0ff7d4e),3,alarm_ok?T(LK_Alle_Alarme_sind_wieder_aktiv_f9e49aca):T("Alarme weiter blockiert. Bitte Uhr neu starten und hier erneut versuchen. Termine bleiben gespeichert."));}else{test_at=time(NULL)+60;persist_write_int(28,test_at);schedule_next();show_info(T(LK_Alarmtest_c4d250b1),3,alarm_ok?T("ALARMTEST\n\nApp jetzt schließen. In einer Minute öffnet sich die App mit Vibration. Deine Termine bleiben erhalten."):T(LK_Testalarm_konnte_nicht_aktiviert_werden_cd071da0));}break;
 }break;
  case EXPLANATIONS:switch(r){
- case 2:show_info(T("Handy-Eingabe"),2,T("HANDY-EINGABE\n\nIn der Pebble-App beim Fahrschul Planer die Einstellungen öffnen. Dort Termine anlegen, bearbeiten und löschen.\n\nZur Übertragung die Uhr-App öffnen und Bluetooth verbinden.\n\nDie Uhr bleibt vollständig ohne diese Zusatzfunktion bedienbar."));break;
- case 1:show_info(T("Bedingungen & Kürzel"),1,T("FAHRSCHUL PLANER 3.8.42\n\n24 Termine, 2 Erinnerungen und 10-Min.-Schlummern.\nNach dem geplanten Ende fragt die Uhr nach Stunden. Gebucht wird nur nach Bestätigung.\n\nLA Landstraße / AU Autobahn\nNA Nacht / UE Übung\nGA Grundausbildung\nGS Grundstoff / ZS Zusatzstoff\n\nPraxis ab 45 Min., +5-Min.-Schritte.\n45 Restminuten ergeben 1 Einheit.\nTheorie je 90 Min.\nTheorie-Häkchen zählen als eine 90-Minuten-Einheit. Entfernen zieht diese Einheit ab. Zugeordnete Theorie-Termine zählen dasselbe Thema nicht doppelt.\nGS/ZS manuell bearbeitet nur zusätzliche Einheiten. Häkchen bleiben geschützt und können nur in der Themenliste entfernt werden.\n\nOben/Unten scrollen. Mitte wählt, Zurück schließt. OK unter Pflichtstunden halten: Zusätze bearbeiten oder löschen. Neue Termine: 01:00 und 00:30 vorher. Erinnerung 2 lässt sich direkt im Termin auf Aus stellen.\n\nVersion 3.8.42\n(Idee by Traumlewis | Code by Codex)"));break;
- case 0:show_info(T("Rechtliche Vorgaben"),0,T("PFLICHTSTUNDEN\n\nFahrschAusbO: Par. 4, Anlagen 1, 2.2, 2.8, 4 und 5. Stand 06.11.2026.\n\nProfil passend zum Vorbesitz wählen. 0 = keine feste Mindestzahl, nicht keine Ausbildung.\n\nThemen sind eine Lernhilfe; Reihenfolge mit Fahrschule abstimmen. Zusatzstoff außer B wird als nummerierte Liste geführt.\n\nDetails in QUELLEN.md."));break;}break;
+ case 2:show_info(T(LK_Handy_Eingabe_ded1a7d1),2,T("HANDY-EINGABE\n\nIn der Pebble-App beim Fahrschul Planer die Einstellungen öffnen. Dort Termine anlegen, bearbeiten und löschen.\n\nZur Übertragung die Uhr-App öffnen und Bluetooth verbinden.\n\nDie Uhr bleibt vollständig ohne diese Zusatzfunktion bedienbar."));break;
+ case 1:show_info(T(LK_Bedingungen_Kurzel_dd2d41c3),1,T("FAHRSCHUL PLANER 3.8.43\n\n24 Termine, 2 Erinnerungen und 10-Min.-Schlummern.\nNach dem geplanten Ende fragt die Uhr nach Stunden. Gebucht wird nur nach Bestätigung.\n\nLA Landstraße / AU Autobahn\nNA Nacht / UE Übung\nGA Grundausbildung\nGS Grundstoff / ZS Zusatzstoff\n\nPraxis ab 45 Min., +5-Min.-Schritte.\n45 Restminuten ergeben 1 Einheit.\nTheorie je 90 Min.\nTheorie-Häkchen zählen als eine 90-Minuten-Einheit. Entfernen zieht diese Einheit ab. Zugeordnete Theorie-Termine zählen dasselbe Thema nicht doppelt.\nGS/ZS manuell bearbeitet nur zusätzliche Einheiten. Häkchen bleiben geschützt und können nur in der Themenliste entfernt werden.\n\nOben/Unten scrollen. Mitte wählt, Zurück schließt. OK unter Pflichtstunden halten: Zusätze bearbeiten oder löschen. Neue Termine: 01:00 und 00:30 vorher. Erinnerung 2 lässt sich direkt im Termin auf Aus stellen.\n\nVersion 3.8.43\n(Idee by Traumlewis | Code by Codex)"));break;
+ case 0:show_info(T(LK_Rechtliche_Vorgaben_88580760),0,T("PFLICHTSTUNDEN\n\nFahrschAusbO: Par. 4, Anlagen 1, 2.2, 2.8, 4 und 5. Stand 06.11.2026.\n\nProfil passend zum Vorbesitz wählen. 0 = keine feste Mindestzahl, nicht keine Ausbildung.\n\nThemen sind eine Lernhilfe; Reihenfolge mit Fahrschule abstimmen. Zusatzstoff außer B wird als nummerierte Liste geführt.\n\nDetails in QUELLEN.md."));break;}break;
  case LIST:case PENDING:if(page==LIST&&!r){begin_edit(-1);break;}r-=page==LIST?1:0;if(r>=0&&r<list_count){selected=list_map[r];show_page(ACTIONS);}break;
  case CLASSES:choose_class(r);break;
  case PROFILES:cfg.profile=r;store_config();store_revision();if(navigation_depth&&navigation[0].page==HOME&&navigation_depth>1)return_to(SETTINGS);else return_to(HOME);break;
- case EDIT:switch(r){case 0:show_page(KINDS);menu_layer_set_selected_index(menu,MenuIndex(0,draft.cls==14?draft.kind-5:draft.kind),MenuRowAlignCenter,false);break;case 1:edit_datetime(0);break;case 2:edit_datetime(1);break;case 3:edit_number(5,T("Erinnerung 1"),draft.lead[0]/15,1,192);break;case 4:edit_number(6,T("Erinnerung 2"),draft.lead[1]/15,0,192);break;case 5:if(draft_uses_minutes())edit_number(7,T("Praxisdauer (Minuten)"),duration_minutes(&draft)/5,9,108);else edit_number(7,T(draft.kind>=5?"Theorie-Einheiten":"Praxis-Einheiten"),draft.units,1,12);break;case 6:if(draft.kind>=5)show_page(TOPIC_PICK);else show_notice(T("Theorie-Thema"),1,T("Themen sind nur für Theorie-Termine verfügbar."));break;case 7:save_draft();break;case 8:return_page();break;}break;
+ case EDIT:switch(r){case 0:show_page(KINDS);menu_layer_set_selected_index(menu,MenuIndex(0,draft.cls==14?draft.kind-5:draft.kind),MenuRowAlignCenter,false);break;case 1:edit_datetime(0);break;case 2:edit_datetime(1);break;case 3:edit_number(5,T(LK_Erinnerung_1_940250b1),draft.lead[0]/15,1,192);break;case 4:edit_number(6,T(LK_Erinnerung_2_7c4d39d4),draft.lead[1]/15,0,192);break;case 5:if(draft_uses_minutes())edit_number(7,T(LK_Praxisdauer_Minuten_f86b6821),duration_minutes(&draft)/5,9,108);else edit_number(7,T(draft.kind>=5?LK_Theorie_Einheiten_03c02c33:LK_Praxis_Einheiten_618b345c),draft.units,1,12);break;case 6:if(draft.kind>=5)show_page(TOPIC_PICK);else show_notice(T(LK_Theorie_Thema_0f0e1da9),1,T(LK_Themen_sind_nur_fur_Theorie_Termine_verfugbar_5dac2058));break;case 7:save_draft();break;case 8:return_page();break;}break;
  case KINDS:draft.kind=draft.cls==14?r+5:r;draft.topic=NO_TOPIC;if(!draft_uses_minutes())draft.extra_minutes=0;return_page();break;
- case PROGRESS:if(r>=4&&r<6){unsigned protected=topic_units(cfg.cls,r);edit_number(10+r,r==4?T("Grundstoff: manuell"):T("Zusatzstoff: manuell"),counts[cfg.cls][r]-protected,0,999-protected);}else if(r<4)edit_number(10+r,T(counters[r]),counts[cfg.cls][r],0,999);else edit_number(16,T("Übungsfahrten"),practice[cfg.cls].exercise_units,0,999);break;
- case PROGRESS_ACTIONS:if(!progress_can_hold(progress_counter)&&r!=0)break;if(r==0){Page old=page;page=PROGRESS;MenuIndex index=MenuIndex(0,progress_counter);select_row(menu,&index,NULL);page=old;}else if(r==1&&progress_counter!=4&&progress_counter!=5){int slot=progress_counter<4?progress_counter:4;edit_number(17,T("Zusatzminuten"),practice[cfg.cls].remainder[slot]/5,0,extra_minutes_limit(cfg.cls,progress_counter)/5);}else show_page(PROGRESS_RESET);break;
- case PROGRESS_RESET:if(r){bool theory=progress_counter==4||progress_counter==5;bool ok=theory?set_progress_count(cfg.cls,progress_counter,topic_units(cfg.cls,progress_counter)):set_extra_minutes(cfg.cls,progress_counter,0);if(!ok){show_notice(T("Fortschritt"),5,T("Fortschritt nicht gespeichert. Bitte App neu starten."));break;}}if(r)return_to(PROGRESS);else return_page();if(r)show_status(T("Zusätze gelöscht"),T("Pflichtstunden"));break;
- case TOPICS:if(toggle_topic(cfg.cls,r))refresh();else show_notice(T("Theorie-Themen"),1,T("Thema nicht gespeichert. Bitte App neu starten."));break;
+ case PROGRESS:if(r>=4&&r<6){unsigned protected=topic_units(cfg.cls,r);edit_number(10+r,r==4?T(LK_Grundstoff_manuell_0a5ee3e4):T(LK_Zusatzstoff_manuell_632c7a08),counts[cfg.cls][r]-protected,0,999-protected);}else if(r<4)edit_number(10+r,T(counters[r]),counts[cfg.cls][r],0,999);else edit_number(16,T(LK_Ubungsfahrten_ad92b736),practice[cfg.cls].exercise_units,0,999);break;
+ case PROGRESS_ACTIONS:if(!progress_can_hold(progress_counter)&&r!=0)break;if(r==0){Page old=page;page=PROGRESS;MenuIndex index=MenuIndex(0,progress_counter);select_row(menu,&index,NULL);page=old;}else if(r==1&&progress_counter!=4&&progress_counter!=5){int slot=progress_counter<4?progress_counter:4;edit_number(17,T(LK_Zusatzminuten_b29c7da2),practice[cfg.cls].remainder[slot]/5,0,extra_minutes_limit(cfg.cls,progress_counter)/5);}else show_page(PROGRESS_RESET);break;
+ case PROGRESS_RESET:if(r){bool theory=progress_counter==4||progress_counter==5;bool ok=theory?set_progress_count(cfg.cls,progress_counter,topic_units(cfg.cls,progress_counter)):set_extra_minutes(cfg.cls,progress_counter,0);if(!ok){show_notice(T(LK_Fortschritt_8dc68203),5,T(LK_Fortschritt_nicht_gespeichert_Bitte_App_neu_s_2095b54e));break;}}if(r)return_to(PROGRESS);else return_page();if(r)show_status(T(LK_Zusatze_geloscht_86ee3f20),T(LK_Pflichtstunden_85cf0708));break;
+ case TOPICS:if(toggle_topic(cfg.cls,r))refresh();else show_notice(T(LK_Theorie_Themen_e8712ee4),1,T(LK_Thema_nicht_gespeichert_Bitte_App_neu_starten_adb2776d));break;
  case TOPIC_PICK:draft.topic=!r?NO_TOPIC:draft.kind==5?r-1:r+11;return_page();break;
- case ACTIONS:if(!e){return_to(HOME);break;}switch(r){case 0:begin_edit(selected);break;case 1:if(end_time(e)>time(NULL))show_notice(T("Stunden buchen"),1,T("Der Unterricht ist laut Planung noch nicht beendet. Danach kannst du die Stunden bestätigen. Vorhandene Stunden sind unter Pflichtstunden korrigierbar."));else show_page(COMPLETE_CONFIRM);break;case 2:details(e);break;case 3:snooze_entry(selected);clear_alerts();schedule_next();return_to(HOME);if(alarm_ok)show_status(T("In 10 Minuten"),T("Erneute Erinnerung"));else show_notice(T("Alarmstatus"),3,T("Schlummern gespeichert, aber Alarm blockiert! Bitte Alarm erneut aktivieren."));break;case 4:show_page(DELETE_CONFIRM);break;}break;
- case DELETE_CONFIRM:if(r&&e){Entry old=*e;e->active=0;if(!store_entry(selected)){*e=old;show_notice(T("Löschfehler"),4,T("Löschen nicht gespeichert. Bitte neu starten."));break;}store_revision();state_changed();}else return_page();break;
- case COMPLETE_CONFIRM:if(!e){return_to(HOME);break;}if(r==0){if(book_entry(selected)){clear_completion(selected);state_changed();if(completion_count)surface_alerts();else show_status(T("Stunden gebucht"),T("Fortschritt aktualisiert"));}else show_notice(T("Buchungsfehler"),4,T("Buchung nicht gespeichert oder Unterricht noch nicht beendet. Bitte prüfen und App bei Speicherfehler neu starten."));}else{if(r==1)e->review=time(NULL)+1800;e->flags|=ASKED;store_entry(selected);store_revision();clear_completion(selected);schedule_next();if(completion_count)surface_alerts();else return_to(HOME);}break;
- case ALERT:if(r<alert_count){selected=alert_queue[r];show_page(ACTIONS);}else if(r==alert_count){for(int i=0;i<alert_count;i++)if(entries[alert_queue[i]].active)snooze_entry(alert_queue[i]);clear_alerts();schedule_next();return_to(HOME);if(alarm_ok)show_status(T("In 10 Minuten"),T("Erneute Erinnerung"));else show_notice(T("Alarmstatus"),3,T("Alarmfehler! Bitte unter Einstellungen erneut aktivieren."));}else{clear_alerts();if(completion_count)surface_alerts();else return_to(HOME);}break;
+ case ACTIONS:if(!e){return_to(HOME);break;}switch(r){case 0:begin_edit(selected);break;case 1:if(end_time(e)>time(NULL))show_notice(T(LK_Stunden_buchen_5d717818),1,T("Der Unterricht ist laut Planung noch nicht beendet. Danach kannst du die Stunden bestätigen. Vorhandene Stunden sind unter Pflichtstunden korrigierbar."));else show_page(COMPLETE_CONFIRM);break;case 2:details(e);break;case 3:snooze_entry(selected);clear_alerts();schedule_next();return_to(HOME);if(alarm_ok)show_status(T(LK_In_10_Minuten_77b8836e),T(LK_Erneute_Erinnerung_577b9f7b));else show_notice(T(LK_Alarmstatus_b0ff7d4e),3,T(LK_Schlummern_gespeichert_aber_Alarm_blockiert_B_ef01bf8a));break;case 4:show_page(DELETE_CONFIRM);break;}break;
+ case DELETE_CONFIRM:if(r&&e){Entry old=*e;e->active=0;if(!store_entry(selected)){*e=old;show_notice(T(LK_Loschfehler_2e07ae38),4,T(LK_Loschen_nicht_gespeichert_Bitte_neu_starten_8c2263fa));break;}store_revision();state_changed();}else return_page();break;
+ case COMPLETE_CONFIRM:if(!e){return_to(HOME);break;}if(r==0){if(book_entry(selected)){clear_completion(selected);state_changed();if(completion_count)surface_alerts();else show_status(T(LK_Stunden_gebucht_8ffcdc18),T(LK_Fortschritt_aktualisiert_7ce53448));}else show_notice(T(LK_Buchungsfehler_9e2083de),4,T("Buchung nicht gespeichert oder Unterricht noch nicht beendet. Bitte prüfen und App bei Speicherfehler neu starten."));}else{if(r==1)e->review=time(NULL)+1800;e->flags|=ASKED;store_entry(selected);store_revision();clear_completion(selected);schedule_next();if(completion_count)surface_alerts();else return_to(HOME);}break;
+ case ALERT:if(r<alert_count){selected=alert_queue[r];show_page(ACTIONS);}else if(r==alert_count){for(int i=0;i<alert_count;i++)if(entries[alert_queue[i]].active)snooze_entry(alert_queue[i]);clear_alerts();schedule_next();return_to(HOME);if(alarm_ok)show_status(T(LK_In_10_Minuten_77b8836e),T(LK_Erneute_Erinnerung_577b9f7b));else show_notice(T(LK_Alarmstatus_b0ff7d4e),3,T(LK_Alarmfehler_Bitte_unter_Einstellungen_erneut__aa2b7c63));}else{clear_alerts();if(completion_count)surface_alerts();else return_to(HOME);}break;
  }
 }
 static void back(ClickRecognizerRef r,void *ctx){
@@ -624,7 +626,8 @@ static void init(void){
  window_set_touch_bridge_disabled(window,true);window_set_touch_bridge_disabled(num_window,true);window_set_touch_bridge_disabled(date_window,true);window_set_touch_bridge_disabled(msg_window,true);
 #endif
  wakeup_service_subscribe(wake_handler);tick_timer_service_subscribe(MINUTE_UNIT,minute_tick);phone_init();process_events(true);
- if(storage_error)show_notice(T("Speicherfehler"),4,T("SPEICHERFEHLER\n\nBitte Uhr-App neu starten. Gespeicherte Daten werden beim Start erneut geladen. Bis dahin keine weiteren Änderungen vornehmen."));
+ if(!language_pack_ready()&&!alert_count){language_setup_notice=true;show_notice("Sprache / Language",1,"Bitte Sprache in den Handy-Einstellungen laden.\n\nLoad a language in the phone settings.\n\nTermine und Alarme bleiben gespeichert.");}
+ if(storage_error)show_notice(T(LK_Speicherfehler_71eed920),4,T("SPEICHERFEHLER\n\nBitte Uhr-App neu starten. Gespeicherte Daten werden beim Start erneut geladen. Bis dahin keine weiteren Änderungen vornehmen."));
 }
 static void deinit(void){layer_destroy(info_header);layer_destroy(footer_layer);dismiss_status();layer_destroy(status_layer);window_destroy(status_window);cancel_progress_touch();
 #if 0 // Legacy watches use physical buttons only.

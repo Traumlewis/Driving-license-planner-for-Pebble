@@ -1,8 +1,20 @@
 {
-  "strings": 284,
-  "bytes": 2317,
-  "parts": 19,
-  "id": 202810302,
-  "crc": 894696415,
-  "maxTextBytes": 60
+  "strings": 283,
+  "languages": [
+    {
+      "language": 0,
+      "id": 1147276918,
+      "crc": 1348101711,
+      "size": 2359,
+      "chunks": 19
+    },
+    {
+      "language": 1,
+      "id": 145853700,
+      "crc": 3553108756,
+      "size": 2314,
+      "chunks": 19
+    }
+  ],
+  "maxTextBytes": 96
 }

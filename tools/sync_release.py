@@ -2,6 +2,7 @@
 """Keep watch explanations, translation sources and package metadata on one release version."""
 from pathlib import Path
 import ast,io,json,re,subprocess,sys,tokenize
+from generate_language_pack import restore_project
 ROOT=Path(__file__).resolve().parents[1]
 TARGETS={'time2':['emery'],'core2duo':['flint'],'round2':['gabbro'],'time-pebble2':['basalt','diorite'],'timeround':['chalk']}
 CREDIT='(Idee by Traumlewis | Code by Codex)'
@@ -18,7 +19,7 @@ def sync():
             value=value.rstrip()+'\n\nVersion '+version+'\n'+CREDIT
         return value
     for project,platforms in TARGETS.items():
-        folder=ROOT/'projects'/project;pkgpath=folder/'package.json';pkg=json.loads(pkgpath.read_text());pkg['version']=version;pkg['author']=developer;pkg['pebble']['targetPlatforms']=platforms
+        folder=ROOT/'projects'/project;restore_project(folder);pkgpath=folder/'package.json';pkg=json.loads(pkgpath.read_text());pkg['version']=version;pkg['author']=developer;pkg['pebble']['targetPlatforms']=platforms
         media=[]
         for original in pkg['pebble']['resources']['media']:
             item=dict(original)

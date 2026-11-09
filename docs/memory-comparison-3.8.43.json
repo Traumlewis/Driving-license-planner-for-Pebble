@@ -1,0 +1,151 @@
+{
+  "baseline": "3.8.42",
+  "version": "3.8.43",
+  "builds": [
+    {
+      "platform": "emery",
+      "before": {
+        "resources": 8545,
+        "ram": 66392,
+        "heap": 64680
+      },
+      "after": {
+        "resources": 10293,
+        "ram": 64096,
+        "heap": 66976
+      },
+      "heapGain": 2296
+    },
+    {
+      "platform": "flint",
+      "before": {
+        "resources": 10544,
+        "ram": 57662,
+        "heap": 7874
+      },
+      "after": {
+        "resources": 12292,
+        "ram": 55240,
+        "heap": 10296
+      },
+      "heapGain": 2422
+    },
+    {
+      "platform": "diorite",
+      "before": {
+        "resources": 10544,
+        "ram": 57618,
+        "heap": 7918
+      },
+      "after": {
+        "resources": 12292,
+        "ram": 55192,
+        "heap": 10344
+      },
+      "heapGain": 2426
+    },
+    {
+      "platform": "basalt",
+      "before": {
+        "resources": 9013,
+        "ram": 57590,
+        "heap": 7946
+      },
+      "after": {
+        "resources": 10761,
+        "ram": 55168,
+        "heap": 10368
+      },
+      "heapGain": 2422
+    },
+    {
+      "platform": "gabbro",
+      "before": {
+        "resources": 8545,
+        "ram": 64025,
+        "heap": 67047
+      },
+      "after": {
+        "resources": 10293,
+        "ram": 61462,
+        "heap": 69610
+      },
+      "heapGain": 2563
+    },
+    {
+      "platform": "chalk",
+      "before": {
+        "resources": 9013,
+        "ram": 60496,
+        "heap": 5040
+      },
+      "after": {
+        "resources": 10761,
+        "ram": 58076,
+        "heap": 7460
+      },
+      "heapGain": 2420
+    }
+  ],
+  "storedBytes": {
+    "DE": 2375,
+    "EN": 2330
+  },
+  "transientIncomingBytes": {
+    "DE": 2359,
+    "EN": 2314
+  },
+  "runtimeTimeRound": {
+    "DE": {
+      "id": 1147276918,
+      "language": 0,
+      "bytes": 2359,
+      "ready": true,
+      "received": 524287,
+      "storedBytes": 2375,
+      "stagedBytes": 0,
+      "heapFree": 3864
+    },
+    "during_EN": {
+      "id": 1147276918,
+      "language": 0,
+      "bytes": 2359,
+      "ready": true,
+      "received": 1,
+      "storedBytes": 2375,
+      "stagedBytes": 2314,
+      "heapFree": 1544
+    },
+    "interrupted": {
+      "id": 1147276918,
+      "language": 0,
+      "bytes": 2359,
+      "ready": true,
+      "received": 524287,
+      "storedBytes": 2375,
+      "stagedBytes": 0,
+      "heapFree": 3864
+    },
+    "EN": {
+      "id": 145853700,
+      "language": 1,
+      "bytes": 2314,
+      "ready": true,
+      "received": 524287,
+      "storedBytes": 2330,
+      "stagedBytes": 0,
+      "heapFree": 3864
+    },
+    "back_DE": {
+      "id": 1147276918,
+      "language": 0,
+      "bytes": 2359,
+      "ready": true,
+      "received": 524287,
+      "storedBytes": 2375,
+      "stagedBytes": 0,
+      "heapFree": 3864
+    }
+  },
+  "pbwSha256": "d79588f00bc752ca35d50fe1f4e662e23827ce7583564f7a7faf9f400b934db3"
+}

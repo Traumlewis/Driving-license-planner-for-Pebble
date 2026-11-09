@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.8.43 — Development language-swap experiment
+
+- Replace the persisted DE/EN menu packet when changing languages; the inactive packet stays on the phone and is transferred again when selected.
+- Replace compiled German menu keys with generated symbolic text IDs, increasing available build heap by approximately 2.3–2.6KB across supported targets. Keep a small loading/emergency fallback and the existing bundled long explanations.
+- Stage downloads in temporary RAM to preserve the old language across interrupted/corrupt downloads. Verify before flash commit and provide recovery for missing packets.
+- Record native persistent-storage and RAM measurements. Keep public releases manual and test files marked (DEV).
+
 ## 3.8.42 — Development language-pack prototype
 
 - Transfer the English menu/control translations from the phone in acknowledged, small chunks and retain the verified package for offline use. German remains available as the fallback; longer English explanations remain bundled for this first test.

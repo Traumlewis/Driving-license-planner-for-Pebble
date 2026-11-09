@@ -8,6 +8,8 @@ def body(source,marker):
  return source[start:b-1]
 for project,platform in [('time2','EMERY'),('core2duo','FLINT'),('time-pebble2','BASALT'),('time-pebble2','DIORITE'),('round2','GABBRO'),('timeround','CHALK')]:
  folder=ROOT/'projects'/project;s=(folder/'src/c/main.c').read_text();round_device=project in ['round2','timeround']
+ keymap=json.loads((folder/'tools/language-key-map.json').read_text())
+ fake_translate='static const char *fake_translate(const char *s){if(!s)return s;\n'+'\n'.join('if(!strcmp(s,'+key+'))return '+json.dumps(value,ensure_ascii=False)+';' for key,value in keymap.items())+'\nreturn s;}\n'
  code=body(s,'else if(page==PROGRESS){') if round_device else body(s,'static void progress_row(')
  if round_device:code='int r=row,left=8,width=164,h=56;bool selected=false;(void)h;'+code
  prefix=r'''
@@ -16,12 +18,12 @@ for project,platform in [('time2','EMERY'),('core2duo','FLINT'),('time-pebble2',
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
-'''+ '#include '+json.dumps(str(folder/'src/c/rules.h'))+r'''
+'''+ '#include '+json.dumps(str(folder/'src/c/rules.h'))+'\n'+fake_translate+r'''
 typedef int GContext;typedef int Layer;typedef int GFont;
 typedef struct {int w,h;} GSize;
 typedef struct {int x,y,w,h;} GRect;
 #define GRect(x,y,w,h) ((GRect){x,y,w,h})
-#define T(x) (x)
+#define T(x) fake_translate(x)
 #define UI_WIDTH 144
 #define UI_SELECTION_TEXT 0
 #define GColorWhite 1

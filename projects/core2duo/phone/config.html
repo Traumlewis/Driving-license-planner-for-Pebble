@@ -103,7 +103,7 @@ function applyState(next,result){
  var firstFresh=!state.fresh&&next.fresh;
  state=next;extras=state.extras||extras;
  var lp=state.languagePack;
- if(lp)$('languagePackStatus').textContent=lp.transferring?(Number(state.language)?'Transferring English language pack…':'Englisches Sprachpaket wird übertragen…'):lp.ready?(Number(state.language)?'English pack saved on watch · available offline':'Englisch-Paket auf der Uhr gespeichert · offline verfügbar'):(Number(state.language)?'English pack will be transferred when selected':'Englisch-Paket wird bei Auswahl übertragen');
+ if(lp){var packName=lp.language===0?'Deutsch':'English';$('languagePackStatus').textContent=lp.transferring?(Number(state.language)?'Transferring selected language pack…':'Ausgewähltes Sprachpaket wird übertragen…'):lp.ready?(Number(state.language)?packName+' pack on watch · other language stays on phone':packName+'-Paket auf der Uhr · andere Sprache auf dem Handy'):(Number(state.language)?'Connect the watch to load its language pack':'Uhr verbinden, um das Sprachpaket zu laden');}
  var nextLang=Number(state.language||0);
  // Polling updates data, never rebuilds the form's option lists or overwrites a language preview.
  if(!languageDirty&&lang!==nextLang){lang=nextLang;$('language').value=lang;localize();}
