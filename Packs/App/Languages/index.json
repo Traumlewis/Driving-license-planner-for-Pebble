@@ -26,5 +26,46 @@
         "watchLanguage": null
       }
     ]
+  },
+  "watchPacks": {
+    "37bc2f9e-faa262da": {
+      "format": "LP4/shared-bpe-v1",
+      "schemaId": 935079838,
+      "codecId": 4204946138,
+      "tag": "37bc2f9e-faa262da",
+      "maxBytes": 2560,
+      "languages": [
+        {
+          "locale": "de",
+          "name": "Deutsch",
+          "language": 0,
+          "id": 2108833273,
+          "crc": 1182286825,
+          "size": 2512,
+          "file": "watch/37bc2f9e-faa262da/de.json",
+          "sha256": "ad3053cf8058840a0577bf5a9dfe83ce16011e329d466f1afdca7ea35d52203a"
+        },
+        {
+          "locale": "en",
+          "name": "English",
+          "language": 1,
+          "id": 2943873964,
+          "crc": 1898161174,
+          "size": 2303,
+          "file": "watch/37bc2f9e-faa262da/en.json",
+          "sha256": "b437e8a624ca8c6fe1af6d9c634a4237e39fe9f279ec880bcc142b7bf7f074d2"
+        },
+        {
+          "locale": "es",
+          "name": "Español",
+          "language": 2,
+          "id": 391850661,
+          "crc": 4246600689,
+          "size": 2520,
+          "file": "watch/37bc2f9e-faa262da/es.json",
+          "sha256": "747d0cf39b7a8c4dd6fc8d0cd641346f21bd99cb93e0646aa8869ae772b7eefd"
+        }
+      ]
+    }
   }
 }
