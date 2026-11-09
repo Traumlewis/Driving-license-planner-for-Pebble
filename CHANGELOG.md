@@ -1,5 +1,14 @@
 # Changelog
 
+## 3.8.46 — Development: dynamic phone settings languages
+
+- Load the settings-language list and translations from GitHub; add compatible phone-only translations without rebuilding the PBW.
+- Cache one selected settings packet, verify hashes/schema and preserve it on failed downloads or offline restart. Retain an English fallback.
+- Keep watch language separate: DE/EN can be applied to the watch; additional settings languages are marked phone only. Additional watch decoders/glyphs are deferred.
+- Preserve form edits and selection during localization and automatic polling; support both current bridge and legacy settings pages.
+- Add a packet registration helper and browser/bridge/live HTTPS tests. Combined six-target DEV build; source updates only, no GitHub Release.
+
+
 ## 3.8.45 — Development: Germany packet paths
 
 - Rename the canonical country directory to `Packs/Germany/Languages`; update generation, downloads and manifest validation.

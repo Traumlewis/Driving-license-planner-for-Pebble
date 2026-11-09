@@ -33,6 +33,8 @@ def export():
         entry=json.loads(path.read_text())
         if entry['appVersion']!=path.parent.name:raise ValueError('Version folder/manifest mismatch')
         versions[path.parent.name]=path.relative_to(base).as_posix()
-    (base/'index.json').write_text(json.dumps(dict(schemaVersion=1,trainingCountry='DE',versions=versions),indent=2)+'\n')
+    index_path=base/'index.json';index=json.loads(index_path.read_text()) if index_path.exists() else {}
+    index.update(schemaVersion=1,trainingCountry='DE',versions=versions)
+    index_path.write_text(json.dumps(index,ensure_ascii=False,indent=2)+'\n')
     return target
 if __name__=='__main__':print(export())

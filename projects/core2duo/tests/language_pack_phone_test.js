@@ -4,7 +4,7 @@ const source=fs.readFileSync(__dirname+'/../src/pkjs/index.js','utf8'),metadata=
 const remote=require('../src/pkjs/remote-language'),folder=__dirname+'/../../../Packs/Germany/Languages/'+metadata.appVersion;
 function setup(storage={}){
  const events={},sent=[],requests=[],timers=new Map();let nextTimer=1;
- const context={require:n=>n==='./lang-pack'?metadata:n==='./remote-language'?{create:(m,s)=>remote.create(m,s,{request:(url,cb)=>{requests.push(url);cb(null,fs.readFileSync(folder+'/'+url.split('/').pop(),'utf8'));}})}:n==='./timeline'?require('../src/pkjs/timeline'):'/*__INITIAL_STATE__*/',Date,Number,JSON,Array,String,Math,encodeURIComponent,decodeURIComponent,console,
+ const context={require:n=>n==='./settings-language'?require('../src/pkjs/settings-language'):n==='./lang-pack'?metadata:n==='./remote-language'?{create:(m,s)=>remote.create(m,s,{request:(url,cb)=>{requests.push(url);cb(null,fs.readFileSync(folder+'/'+url.split('/').pop(),'utf8'));}})}:n==='./timeline'?require('../src/pkjs/timeline'):'/*__INITIAL_STATE__*/',Date,Number,JSON,Array,String,Math,encodeURIComponent,decodeURIComponent,console,
  localStorage:{getItem:k=>storage[k]||null,setItem:(k,v)=>storage[k]=String(v),removeItem:k=>delete storage[k]},setTimeout:(fn)=>{const id=nextTimer++;timers.set(id,fn);return id;},clearTimeout:id=>timers.delete(id),
  Pebble:{addEventListener:(e,fn)=>events[e]=fn,sendAppMessage:(m,ack)=>{sent.push(JSON.parse(JSON.stringify(m)));if(ack)ack();},sendConfigMessage:()=>{},insertTimelinePin:()=>{},deleteTimelinePin:()=>{}}};
  vm.runInNewContext(source,context);

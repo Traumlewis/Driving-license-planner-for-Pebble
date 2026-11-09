@@ -4,12 +4,14 @@ from pathlib import Path
 import ast,io,json,re,subprocess,sys,tokenize
 from generate_language_pack import restore_project
 from export_language_packs import export as export_language_packs
+from export_settings_languages import export as export_settings_languages
 ROOT=Path(__file__).resolve().parents[1]
 TARGETS={'time2':['emery'],'core2duo':['flint'],'round2':['gabbro'],'time-pebble2':['basalt','diorite'],'timeround':['chalk']}
 CREDIT='(Idee by Traumlewis | Code by Codex)'
 
 def sync():
     cfg=json.loads((ROOT/'release.json').read_text());version=cfg['version'];developer=cfg['developer']
+    export_settings_languages()
     if not re.fullmatch(r'\d+\.\d+\.\d+',version):raise ValueError('Release version must have three numeric components')
     if cfg['credits']!=CREDIT:raise ValueError('Unexpected credits')
     def text(value):

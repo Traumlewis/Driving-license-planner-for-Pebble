@@ -1,6 +1,7 @@
 'use strict';
 var configHTML=require('./config-html');
 var languageMetadata=require('./lang-pack');
+var settingsStore=require('./settings-language').create(languageMetadata.baseURL,localStorage);
 var languagePacks=languageMetadata.packs;
 var languageStore=require('./remote-language').create(languageMetadata,localStorage);
 function packForLanguage(value){return languagePacks[value===1?1:0];}
@@ -14,7 +15,7 @@ try{snapshot=JSON.parse(localStorage.getItem(STORE+'snapshot')||'null');}catch(e
 function pending(){try{return JSON.parse(localStorage.getItem(STORE+'pending')||'null');}catch(e){return null;}}
 function empty(){return {version:2,language:Number(localStorage.getItem(STORE+'language')||0),revision:0,cls:4,profile:0,entries:[],counts:[],topics:[]};}
 function freshState(){
- var s=snapshot?JSON.parse(JSON.stringify(snapshot)):empty();s.fresh=lastReply>0&&Date.now()-lastReply<20000;s.timeline=timeline.state();
+ var s=snapshot?JSON.parse(JSON.stringify(snapshot)):empty();s.fresh=lastReply>0&&Date.now()-lastReply<20000;s.timeline=timeline.state();s.settingsLanguage=settingsStore.state();
  if(!s.error)s.error=localStorage.getItem(STORE+'lastError')||'';
  var command=pending();
  if(command&&command.action==='language'){s.language=command.language;if(s.languagePack)s.languagePack.transferring=(!s.languagePack.ready||s.languagePack.id!==packForLanguage(command.language).id);}
@@ -64,14 +65,16 @@ Pebble.addEventListener('ready',function(){requestSnapshot();retries=0;transmit(
 // Older mobile apps still get an immediate, synchronous configuration page. No waiting for
 // a watch response before openURL, and no navigation from a timer callback.
 Pebble.addEventListener('showConfiguration',function(){
- languageStore.retry();
- var state=JSON.stringify(freshState()).replace(/</g,'\\u003c');
+ languageStore.retry();settingsStore.refresh(snapshot&&snapshot.language===1?'en':'de',function(){publish();});
+ var initial=freshState();initial.settingsCache=settingsStore.exportCache();var state=JSON.stringify(initial).replace(/</g,'\\u003c');
  var html=configHTML.replace('/*__INITIAL_STATE__*/','window.__FAHRSCHUL_INITIAL_STATE__='+state+';');
  Pebble.openURL('data:text/html;charset=utf-8,'+encodeURIComponent(html));requestSnapshot();
 });
 // Current mobile apps load the bundled configPage directly; it stays open while syncing.
 Pebble.addEventListener('configmessage',function(e){
  var m=e.data||{};
+ if(m.type==='settingsRefresh'){settingsStore.refresh(snapshot&&snapshot.language===1?'en':'de',function(){publish();});e.respond({state:freshState()});return;}
+ if(m.type==='settingsSelect'){settingsStore.select(m.locale,function(error){e.respond({error:error||null,state:freshState()});publish();});return;}
  if(m.type==='timeline'&&typeof m.enabled==='boolean'){timeline.setEnabled(m.enabled);e.respond({state:freshState()});publish();requestSnapshot();return;}
  if(m.type==='snapshot'){e.respond({state:freshState()});requestSnapshot();if(pending()&&!waiting){retries=0;transmit();}return;}
  if(m.type==='command'){e.respond(queueCommand(m.command));return;}
@@ -98,6 +101,18 @@ Pebble.addEventListener('appmessage',function(event){
 });
 Pebble.addEventListener('webviewclosed',function(event){
  if(!event.response||event.response==='CANCELLED')return;var p;try{p=JSON.parse(decodeURIComponent(event.response));}catch(e){return;}
+ if(p.settingsCache)importSettingsCache(p.settingsCache);
+ if(p.action==='settingsLanguage'){requestSnapshot();return;}
  if(p.action==='timeline'&&typeof p.enabled==='boolean'){timeline.setEnabled(p.enabled);requestSnapshot();return;}
  queueCommand(p);
 });
+
+function importSettingsCache(cache){
+ if(!cache||typeof cache.catalogue!=='string'||cache.catalogue.length>60000||typeof cache.packet!=='string'||cache.packet.length>160000)return;
+ var memory={'fahrschul.v2.settingsCatalogue':cache.catalogue,'fahrschul.v2.settingsPacket':cache.packet};
+ var candidate=require('./settings-language').create(languageMetadata.baseURL,{getItem:function(k){return memory[k]||null;},setItem:function(){}});
+ if(!candidate.state().active)return;
+ localStorage.setItem('fahrschul.v2.settingsCatalogue',cache.catalogue);localStorage.setItem('fahrschul.v2.settingsPacket',cache.packet);settingsStore=candidate;
+ // Recreate with persistent storage so later selections are retained.
+ settingsStore=require('./settings-language').create(languageMetadata.baseURL,localStorage);
+}

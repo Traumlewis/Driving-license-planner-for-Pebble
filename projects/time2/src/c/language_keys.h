@@ -113,7 +113,7 @@
 #define LK_Fahrmanover_und_Beobachtung_a590799b "~006f"
 #define LK_FahrschAusbO_Stand_06_11_26_f99f7725 "~0070"
 #define LK_Fahrschul_Planer_8d88df9a "~0071"
-#define LK_Fahrschul_Planer_3_8_45_621bc9ae "~0072"
+#define LK_Fahrschul_Planer_3_8_46_af8d59c5 "~0072"
 #define LK_Fortschritt_8dc68203 "~0073"
 #define LK_Fortschritt_aktualisiert_7ce53448 "~0074"
 #define LK_Fortschritt_nicht_gespeichert_Bitte_App_neu_s_2095b54e "~0075"

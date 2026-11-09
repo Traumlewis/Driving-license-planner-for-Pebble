@@ -1,0 +1,18 @@
+'use strict';
+const fs=require('fs'),assert=require('assert'),crypto=require('crypto'),path=require('path'),create=require('../src/pkjs/settings-language').create;
+const base='https://example.test/',folder=path.resolve(__dirname,'../../../Packs/Germany/Languages'),files={};
+files['index.json']=fs.readFileSync(folder+'/index.json','utf8');for(const locale of ['de','en'])files[locale+'/settings.json']=fs.readFileSync(folder+'/'+locale+'/settings.json','utf8');
+const state={},storage={getItem:k=>state[k]||null,setItem:(k,v)=>state[k]=v},calls=[];let failure=false,pending=[];
+function request(url,cb){calls.push(url);if(failure)return cb('NETWORK_ERROR');cb(null,files[url.slice(base.length)]);}
+const client=create(base,storage,{request});client.refresh('de',(e)=>assert(!e));assert.strictEqual(client.state().active.locale,'de');assert.strictEqual(calls.length,2);
+const before=state['fahrschul.v2.settingsPacket'];failure=true;client.select('en',e=>assert(e));assert.strictEqual(state['fahrschul.v2.settingsPacket'],before);assert.strictEqual(client.state().active.locale,'de');
+const offline=create(base,storage,{request});assert.strictEqual(offline.state().active.locale,'de');offline.refresh('en',e=>assert(e));assert.strictEqual(offline.state().active.locale,'de');failure=false;
+// Simulate adding a catalogue entry and its packet after the application was built.
+const french=JSON.parse(files['en/settings.json']);french.locale='fr';french.strings.appName='Planificateur';files['fr/settings.json']=JSON.stringify(french);const index=JSON.parse(files['index.json']);index.settings.languages.push({locale:'fr',name:'Français',file:'fr/settings.json',sha256:crypto.createHash('sha256').update(files['fr/settings.json']).digest('hex'),watchLanguage:null});files['index.json']=JSON.stringify(index);
+client.refresh('de',e=>assert(!e));assert(client.state().catalogue.some(d=>d.locale==='fr'));client.select('fr',e=>assert(!e));assert.strictEqual(client.state().active.packet.strings.appName,'Planificateur');assert.strictEqual(client.state().active.watchLanguage,null);assert(!state['fahrschul.v2.settingsPacket'].includes('Führerscheinklasse'));assert.strictEqual(create(base,storage,{request}).state().active.locale,'fr');
+const prior=state['fahrschul.v2.settingsPacket'];files['en/settings.json']+=' ';client.select('en',e=>assert(e));assert.strictEqual(state['fahrschul.v2.settingsPacket'],prior);files['en/settings.json']=fs.readFileSync(folder+'/en/settings.json','utf8');
+const bad=JSON.parse(files['index.json']);bad.settings.languages[0].file='../secrets.json';files['index.json']=JSON.stringify(bad);client.refresh('fr',e=>assert(e));assert.strictEqual(client.state().active.locale,'fr');
+files['index.json']=JSON.stringify(index);const raceState={...state},raceStorage={getItem:k=>raceState[k]||null,setItem:(k,v)=>raceState[k]=v};const racing=create(base,raceStorage,{request:(url,cb)=>pending.push({url,cb})});racing.select('de',e=>assert.strictEqual(e,'CANCELLED'));racing.select('en',e=>assert(!e));pending[1].cb(null,files['en/settings.json']);pending[0].cb(null,files['de/settings.json']);assert.strictEqual(racing.state().active.locale,'en');
+// Removing the current locale from the live list preserves its verified offline packet.
+index.settings.languages=index.settings.languages.filter(d=>d.locale!=='fr');files['index.json']=JSON.stringify(index);client.refresh('de',e=>assert(!e));assert.strictEqual(client.state().active.locale,'fr');assert.strictEqual(create(base,storage,{request}).state().active.locale,'fr');
+console.log('PASS settings language: dynamic third language without rebuilding, one packet, restart/offline, corruption, traversal, removed locale and stale-response protection');
