@@ -18,4 +18,4 @@ with sync_playwright() as p:
   for width in [320,390,768]:
    page.set_viewport_size({'width':width,'height':844});assert page.evaluate('document.documentElement.scrollWidth<=innerWidth')
  assert not errors,errors;browser.close()
-print('PASS ten-language watch UI: translated Apply button, language 0–9 commands, accents and responsive layouts')
+print('PASS fourteen-language watch UI: translated Apply button, language 0–13 commands, accents and responsive layouts')

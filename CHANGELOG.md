@@ -1,3 +1,10 @@
+# 3.8.53 (development)
+
+- Add full Finnish, Czech, Hungarian and Romanian phone/watch translations downloaded from GitHub.
+- Extend the frozen shared v5 dictionary; keep LP4, the 2,560-byte limit, one selected packet and all historical codec variants.
+- Probe required diacritics in seven existing Gothic font variants on all six platforms; retain the original display designs and fonts.
+- Preserve user data and validate native language replacement/offline restart, phone actions and memory. Combined DEV PBW and source/data only; no GitHub Release.
+
 # 3.8.52 (development)
 
 - Add complete Danish and Swedish phone/watch translations, downloaded from GitHub.

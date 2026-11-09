@@ -14,7 +14,7 @@ The settings-v1 schema retains its trainingCountry DE compatibility field. Curre
 
 See [directory migration](../../../docs/DEV-3.8.47.md) and [format and behavior](../../../docs/DEV-3.8.46.md). Use 3.8.47 or newer for this download path. Repository updates do not publish a GitHub Release.
 
-Available settings languages: Deutsch, English, Español, Français, Italiano, Português, Nederlands, Polski, Dansk and Svenska. Spanish/French are phone-only on 3.8.47; watch support depends on the compatible LP4 catalogue. Germany’s training rules remain unchanged.
+Available settings languages: Deutsch, English, Español, Français, Italiano, Português, Nederlands, Polski, Dansk, Svenska, Suomi, Čeština, Magyar and Română. Spanish/French are phone-only on 3.8.47; watch support depends on the compatible LP4 catalogue. Germany’s training rules remain unchanged.
 
 ## Watch packets (3.8.48+)
 
@@ -31,3 +31,7 @@ Phone settings and full 296-string watch sources are available for Italiano (`it
 ## Danish and Swedish (3.8.52+)
 
 Dansk (`da`, watch ID 8) and Svenska (`sv`, ID 9) now include full phone settings and 296 watch texts. They require the 3.8.52 DEV PBW with the frozen v4 shared dictionary. The complete payloads are 2,177 and 2,205 bytes, below the unchanged 2,560-byte limit. The old oversized drafts are replaced by watch-source.json files. Older codec variants remain frozen and show these languages as phone-only. See [sizes, memory and testing](../../../docs/DEV-3.8.52.md).
+
+## Finnish, Czech, Hungarian and Romanian (3.8.53+)
+
+Suomi (`fi`, watch ID 10), Čeština (`cs`, ID 11), Magyar (`hu`, ID 12) and Română (`ro`, ID 13) have complete settings and 296 watch texts. Watch support requires the 3.8.53 DEV PBW and frozen v5 shared dictionary. The LP4 limit remains 2,560 bytes and all five compatibility variants remain published. Seven system-font variants were probed for the needed characters on all six platforms. See [packet/memory results and testing](../../../docs/DEV-3.8.53.md).

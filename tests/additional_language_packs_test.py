@@ -5,7 +5,7 @@ from playwright.sync_api import sync_playwright
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT/'tools'))
 from watch_packets import encode,signature,compatibility
 BASE=ROOT/'Packs/App/Languages';REMOTE='https://raw.githubusercontent.com/Traumlewis/Driving-license-planner-for-Pebble/main/Packs/App/Languages/'
-index=json.loads((BASE/'index.json').read_text());english=json.loads((BASE/'en/settings.json').read_text());schema=json.loads((ROOT/'tools/watch-schema.json').read_text());variant=index['watchPacks'][compatibility()['tag']];new={'it':'Italiano','pt':'Português','nl':'Nederlands','pl':'Polski','da':'Dansk','sv':'Svenska'};report={}
+index=json.loads((BASE/'index.json').read_text());english=json.loads((BASE/'en/settings.json').read_text());schema=json.loads((ROOT/'tools/watch-schema.json').read_text());variant=index['watchPacks'][compatibility()['tag']];new={'it':'Italiano','pt':'Português','nl':'Nederlands','pl':'Polski','da':'Dansk','sv':'Svenska','fi':'Suomi','cs':'Čeština','hu':'Magyar','ro':'Română'};report={}
 for locale,name in new.items():
  descriptor=next(d for d in index['settings']['languages'] if d['locale']==locale);raw=(BASE/descriptor['file']).read_bytes();assert hashlib.sha256(raw).hexdigest()==descriptor['sha256'];packet=json.loads(raw)
  assert packet['locale']==locale and set(packet['strings'])==set(english['strings'])
