@@ -59,6 +59,20 @@
         "file": "pl/settings.json",
         "sha256": "212f3a5eac3fdf2e38562e62190830f5c0e60a39fefb707be6c87c59320709e6",
         "watchLanguage": null
+      },
+      {
+        "locale": "da",
+        "name": "Dansk",
+        "file": "da/settings.json",
+        "sha256": "62930b0b071db82274aebce25e25cc52568166379d6a1ca14c742bdbc3c92dfe",
+        "watchLanguage": null
+      },
+      {
+        "locale": "sv",
+        "name": "Svenska",
+        "file": "sv/settings.json",
+        "sha256": "09f8af731deaa9e7c5981a24d291c7b7345fb8b42ea63b7a66dbbe82e3f27980",
+        "watchLanguage": null
       }
     ]
   },
@@ -237,6 +251,115 @@
           "size": 2444,
           "file": "watch/37bc2f9e-0148b906/pl.json",
           "sha256": "460f0ac5f3bc697f83c694888364f90d1319633f68327455293c6307f140bd44"
+        }
+      ]
+    },
+    "37bc2f9e-ba59526d": {
+      "format": "LP4/shared-bpe-v1",
+      "schemaId": 935079838,
+      "codecId": 3126415981,
+      "tag": "37bc2f9e-ba59526d",
+      "maxBytes": 2560,
+      "languages": [
+        {
+          "locale": "de",
+          "name": "Deutsch",
+          "language": 0,
+          "id": 3295986960,
+          "crc": 3369945848,
+          "size": 2474,
+          "file": "watch/37bc2f9e-ba59526d/de.json",
+          "sha256": "c6b659c2cbba6a89765fa761ae729707a68a3c5c3608ec918f6bf8e538b048f6"
+        },
+        {
+          "locale": "en",
+          "name": "English",
+          "language": 1,
+          "id": 554947246,
+          "crc": 1851301263,
+          "size": 2389,
+          "file": "watch/37bc2f9e-ba59526d/en.json",
+          "sha256": "151749803c8cda0c7ea77f11e597cf377b0638e428359e6ce448261919c8bb9c"
+        },
+        {
+          "locale": "es",
+          "name": "Español",
+          "language": 2,
+          "id": 2810523732,
+          "crc": 3435980170,
+          "size": 2490,
+          "file": "watch/37bc2f9e-ba59526d/es.json",
+          "sha256": "83295d8e92b3fc888bff956156e4e6a7287678ac87718602465d5f71b1b4117f"
+        },
+        {
+          "locale": "fr",
+          "name": "Français",
+          "language": 3,
+          "id": 1632455767,
+          "crc": 912102059,
+          "size": 2466,
+          "file": "watch/37bc2f9e-ba59526d/fr.json",
+          "sha256": "e37fb227b15238d48089a05fd4aaac2d6dfe530809a87d3b9d1d50d4bd58f987"
+        },
+        {
+          "locale": "it",
+          "name": "Italiano",
+          "language": 4,
+          "id": 2728964217,
+          "crc": 276227728,
+          "size": 2308,
+          "file": "watch/37bc2f9e-ba59526d/it.json",
+          "sha256": "38f0f6da42d868df653704b4f731ad42d73415e28e8ac6709ba7469ce4540122"
+        },
+        {
+          "locale": "pt",
+          "name": "Português",
+          "language": 5,
+          "id": 1476068061,
+          "crc": 2555543396,
+          "size": 2203,
+          "file": "watch/37bc2f9e-ba59526d/pt.json",
+          "sha256": "d727491503c73284892ba9ae446b62131e0707565d11453963f6804baaaad981"
+        },
+        {
+          "locale": "nl",
+          "name": "Nederlands",
+          "language": 6,
+          "id": 754488144,
+          "crc": 3195480571,
+          "size": 2280,
+          "file": "watch/37bc2f9e-ba59526d/nl.json",
+          "sha256": "a0aa536328f9081df08a99b2aba323ecb79850aca3dbe60bb847ab3753666cf1"
+        },
+        {
+          "locale": "pl",
+          "name": "Polski",
+          "language": 7,
+          "id": 1667761743,
+          "crc": 1163750444,
+          "size": 2487,
+          "file": "watch/37bc2f9e-ba59526d/pl.json",
+          "sha256": "aaa1f2c2c3d962734f2fd39994f7b1e4fd7cba566a4bc05cfbd20ce088c6245f"
+        },
+        {
+          "locale": "da",
+          "name": "Dansk",
+          "language": 8,
+          "id": 991216155,
+          "crc": 1014919581,
+          "size": 2177,
+          "file": "watch/37bc2f9e-ba59526d/da.json",
+          "sha256": "c747df036df6b30e00cc9a91b529b94e844c5582c181bcc43d9d065e48b6ab29"
+        },
+        {
+          "locale": "sv",
+          "name": "Svenska",
+          "language": 9,
+          "id": 1805906764,
+          "crc": 1266537537,
+          "size": 2205,
+          "file": "watch/37bc2f9e-ba59526d/sv.json",
+          "sha256": "25a8df53f073cd8d2656c3235e52d709717552a6e3c819089b849bd77a10c295"
         }
       ]
     }
