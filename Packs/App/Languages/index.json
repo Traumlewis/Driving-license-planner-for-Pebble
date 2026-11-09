@@ -24,6 +24,13 @@
         "file": "es/settings.json",
         "sha256": "bd265687fc2458d89291d1a6fdba1589016f74fb295a96dd3bfebc833955df68",
         "watchLanguage": null
+      },
+      {
+        "locale": "fr",
+        "name": "Français",
+        "file": "fr/settings.json",
+        "sha256": "8f74ebb74e9150d1ca6698d6a4f4a3b6e189a781aaab0f758ed90f82a7cdd358",
+        "watchLanguage": null
       }
     ]
   },
@@ -64,6 +71,55 @@
           "size": 2520,
           "file": "watch/37bc2f9e-faa262da/es.json",
           "sha256": "747d0cf39b7a8c4dd6fc8d0cd641346f21bd99cb93e0646aa8869ae772b7eefd"
+        }
+      ]
+    },
+    "37bc2f9e-f48e0f24": {
+      "format": "LP4/shared-bpe-v1",
+      "schemaId": 935079838,
+      "codecId": 4102950692,
+      "tag": "37bc2f9e-f48e0f24",
+      "maxBytes": 2560,
+      "languages": [
+        {
+          "locale": "de",
+          "name": "Deutsch",
+          "language": 0,
+          "id": 2022343360,
+          "crc": 649742419,
+          "size": 2538,
+          "file": "watch/37bc2f9e-f48e0f24/de.json",
+          "sha256": "ac26bd211d00a3892efe6a1db8d39215b6c3d62d3b506cbf3b92fc8a5fd314b7"
+        },
+        {
+          "locale": "en",
+          "name": "English",
+          "language": 1,
+          "id": 637614622,
+          "crc": 244900872,
+          "size": 2280,
+          "file": "watch/37bc2f9e-f48e0f24/en.json",
+          "sha256": "0bd12267c9f7c7af0d493f2875f34ef6027da1b2e1f1203e332afca9527fb0a0"
+        },
+        {
+          "locale": "es",
+          "name": "Español",
+          "language": 2,
+          "id": 3953091602,
+          "crc": 281538628,
+          "size": 2551,
+          "file": "watch/37bc2f9e-f48e0f24/es.json",
+          "sha256": "3e6dd31ae00f7883bf84959681869d44400dc9c41089ddb89d82e7ebd79d6e0a"
+        },
+        {
+          "locale": "fr",
+          "name": "Français",
+          "language": 3,
+          "id": 879794766,
+          "crc": 3672353306,
+          "size": 2398,
+          "file": "watch/37bc2f9e-f48e0f24/fr.json",
+          "sha256": "e8c2647517221b9956ec3b61e387fbd54933ab5be23158def98b312fe50015d9"
         }
       ]
     }
