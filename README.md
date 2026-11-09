@@ -2,7 +2,7 @@
 
 Driving lessons, reminders and German licence progress on your wrist.
 
-**Release 3.8.4 · Developer: Traumlewis**
+**Development 3.8.41 · Latest public release: 3.8.4 · Developer: Traumlewis**
 
 ![Driving Planner](store/banner.png)
 
@@ -35,7 +35,7 @@ One PBW contains all six platforms. Touch controls are available on Time 2 and R
 
 Open `release/Fahrschul-Planer-v3.8.4.pbw` with the Pebble app and install over an existing copy. Keep the existing installation to retain data; do not uninstall first. The application UUID and storage format remain unchanged.
 
-Release 3.8.4 restores progress bars for counters without a fixed legal minimum: empty at zero units and full from one whole unit. Circular-display scrolling fixes from 3.8.3 remain included. All native programs use version 3.8.4 and developer Traumlewis.
+Release 3.8.4 restores progress bars for counters without a fixed legal minimum: empty at zero units and full from one whole unit. Circular-display scrolling fixes from 3.8.3 remain included. The public package uses version 3.8.4 and developer Traumlewis. Current development source uses 3.8.41; see [development changes](docs/DEV-3.8.41.md).
 
 ## Build
 
@@ -47,7 +47,9 @@ python3 tools/build_all.py
 python3 tools/build_all.py --pebble /path/to/pebble
 ```
 
-Edit `release.json` to change the release version. `tools/sync_release.py` updates each package, visible guide versions, DE/EN translations and the credits footer before building. It regenerates `VERSION`. Do not update watch versions individually.
+Current development version is 3.8.41; continue with 3.8.42, 3.8.43, etc. Test build example: `python3 tools/build_all.py --output "/tmp/Fahrschul-Planer-v3.8.41(DEV).pbw"`.
+
+Edit `release.json` to change the version. `tools/sync_release.py` updates each package, visible guide versions, DE/EN translations and the credits footer before building. It regenerates `VERSION`. Do not update watch versions individually.
 
 The five projects preserve the tested device layouts:
 
@@ -71,4 +73,4 @@ Idee by Traumlewis | Code by Codex
 
 ## GitHub Releases
 
-The Publish GitHub Release workflow validates the checked-in PBW, packages source/store ZIPs and checksum files, uploads them to a draft, and publishes the completed release. It runs when a PBW or release metadata is pushed to main and can also be started manually from Actions. Existing published releases are kept unchanged.
+The Publish GitHub Release workflow validates the checked-in PBW, packages source/store ZIPs and checksum files, uploads them to a draft, and publishes the completed release. It can only be started manually from Actions, after the owner explicitly requests a release. Source pushes never create or publish releases. Test PBWs contain (DEV) in their filenames; existing published releases are kept unchanged.

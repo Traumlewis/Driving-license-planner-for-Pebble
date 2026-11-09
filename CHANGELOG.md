@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.8.41 — Development
+
+- Hide extra-minute hold actions for practical counters without a required minimum; whole units remain editable through a normal selection. Theory manual-unit management stays protected.
+- Use whole-unit appointment editors for practical lesson types without a required minimum, including general driving. Mandatory practical lessons retain 5-minute steps; theory retains 90-minute units. The choice respects each class and training profile.
+- Disable automatic GitHub Releases on source pushes; public releases require an explicit owner request. Development test PBWs include (DEV) in their filenames.
+
 ## 3.8.4 — Restore progress bars
 
 - Keep monochrome bars visible in selected rows.

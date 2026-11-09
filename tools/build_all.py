@@ -54,6 +54,7 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--pebble',default='pebble',help='Pebble CLI executable')
     parser.add_argument('--skip-build',action='store_true',help='Use existing project build/*.pbw outputs')
+    parser.add_argument('--output',type=Path,help='Write a test PBW to this path instead of release/')
     args=parser.parse_args();inputs={}
     subprocess.run([__import__('sys').executable,str(ROOT/'tools/sync_release.py')],check=True)
     for folder in dict.fromkeys(PLATFORMS.values()):
@@ -66,6 +67,7 @@ def main():
         for platform,target in PLATFORMS.items():
             if target==folder:inputs[platform]=candidates[0]
     output=ROOT/'release'/('Fahrschul-Planer-v'+json.loads((ROOT/'release.json').read_text())['version']+'.pbw')
+    if args.output:output=args.output.resolve()
     merge({p:inputs[p] for p in PLATFORMS},output);print(output)
 
 if __name__=='__main__':main()

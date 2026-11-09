@@ -15,6 +15,8 @@ typedef struct {int x,y;} GPoint;
 typedef struct {int section,row;} MenuIndex;
 #define MenuIndex(s,r) ((MenuIndex){s,r})
 enum {HOME,PROGRESS,PROGRESS_ACTIONS,MenuRowAlignNone};
+static int blocked_row=-1;
+static bool progress_can_hold(int row){return row!=blocked_row;}
 static int page=PROGRESS,menu,progress_counter,progress_touch_row,selected,offset,registered,cancelled;
 static AppTimer value,*progress_hold_timer;static bool progress_hold_fired;
 static Window root,other,*window=&root,*top=&root;
@@ -24,6 +26,9 @@ static AppTimer *app_timer_register(int ms,void (*cb)(void *),void *ctx){assert(
 static Window *window_stack_get_top_window(void){return top;}
 static void menu_layer_set_selected_index(int m,MenuIndex index,int align,bool animated){(void)m;assert(align==MenuRowAlignNone&&!animated);selected=index.row;}
 static void show_page(int p){page=p;}
+typedef struct {GPoint origin;} GRect;
+static int menu_layer_get_layer(int m){return m;}
+static GRect layer_get_frame(int m){(void)m;return (GRect){{0,0}};}
 static int menu_layer_get_scroll_layer(int m){return m;}
 static GPoint scroll_layer_get_content_offset(int m){(void)m;return (GPoint){0,offset};}
 static int header_height(int m,int section,void *ctx){(void)m;(void)section;(void)ctx;return 54;}
@@ -35,6 +40,7 @@ int main(void){
  start_progress_touch(80);cancel_progress_touch();assert(cancelled==1&&!progress_hold_timer);
  page=HOME;start_progress_touch(80);assert(registered==old+1);
  page=PROGRESS;start_progress_touch(80);top=&other;callback(NULL);assert(page==PROGRESS);
+ blocked_row=0;page=PROGRESS;top=&root;offset=0;int previous=registered;start_progress_touch(80);assert(registered==previous);progress_touch_row=0;callback(NULL);assert(page==PROGRESS);
  puts("PASS progress hold: all seven 56px rows including scrolled offsets, header/end rejection, cancellation and changed top window");
 }
 '''

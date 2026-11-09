@@ -1,6 +1,6 @@
 """Validate the release version/credits, native package and required store assets."""
 from pathlib import Path
-import hashlib,json,re,struct,zipfile
+import hashlib,json,re,struct,zipfile,sys
 ROOT=Path(__file__).resolve().parents[1];cfg=json.loads((ROOT/'release.json').read_text());version=cfg['version'];credit=cfg['credits']
 assert (ROOT/'VERSION').read_text().strip()==version
 projects={'time2':['emery'],'core2duo':['flint'],'round2':['gabbro'],'time-pebble2':['basalt','diorite'],'timeround':['chalk']}
@@ -16,7 +16,7 @@ for name,platforms in projects.items():
     assert value.count(credit)==1
  for p in json.loads((folder/'tools/translations.json').read_text()).items():
   for s in p:assert len(s.encode())<1024
-pbw=ROOT/'release'/('Fahrschul-Planer-v'+version+'.pbw')
+pbw=Path(sys.argv[1]).resolve() if len(sys.argv)>1 else ROOT/'release'/('Fahrschul-Planer-v'+version+'.pbw')
 with zipfile.ZipFile(pbw) as z:
  assert z.testzip() is None
  info=json.loads(z.read('appinfo.json'));assert info['versionLabel']==version and info['companyName']==cfg['developer']

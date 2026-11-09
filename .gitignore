@@ -8,3 +8,5 @@ output/
 .DS_Store
 release-assets/
 release-assets-status.json
+
+docs/verification/dev/

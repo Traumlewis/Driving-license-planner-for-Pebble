@@ -66,6 +66,16 @@ static void move_menu(bool up);
 static void footer_draw(Layer *layer,GContext *ctx);
 static void load_rules(void) {rule_count=rules_for(cfg.cls,rules);if(cfg.profile<0||cfg.profile>=rule_count)cfg.profile=0;}
 static const uint16_t *targets(void) {return rules[cfg.profile].target;}
+
+static bool draft_uses_minutes(void){
+ if(draft.kind==0||draft.kind>=5)return false;
+ if(draft.cls==cfg.cls)return targets()[kind_counter(draft.kind)]>0;
+ Rule available[10];int n=rules_for(draft.cls,available),profile=profiles[draft.cls];
+ if(profile<0||profile>=n)profile=0;
+ return n>0&&available[profile].target[kind_counter(draft.kind)]>0;
+}
+static bool progress_has_minutes(int counter){return counter>=0&&counter<4&&targets()[counter]>0;}
+static bool progress_can_hold(int counter){return counter==4||counter==5||progress_has_minutes(counter);}
 int profile_extra(int c){Rule r[10];int n=rules_for(c,r);return r[profiles[c]<n?profiles[c]:0].target[5];}
 static bool selected_valid(void) {return selected>=0&&selected<MAX_ENTRIES&&entries[selected].active;}
 static int active_count(void) {int n=0;for(int i=0;i<MAX_ENTRIES;i++)n+=entries[i].active?1:0;return n;}
@@ -273,9 +283,9 @@ static bool save_draft(void) {
 static void apply_number(void) {
  switch(number_field){
  case 0:draft_tm.tm_year=number_value-1900;break;case 1:draft_tm.tm_mon=number_value-1;break;case 2:draft_tm.tm_mday=number_value;break;case 3:draft_tm.tm_hour=number_value;break;case 4:draft_tm.tm_min=number_value;break;
- case 5:draft.lead[0]=number_value*15;break;case 6:draft.lead[1]=number_value*15;break;case 7:if(draft.kind<5){draft.units=number_value*5/45;draft.extra_minutes=number_value*5%45;}else{draft.units=number_value;draft.extra_minutes=0;}break;
+ case 5:draft.lead[0]=number_value*15;break;case 6:draft.lead[1]=number_value*15;break;case 7:if(draft_uses_minutes()){draft.units=number_value*5/45;draft.extra_minutes=number_value*5%45;}else{draft.units=number_value;draft.extra_minutes=0;}break;
  case 16:practice[cfg.cls].exercise_units=number_value;store_progress(cfg.cls);store_revision();break;
- case 17:set_extra_minutes(cfg.cls,progress_counter,number_value*5);break;
+ case 17:if(progress_has_minutes(progress_counter))set_extra_minutes(cfg.cls,progress_counter,number_value*5);break;
  default:{int k=number_field-10;set_progress_count(cfg.cls,k,number_value+topic_units(cfg.cls,k));break;}
  }refresh();
 }
@@ -284,13 +294,13 @@ static void num_draw(Layer *l,GContext *ctx) {
  GFont font=fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD);GSize size=graphics_text_layout_get_content_size(T(number_title),font,GRect(0,0,1000,40),GTextOverflowModeTrailingEllipsis,GTextAlignmentLeft);if(size.w>184)font=fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD);
  graphics_draw_text(ctx,T(number_title),font,GRect(6,8,188,38),GTextOverflowModeWordWrap,GTextAlignmentCenter,NULL);
  graphics_context_set_stroke_color(ctx,GColorCyan);graphics_context_set_stroke_width(ctx,1);graphics_draw_line(ctx,GPoint(8,49),GPoint(192,49));
- if(number_field==5||number_field==6){if(number_value)snprintf(value,sizeof(value),T("%02d:%02d"),number_value/4,number_value%4*15);else snprintf(value,sizeof(value),T("Aus"));}else if((number_field==7&&draft.kind<5)||number_field==17)snprintf(value,sizeof(value),T("%d"),number_value*5);else snprintf(value,sizeof(value),T("%02d"),number_value);
+ if(number_field==5||number_field==6){if(number_value)snprintf(value,sizeof(value),T("%02d:%02d"),number_value/4,number_value%4*15);else snprintf(value,sizeof(value),T("Aus"));}else if((number_field==7&&draft_uses_minutes())||number_field==17)snprintf(value,sizeof(value),T("%d"),number_value*5);else snprintf(value,sizeof(value),T("%02d"),number_value);
  graphics_context_set_text_color(ctx,GColorCyan);graphics_draw_text(ctx,value,fonts_get_system_font(FONT_KEY_BITHAM_42_BOLD),GRect(2,65,b.size.w-4,56),GTextOverflowModeTrailingEllipsis,GTextAlignmentCenter,NULL);
- const char *unit=(number_field==5||number_field==6)?T("Vorwarnzeit"):((number_field==7&&draft.kind<5)||number_field==17)?T("Minuten"):T("Einheiten");
+ const char *unit=(number_field==5||number_field==6)?T("Vorwarnzeit"):((number_field==7&&draft_uses_minutes())||number_field==17)?T("Minuten"):T("Einheiten");
  graphics_context_set_text_color(ctx,GColorWhite);graphics_draw_text(ctx,unit,fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD),GRect(4,120,192,24),GTextOverflowModeTrailingEllipsis,GTextAlignmentCenter,NULL);
  if(number_field==14||number_field==15)snprintf(hint,sizeof(hint),T("%u per Häkchen geschützt"),topic_units(cfg.cls,number_field-10));
- else if(number_field==17||(number_field==7&&draft.kind<5))snprintf(hint,sizeof(hint),"%s",T("45 Min. = 1 Einheit"));
- else if(number_field==7&&draft.kind>=5)snprintf(hint,sizeof(hint),"%s",T("90 Min. = 1 Einheit"));
+ else if(number_field==17||(number_field==7&&draft_uses_minutes()))snprintf(hint,sizeof(hint),"%s",T("45 Min. = 1 Einheit"));
+ else if(number_field==7)snprintf(hint,sizeof(hint),"%s",T(draft.kind>=5?"90 Min. = 1 Einheit":"45 Min. = 1 Einheit"));
  graphics_draw_text(ctx,hint,fonts_get_system_font(FONT_KEY_GOTHIC_14),GRect(4,144,192,20),GTextOverflowModeTrailingEllipsis,GTextAlignmentCenter,NULL);
  touch_controls(ctx,false);
 }
@@ -395,7 +405,7 @@ static void touch_handler(const TouchEvent *event,void *context) {
 static int topic_count(void){return 12+targets()[5];}
 static int pick_count(void){if(draft.kind==5)return 13;if(draft.kind==6){Rule temp[10];int n=rules_for(draft.cls,temp);int p=profiles[draft.cls]<n?profiles[draft.cls]:0;return 1+temp[p].target[5];}return 1;}
 static uint16_t rows(MenuLayer *m,uint16_t s,void *ctx){(void)m;(void)s;(void)ctx;switch(page){
- case HOME:return 7;case SETTINGS:case EXPLANATIONS:return 3;case LIST:return list_count+1;case PENDING:return list_count?list_count:1;case CLASSES:return 16;case PROFILES:return rule_count;case EDIT:return 9;case KINDS:return draft.cls==14?2:7;case PROGRESS:return 7;case ACTIONS:return selected_valid()?5:1;case DELETE_CONFIRM:return 2;case COMPLETE_CONFIRM:return 3;case TOPICS:return topic_count();case TOPIC_PICK:return pick_count();case ALERT:return alert_count+2;case PROGRESS_ACTIONS:return progress_counter==4||progress_counter==5?2:3;case PROGRESS_RESET:return 2;}return 0;}
+ case HOME:return 7;case SETTINGS:case EXPLANATIONS:return 3;case LIST:return list_count+1;case PENDING:return list_count?list_count:1;case CLASSES:return 16;case PROFILES:return rule_count;case EDIT:return 9;case KINDS:return draft.cls==14?2:7;case PROGRESS:return 7;case ACTIONS:return selected_valid()?5:1;case DELETE_CONFIRM:return 2;case COMPLETE_CONFIRM:return 3;case TOPICS:return topic_count();case TOPIC_PICK:return pick_count();case ALERT:return alert_count+2;case PROGRESS_ACTIONS:return !progress_can_hold(progress_counter)?1:progress_counter==4||progress_counter==5?2:3;case PROGRESS_RESET:return 2;}return 0;}
 static int16_t separator_height(MenuLayer *m,MenuIndex *i,void *ctx){(void)m;(void)i;(void)ctx;return 0;}
 static int16_t header_height(MenuLayer *m,uint16_t s,void *ctx){(void)m;(void)s;(void)ctx;return page==HOME?160:(page==PROGRESS||page==TOPICS||page==TOPIC_PICK)?54:36;}
 static void list_entry_title(const Entry *e,char *text,size_t size){
@@ -524,7 +534,7 @@ static void row_draw(GContext *ctx,const Layer *l,MenuIndex *idx,void *c){(void)
  case 2:snprintf(title,sizeof(title),T("%s"),alarm_ok?T("Alarm testen"):T("Alarm erneut aktivieren"));snprintf(sub,sizeof(sub),T("%s"),alarm_ok?T("App schließen: Test in 1 Min."):T("Alle gespeicherten Termine prüfen"));break;}break;
  case EXPLANATIONS:switch(r){
  case 0:snprintf(title,sizeof(title),T("Rechtliche Vorgaben"));snprintf(sub,sizeof(sub),T("FahrschAusbO / Stand 06.11.26"));break;
- case 1:snprintf(title,sizeof(title),T("Bedingungen & Kürzel"));snprintf(sub,sizeof(sub),T("Fahrschul Planer 3.8.4"));break;
+ case 1:snprintf(title,sizeof(title),T("Bedingungen & Kürzel"));snprintf(sub,sizeof(sub),T("Fahrschul Planer 3.8.41"));break;
  case 2:snprintf(title,sizeof(title),T("Handy-Eingabe"));snprintf(sub,sizeof(sub),T("Einstellungen in der Pebble-App"));break;}break;
  case LIST:case PENDING:{if(page==LIST&&r==0){snprintf(title,sizeof(title),T("+ Neuer Termin"));snprintf(sub,sizeof(sub),T("%d von 24 Plätzen belegt"),active_count());break;}int pos=page==LIST?r-1:r;if(pos>=list_count){snprintf(title,sizeof(title),T("Alles erledigt!"));break;}Entry *x=&entries[list_map[pos]];list_entry_title(x,title,sizeof(title));char dt[32];time_t when=x->when;strftime(dt,sizeof(dt),T("%d.%m. · %H:%M"),localtime(&when));snprintf(sub,sizeof(sub),T("%s%s"),end_time(x)<=time(NULL)?T("Offen: "):T(""),dt);break;}
  case CLASSES:snprintf(title,sizeof(title),T("Klasse %s"),classes[r]);snprintf(sub,sizeof(sub),T("%s"),r==cfg.cls?T("Aktuell ausgewählt"):T("Termine und Fortschritt behalten"));break;
@@ -534,7 +544,7 @@ static void row_draw(GContext *ctx,const Layer *l,MenuIndex *idx,void *c){(void)
  case 1:snprintf(title,sizeof(title),T("Datum"));snprintf(sub,sizeof(sub),T("%02d.%02d.%04d"),draft_tm.tm_mday,draft_tm.tm_mon+1,draft_tm.tm_year+1900);break;
  case 2:snprintf(title,sizeof(title),T("Uhrzeit"));snprintf(sub,sizeof(sub),T("%02d:%02d"),draft_tm.tm_hour,draft_tm.tm_min);break;
  case 3:case 4:snprintf(title,sizeof(title),T("Erinnerung %d"),r-2);lead_text(draft.lead[r-3],sub,sizeof(sub));break;
- case 5:snprintf(title,sizeof(title),T("Dauer: %d Minuten"),duration_minutes(&draft));snprintf(sub,sizeof(sub),T("%s"),draft.kind<5?T("In 5-Minuten-Schritten"):T("Theorie: 90-Minuten-Einheiten"));break;
+ case 5:if(draft_uses_minutes())snprintf(title,sizeof(title),T("Dauer: %d Minuten"),duration_minutes(&draft));else snprintf(title,sizeof(title),T("Einheiten: %d"),draft.units);snprintf(sub,sizeof(sub),"%s",T(draft.kind>=5?"Theorie: 90-Minuten-Einheiten":draft_uses_minutes()?"In 5-Minuten-Schritten":"45-Minuten-Einheiten"));break;
  case 6:snprintf(title,sizeof(title),T("Theorie-Thema"));snprintf(sub,sizeof(sub),T("%s"),draft.topic==NO_TOPIC?T("Optional / keine Zuordnung"):T(topic_label(draft.cls,draft.topic)));break;
  case 7:snprintf(title,sizeof(title),T("Termin speichern"));snprintf(sub,sizeof(sub),T("Klasse %s | Abschlussfrage aktiv"),classes[draft.cls]);break;
  case 8:snprintf(title,sizeof(title),T("Abbrechen"));break;}break;
@@ -586,15 +596,15 @@ static void select_row(MenuLayer *m,MenuIndex *idx,void *ctx){(void)m;(void)ctx;
 }break;
  case EXPLANATIONS:switch(r){
  case 2:show_info(T("Handy-Eingabe"),2,T("HANDY-EINGABE\n\nIn der Pebble-App beim Fahrschul Planer die Einstellungen öffnen. Dort Termine anlegen, bearbeiten und löschen.\n\nZur Übertragung die Uhr-App öffnen und Bluetooth verbinden.\n\nDie Uhr bleibt vollständig ohne diese Zusatzfunktion bedienbar."));break;
- case 1:show_info(T("Bedingungen & Kürzel"),1,T("FAHRSCHUL PLANER 3.8.4\n\n24 Termine, 2 Erinnerungen und 10-Min.-Schlummern.\nNach dem geplanten Ende fragt die Uhr nach Stunden. Gebucht wird nur nach Bestätigung.\n\nLA Landstraße / AU Autobahn\nNA Nacht / UE Übung\nGA Grundausbildung\nGS Grundstoff / ZS Zusatzstoff\n\nPraxis ab 45 Min., +5-Min.-Schritte.\n45 Restminuten ergeben 1 Einheit.\nTheorie je 90 Min.\nTheorie-Häkchen zählen als eine 90-Minuten-Einheit. Entfernen zieht diese Einheit ab. Zugeordnete Theorie-Termine zählen dasselbe Thema nicht doppelt.\nGS/ZS manuell bearbeitet nur zusätzliche Einheiten. Häkchen bleiben geschützt und können nur in der Themenliste entfernt werden.\n\nOben/Unten scrollen. Mitte wählt, Zurück schließt. OK unter Pflichtstunden halten: Zusätze bearbeiten oder löschen. Neue Termine: 01:00 und 00:30 vorher. Erinnerung 2 lässt sich direkt im Termin auf Aus stellen.\n\nVersion 3.8.4\n(Idee by Traumlewis | Code by Codex)"));break;
+ case 1:show_info(T("Bedingungen & Kürzel"),1,T("FAHRSCHUL PLANER 3.8.41\n\n24 Termine, 2 Erinnerungen und 10-Min.-Schlummern.\nNach dem geplanten Ende fragt die Uhr nach Stunden. Gebucht wird nur nach Bestätigung.\n\nLA Landstraße / AU Autobahn\nNA Nacht / UE Übung\nGA Grundausbildung\nGS Grundstoff / ZS Zusatzstoff\n\nPraxis ab 45 Min., +5-Min.-Schritte.\n45 Restminuten ergeben 1 Einheit.\nTheorie je 90 Min.\nTheorie-Häkchen zählen als eine 90-Minuten-Einheit. Entfernen zieht diese Einheit ab. Zugeordnete Theorie-Termine zählen dasselbe Thema nicht doppelt.\nGS/ZS manuell bearbeitet nur zusätzliche Einheiten. Häkchen bleiben geschützt und können nur in der Themenliste entfernt werden.\n\nOben/Unten scrollen. Mitte wählt, Zurück schließt. OK unter Pflichtstunden halten: Zusätze bearbeiten oder löschen. Neue Termine: 01:00 und 00:30 vorher. Erinnerung 2 lässt sich direkt im Termin auf Aus stellen.\n\nVersion 3.8.41\n(Idee by Traumlewis | Code by Codex)"));break;
  case 0:show_info(T("Rechtliche Vorgaben"),0,T("PFLICHTSTUNDEN\n\nFahrschAusbO: Par. 4, Anlagen 1, 2.2, 2.8, 4 und 5. Stand 06.11.2026.\n\nProfil passend zum Vorbesitz wählen. 0 = keine feste Mindestzahl, nicht keine Ausbildung.\n\nThemen sind eine Lernhilfe; Reihenfolge mit Fahrschule abstimmen. Zusatzstoff außer B wird als nummerierte Liste geführt.\n\nDetails in QUELLEN.md."));break;}break;
  case LIST:case PENDING:if(page==LIST&&!r){begin_edit(-1);break;}r-=page==LIST?1:0;if(r>=0&&r<list_count){selected=list_map[r];show_page(ACTIONS);}break;
  case CLASSES:choose_class(r);break;
  case PROFILES:cfg.profile=r;store_config();store_revision();if(navigation_depth&&navigation[0].page==HOME&&navigation_depth>1)return_to(SETTINGS);else return_to(HOME);break;
- case EDIT:switch(r){case 0:show_page(KINDS);menu_layer_set_selected_index(menu,MenuIndex(0,draft.cls==14?draft.kind-5:draft.kind),MenuRowAlignCenter,false);break;case 1:edit_datetime(0);break;case 2:edit_datetime(1);break;case 3:edit_number(5,T("Erinnerung 1"),draft.lead[0]/15,1,192);break;case 4:edit_number(6,T("Erinnerung 2"),draft.lead[1]/15,0,192);break;case 5:if(draft.kind<5)edit_number(7,T("Praxisdauer (Minuten)"),duration_minutes(&draft)/5,9,108);else edit_number(7,T("Theorie-Einheiten"),draft.units,1,12);break;case 6:if(draft.kind>=5)show_page(TOPIC_PICK);else show_notice(T("Theorie-Thema"),1,T("Themen sind nur für Theorie-Termine verfügbar."));break;case 7:save_draft();break;case 8:return_page();break;}break;
- case KINDS:draft.kind=draft.cls==14?r+5:r;draft.topic=NO_TOPIC;if(draft.kind>=5)draft.extra_minutes=0;return_page();break;
+ case EDIT:switch(r){case 0:show_page(KINDS);menu_layer_set_selected_index(menu,MenuIndex(0,draft.cls==14?draft.kind-5:draft.kind),MenuRowAlignCenter,false);break;case 1:edit_datetime(0);break;case 2:edit_datetime(1);break;case 3:edit_number(5,T("Erinnerung 1"),draft.lead[0]/15,1,192);break;case 4:edit_number(6,T("Erinnerung 2"),draft.lead[1]/15,0,192);break;case 5:if(draft_uses_minutes())edit_number(7,T("Praxisdauer (Minuten)"),duration_minutes(&draft)/5,9,108);else edit_number(7,T(draft.kind>=5?"Theorie-Einheiten":"Praxis-Einheiten"),draft.units,1,12);break;case 6:if(draft.kind>=5)show_page(TOPIC_PICK);else show_notice(T("Theorie-Thema"),1,T("Themen sind nur für Theorie-Termine verfügbar."));break;case 7:save_draft();break;case 8:return_page();break;}break;
+ case KINDS:draft.kind=draft.cls==14?r+5:r;draft.topic=NO_TOPIC;if(!draft_uses_minutes())draft.extra_minutes=0;return_page();break;
  case PROGRESS:if(r>=4&&r<6){unsigned protected=topic_units(cfg.cls,r);edit_number(10+r,r==4?T("Grundstoff: manuell"):T("Zusatzstoff: manuell"),counts[cfg.cls][r]-protected,0,999-protected);}else if(r<4)edit_number(10+r,T(counters[r]),counts[cfg.cls][r],0,999);else edit_number(16,T("Übungsfahrten"),practice[cfg.cls].exercise_units,0,999);break;
- case PROGRESS_ACTIONS:if(r==0){Page old=page;page=PROGRESS;MenuIndex index=MenuIndex(0,progress_counter);select_row(menu,&index,NULL);page=old;}else if(r==1&&progress_counter!=4&&progress_counter!=5){int slot=progress_counter<4?progress_counter:4;edit_number(17,T("Zusatzminuten"),practice[cfg.cls].remainder[slot]/5,0,extra_minutes_limit(cfg.cls,progress_counter)/5);}else show_page(PROGRESS_RESET);break;
+ case PROGRESS_ACTIONS:if(!progress_can_hold(progress_counter)&&r!=0)break;if(r==0){Page old=page;page=PROGRESS;MenuIndex index=MenuIndex(0,progress_counter);select_row(menu,&index,NULL);page=old;}else if(r==1&&progress_counter!=4&&progress_counter!=5){int slot=progress_counter<4?progress_counter:4;edit_number(17,T("Zusatzminuten"),practice[cfg.cls].remainder[slot]/5,0,extra_minutes_limit(cfg.cls,progress_counter)/5);}else show_page(PROGRESS_RESET);break;
  case PROGRESS_RESET:if(r){bool theory=progress_counter==4||progress_counter==5;bool ok=theory?set_progress_count(cfg.cls,progress_counter,topic_units(cfg.cls,progress_counter)):set_extra_minutes(cfg.cls,progress_counter,0);if(!ok){show_notice(T("Fortschritt"),5,T("Fortschritt nicht gespeichert. Bitte App neu starten."));break;}}if(r)return_to(PROGRESS);else return_page();if(r)show_status(T("Zusätze gelöscht"),T("Pflichtstunden"));break;
  case TOPICS:if(toggle_topic(cfg.cls,r))refresh();else show_notice(T("Theorie-Themen"),1,T("Thema nicht gespeichert. Bitte App neu starten."));break;
  case TOPIC_PICK:draft.topic=!r?NO_TOPIC:draft.kind==5?r-1:r+11;return_page();break;
@@ -629,9 +639,9 @@ static void move_menu(bool up){
 
 static void menu_select(ClickRecognizerRef r,void *c){(void)r;(void)c;MenuIndex i=menu_layer_get_selected_index(menu);select_row(menu,&i,NULL);}
 static void cancel_progress_touch(void){if(progress_hold_timer){app_timer_cancel(progress_hold_timer);progress_hold_timer=NULL;}}
-static void progress_touch_timeout(void *context){(void)context;progress_hold_timer=NULL;if(page!=PROGRESS||window_stack_get_top_window()!=window)return;progress_counter=progress_touch_row;menu_layer_set_selected_index(menu,MenuIndex(0,progress_counter),MenuRowAlignNone,false);progress_hold_fired=true;show_page(PROGRESS_ACTIONS);}
-static void start_progress_touch(int y){if(page!=PROGRESS)return;int content=y-scroll_layer_get_content_offset(menu_layer_get_scroll_layer(menu)).y-header_height(menu,0,NULL);if(content<0)return;for(int row=0;row<7;row++){MenuIndex index=MenuIndex(0,row);int height=row_height(menu,&index,NULL);if(content<height){progress_touch_row=row;progress_hold_timer=app_timer_register(650,progress_touch_timeout,NULL);return;}content-=height;}}
-static void menu_hold(ClickRecognizerRef r,void *c){(void)r;(void)c;if(page==PROGRESS){progress_counter=menu_layer_get_selected_index(menu).row;show_page(PROGRESS_ACTIONS);}else menu_select(NULL,NULL);}
+static void progress_touch_timeout(void *context){(void)context;progress_hold_timer=NULL;if(page!=PROGRESS||window_stack_get_top_window()!=window||!progress_can_hold(progress_touch_row))return;progress_counter=progress_touch_row;menu_layer_set_selected_index(menu,MenuIndex(0,progress_counter),MenuRowAlignNone,false);progress_hold_fired=true;show_page(PROGRESS_ACTIONS);}
+static void start_progress_touch(int y){if(page!=PROGRESS)return;int content=y-scroll_layer_get_content_offset(menu_layer_get_scroll_layer(menu)).y-header_height(menu,0,NULL);if(content<0)return;for(int row=0;row<7;row++){MenuIndex index=MenuIndex(0,row);int height=row_height(menu,&index,NULL);if(content<height){if(!progress_can_hold(row))return;progress_touch_row=row;progress_hold_timer=app_timer_register(650,progress_touch_timeout,NULL);return;}content-=height;}}
+static void menu_hold(ClickRecognizerRef r,void *c){(void)r;(void)c;if(page==PROGRESS){progress_counter=menu_layer_get_selected_index(menu).row;if(progress_can_hold(progress_counter))show_page(PROGRESS_ACTIONS);}else menu_select(NULL,NULL);}
 static void menu_clicks(void *ctx){(void)ctx;window_single_click_subscribe(BUTTON_ID_BACK,back);window_single_repeating_click_subscribe(BUTTON_ID_UP,150,menu_up);window_single_repeating_click_subscribe(BUTTON_ID_DOWN,150,menu_down);window_single_click_subscribe(BUTTON_ID_SELECT,menu_select);window_long_click_subscribe(BUTTON_ID_SELECT,650,menu_hold,NULL);}
 static void minute_tick(struct tm *t,TimeUnits u){(void)t;(void)u;process_events(true);}
 static void init(void){
