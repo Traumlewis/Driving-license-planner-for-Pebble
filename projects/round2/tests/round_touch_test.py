@@ -6,6 +6,8 @@ while depth:depth+=(s[b]=='{')-(s[b]=='}');b+=1
 handler=s[a:b]
 tree=ast.parse((root/'tests/touch_test.py').read_text());prefix=next(n.value.value for n in tree.body if isinstance(n,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='prefix' for t in n.targets))
 prefix=prefix.replace('viewport_height=228','viewport_height=260').replace('point.y>=-272','point.y>=viewport_height-500').replace('return 34;','return 78;')
+prefix=prefix.replace('return 78;', 'return frame_y?0:78;').replace('static int header_height(', 'static int frame_y;\nstatic int header_height(')
+prefix+='\nstatic int menu_layer_get_layer(int value){return value;}\nstatic GRect layer_get_frame(int value){(void)value;return (GRect){{0,frame_y},{260,viewport_height}};}\n'
 prefix+='\n#define UI_WIDTH 260\n#define UI_HEIGHT 260\n#define UI_LEFT 0\n#define UI_TOP 0\n'
 suffix=r'''
 static void raw(int type,int x,int y){TouchEvent e={type,false,x,y};touch_handler(&e,NULL);}
@@ -25,6 +27,13 @@ int main(void){
  local(TouchEvent_Touchdown,30,130);local(TouchEvent_PositionUpdate,110,130);raw(TouchEvent_Liftoff,0,0);assert(back_count==1);
  viewport_height=224;row_count=5;int activations=menu_activated;tap(130,240);assert(menu_activated==activations);
  viewport_height=260;local(TouchEvent_Touchdown,130,102);page++;raw(TouchEvent_Liftoff,0,0);assert(menu_activated==activations);
+ // Sticky header occupies screen coordinates outside the menu viewport.
+ frame_y=78;viewport_height=182;menu_offset=0;menu_selected.row=0;
+ tap(130,102);assert(menu_activated==activations+1);
+ activations=menu_activated;tap(130,60);assert(menu_activated==activations);
+ viewport_height=146;tap(130,240);assert(menu_activated==activations);
+ local(TouchEvent_Touchdown,130,180);local(TouchEvent_PositionUpdate,130,-500);assert(menu_offset==146-500);
+ local(TouchEvent_PositionUpdate,130,-480);assert(menu_offset==166-500);raw(TouchEvent_Liftoff,0,0);
  puts("PASS Round 2 touch: full circular 260px coordinates, +/-/OK/Back, date fields, menu taps, inert corners/gaps/footer, hard scroll limits, Back swipe and page-change cancellation");
 }
 '''

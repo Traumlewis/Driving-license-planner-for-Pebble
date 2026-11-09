@@ -1,3 +1,18 @@
+# Release 3.8.3 validation
+
+Built all six native programs with Pebble SDK 4.44, version 3.8.3, developer Traumlewis. The application UUID and storage format are unchanged.
+
+- `tests/progress_renderer_test.py` exercises the actual progress-drawing code in all five projects, covering 16 classes, 44 profiles and 308 counters per renderer. All 109 counters with undefined legal goals retain their count and show an explicit no-minimum label without a percentage track; defined goals retain their bar.
+- `tests/round_scroll_test.py` exercises production geometry and navigation: fixed-header coordinates, native bottom padding, legacy null separator callbacks, upper/lower selection limits and full first-row return.
+- `projects/round2/tests/round_touch_test.py` replays physical screen coordinates, including fixed-header taps, footer exclusion and hard scrolling with immediate reversal.
+- Native regression captures under `docs/verification/3.8.3/` show AM and B on all six platforms. Both circular platforms include first/last rows, scrolling back up, long German/English theory labels, class selection, progress and planning. Pixel comparisons confirm submenu headings do not move/crop at menu limits; selected final rows retain at least 10 pixels below them before the display edge or theory footer.
+- Native counter tests add then remove one manual country-road unit. Snapshots verify the original appointments, counts, topics, remainders, class, profile and language are restored and alarm/storage status stays healthy.
+- Existing model/storage/translation/wakeup checks and navigation-history checks pass in all five device projects. Release metadata, native manifests, checksums and store asset dimensions are checked by `tests/release_validation.py`.
+
+No physical-watch tests were performed. Store screenshots below remain the 3.8.2 release set; the new regression captures document the 3.8.3 changes.
+
+---
+
 # Release 3.8.2 validation
 
 ## Native builds and metadata

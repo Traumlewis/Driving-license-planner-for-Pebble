@@ -1,7 +1,7 @@
 # Driving Planner
 
 **Developer:** Traumlewis  
-**Version:** 3.8.2  
+**Version:** 3.8.3  
 **Short description:** Plan driving lessons, get reminders and track your German licence progress.
 
 Keep your driving lessons organized from your Pebble. Driving Planner brings practical lessons, theory appointments, reminders and training progress together on your wrist.

@@ -48,6 +48,7 @@ static int progress_touch_row;
 static Window *window,*msg_window,*num_window;
 static Window *status_window;
 static Layer *status_layer,*footer_layer,*info_header;
+static Layer *menu_header_layer;
 static char info_title[64];
 static int info_symbol;
 static AppTimer *status_timer;
@@ -96,6 +97,9 @@ static void start_progress_touch(int y);
 static void cancel_progress_touch(void);
 static void move_menu(bool up);
 static void footer_draw(Layer *layer,GContext *ctx);
+static int page_header_height(void);
+static void header_draw(GContext *ctx,const Layer *layer,uint16_t section,void *context);
+static void menu_header_draw(Layer *layer,GContext *ctx){header_draw(ctx,layer,0,NULL);}
 static void load_rules(void) {rule_count=rules_for(cfg.cls,rules);if(cfg.profile<0||cfg.profile>=rule_count)cfg.profile=0;}
 static const uint16_t *targets(void) {return rules[cfg.profile].target;}
 int profile_extra(int c){Rule r[10];int n=rules_for(c,r);return r[profiles[c]<n?profiles[c]:0].target[5];}
@@ -123,7 +127,7 @@ static int circle_inset(int y){
  return 130-half;
 }
 static int row_screen_top(int row){
- int y=header_height(menu,0,NULL)+scroll_layer_get_content_offset(menu_layer_get_scroll_layer(menu)).y;
+ int y=layer_get_frame(menu_layer_get_layer(menu)).origin.y+header_height(menu,0,NULL)+scroll_layer_get_content_offset(menu_layer_get_scroll_layer(menu)).y;
  for(int i=0;i<row;i++){MenuIndex index=MenuIndex(0,i);y+=row_height(menu,&index,NULL);}return y;
 }
 static int row_inset(int row,int height){
@@ -206,8 +210,13 @@ static void show_info(const char *title,int symbol,const char *body){
 }
 static void buzz(void) {static const uint32_t pattern[]={500,180,500,180,900};vibes_enqueue_custom_pattern((VibePattern){.durations=pattern,.num_segments=5});light_enable_interaction();}
 static void refresh(void){
-
- if(!ui_ready){return;}menu_layer_set_highlight_colors(menu,GColorCyan,GColorOxfordBlue);int h=page==TOPICS?224:260;scroll_layer_set_frame(menu_layer_get_scroll_layer(menu),GRect(0,0,260,h));layer_set_bounds(menu_layer_get_layer(menu),GRect(0,0,260,h));layer_set_hidden(footer_layer,page!=TOPICS);build_list();menu_layer_reload_data(menu);layer_mark_dirty(menu_layer_get_layer(menu));
+ if(!ui_ready)return;
+ menu_layer_set_highlight_colors(menu,GColorCyan,GColorOxfordBlue);
+ int bottom=page==TOPICS?224:260,top=page==HOME?0:page_header_height();
+ GRect frame=GRect(0,top,260,bottom-top);
+ scroll_layer_set_frame(menu_layer_get_scroll_layer(menu),frame);layer_set_bounds(menu_layer_get_layer(menu),GRect(0,0,260,bottom-top));
+ layer_set_frame(menu_header_layer,GRect(0,0,260,page_header_height()));layer_set_hidden(menu_header_layer,page==HOME);layer_mark_dirty(menu_header_layer);
+ layer_set_hidden(footer_layer,page!=TOPICS);build_list();menu_layer_reload_data(menu);layer_mark_dirty(menu_layer_get_layer(menu));
 }
 static MenuView capture_view(void){
  MenuView view={.page=page,.row=menu_layer_get_selected_index(menu).row,.offset=scroll_layer_get_content_offset(menu_layer_get_scroll_layer(menu)),.context_id=selected_valid()?entries[selected].id:0};
@@ -376,7 +385,7 @@ static void __attribute__((unused)) touch_handler(const TouchEvent *event,void *
  ScrollLayer *scroll=top==window?menu_layer_get_scroll_layer(menu):msg_scroll;
  if(event->type==TouchEvent_Touchdown){
   if(event->x<0||event->x>=260||event->y<0||event->y>=260||(event->x-130)*(event->x-130)+(event->y-130)*(event->y-130)>130*130){active=false;cancel_progress_touch();return;}
-  if(top==window&&(event->y<0||event->y>=layer_get_bounds(scroll_layer_get_layer(scroll)).size.h)){active=false;cancel_progress_touch();return;}
+  if(top==window&&(event->y<0||event->y>=layer_get_frame(menu_layer_get_layer(menu)).origin.y+layer_get_bounds(scroll_layer_get_layer(scroll)).size.h)){active=false;cancel_progress_touch();return;}
   active=true;moved=false;axis=0;target=top;touch_page=page;x0=last_x=event->x;y0=last_y=event->y;max_distance=0;
   scroll0=scroll_layer_get_content_offset(scroll).y;
   progress_hold_fired=false;cancel_progress_touch();if(top==window)start_progress_touch(event->y);
@@ -402,9 +411,9 @@ static void __attribute__((unused)) touch_handler(const TouchEvent *event,void *
  active=false;
  if(axis!=1&&dx>50&&ax>ay){if(top==window)back(NULL,NULL);else window_stack_pop(true);return;}
  if(top==window){
-  if(y<0||y>=layer_get_bounds(scroll_layer_get_layer(scroll)).size.h)return;
+  if(y<layer_get_frame(menu_layer_get_layer(menu)).origin.y||y>=layer_get_frame(menu_layer_get_layer(menu)).origin.y+layer_get_bounds(scroll_layer_get_layer(scroll)).size.h)return;
   if(moved||max_distance>20)return;
-  int content_y=y-scroll_layer_get_content_offset(scroll).y;
+  int content_y=y-layer_get_frame(menu_layer_get_layer(menu)).origin.y-scroll_layer_get_content_offset(scroll).y;
   int cursor=header_height(menu,0,NULL),count=rows(menu,0,NULL);
   for(int row=0;row<count;row++){
    MenuIndex index=MenuIndex(0,row);int height=row_height(menu,&index,NULL);
@@ -434,9 +443,8 @@ static int pick_count(void){if(draft.kind==5)return 13;if(draft.kind==6){Rule te
 static uint16_t rows(MenuLayer *m,uint16_t s,void *ctx){(void)m;(void)s;(void)ctx;switch(page){
  case HOME:return 7;case SETTINGS:case EXPLANATIONS:return 3;case LIST:return list_count+1;case PENDING:return list_count?list_count:1;case CLASSES:return 16;case PROFILES:return rule_count;case EDIT:return 9;case KINDS:return draft.cls==14?2:7;case PROGRESS:return 7;case ACTIONS:return selected_valid()?5:1;case DELETE_CONFIRM:return 2;case COMPLETE_CONFIRM:return 3;case TOPICS:return topic_count();case TOPIC_PICK:return pick_count();case ALERT:return alert_count+2;case PROGRESS_ACTIONS:return progress_counter==4||progress_counter==5?2:3;case PROGRESS_RESET:return 2;}return 0;}
 static int16_t separator_height(MenuLayer *m,MenuIndex *i,void *ctx){(void)m;(void)i;(void)ctx;return 0;}
-static int16_t header_height(MenuLayer *m,uint16_t s,void *ctx){
-(void)m;(void)s;(void)ctx;return page==HOME?180:78;
-}
+static int page_header_height(void){return page==HOME?180:78;}
+static int16_t header_height(MenuLayer *m,uint16_t section,void *ctx){(void)m;(void)section;(void)ctx;return page==HOME?page_header_height():0;}
 static void list_entry_title(const Entry *e,char *text,size_t size){
  const char *const names[]={"Übungsfahrt","Landstraße","Autobahn","Nachtfahrt","Grundausbildung","Grundstoff","Zusatzstoff"};
  const char *name=e->kind>=5?T(kinds[e->kind]):T(names[e->kind]);
@@ -527,7 +535,7 @@ static void row_draw(GContext *ctx,const Layer *l,MenuIndex *idx,void *c){(void)
  case 2:snprintf(title,sizeof(title),T("%s"),alarm_ok?T("Alarm testen"):T("Alarm erneut aktivieren"));snprintf(sub,sizeof(sub),T("%s"),alarm_ok?T("App schließen: Test in 1 Min."):T("Alle gespeicherten Termine prüfen"));break;}break;
  case EXPLANATIONS:switch(r){
  case 0:snprintf(title,sizeof(title),T("Rechtliche Vorgaben"));snprintf(sub,sizeof(sub),T("FahrschAusbO / Stand 06.11.26"));break;
- case 1:snprintf(title,sizeof(title),T("Bedingungen & Kürzel"));snprintf(sub,sizeof(sub),T("Fahrschul Planer 3.8.2"));break;
+ case 1:snprintf(title,sizeof(title),T("Bedingungen & Kürzel"));snprintf(sub,sizeof(sub),T("Fahrschul Planer 3.8.3"));break;
  case 2:snprintf(title,sizeof(title),T("Handy-Eingabe"));snprintf(sub,sizeof(sub),T("Einstellungen in der Pebble-App"));break;}break;
  case LIST:case PENDING:{if(page==LIST&&r==0){snprintf(title,sizeof(title),T("+ Neuer Termin"));snprintf(sub,sizeof(sub),T("%d von 24 Plätzen belegt"),active_count());break;}int pos=page==LIST?r-1:r;if(pos>=list_count){snprintf(title,sizeof(title),T("Alles erledigt!"));break;}Entry *x=&entries[list_map[pos]];list_entry_title(x,title,sizeof(title));char dt[32];time_t when=x->when;strftime(dt,sizeof(dt),T("%d.%m. · %H:%M"),localtime(&when));snprintf(sub,sizeof(sub),T("%s%s"),end_time(x)<=time(NULL)?T("Offen: "):T(""),dt);break;}
  case CLASSES:snprintf(title,sizeof(title),T("Klasse %s"),classes[r]);snprintf(sub,sizeof(sub),T("%s"),r==cfg.cls?T("Aktuell ausgewählt"):T("Termine und Fortschritt behalten"));break;
@@ -556,9 +564,15 @@ static void row_draw(GContext *ctx,const Layer *l,MenuIndex *idx,void *c){(void)
  bool selected=cell_selected(l);graphics_context_set_text_color(ctx,GColorOxfordBlue);graphics_context_set_stroke_color(ctx,GColorOxfordBlue);
  if(page==HOME){GFont font=fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD);GSize size=graphics_text_layout_get_content_size(title,font,GRect(0,0,1000,34),GTextOverflowModeWordWrap,GTextAlignmentLeft);if(size.w>width-20){font=fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD);size=graphics_text_layout_get_content_size(title,font,GRect(0,0,1000,34),GTextOverflowModeWordWrap,GTextAlignmentLeft);if(size.w>width-20)font=fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD);}graphics_draw_text(ctx,title,font,GRect(left,0,width-18,34),GTextOverflowModeTrailingEllipsis,GTextAlignmentLeft,NULL);int x=260-left-7;graphics_context_set_stroke_width(ctx,2);graphics_draw_line(ctx,GPoint(x-5,11),GPoint(x,17));graphics_draw_line(ctx,GPoint(x,17),GPoint(x-5,23));}
  else if(page==PROGRESS){const char *const labels[]={"Landstraße","Autobahn","Nachtfahrt","Grundausbildung","Grundstoff","Zusatzstoff","Übungsfahrten"};unsigned value=r<6?counts[cfg.cls][r]:practice[cfg.cls].exercise_units,goal=r<6?targets()[r]:0,rest=(r<4||r==6)?practice[cfg.cls].remainder[r<4?r:4]:0;static char count[32],note[64];if(goal)snprintf(count,sizeof(count),"%u/%u",value,goal);else snprintf(count,sizeof(count),"%u",value);
-  GFont font=fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD);GSize size=graphics_text_layout_get_content_size(T(labels[r]),font,GRect(0,0,1000,28),GTextOverflowModeWordWrap,GTextAlignmentLeft);if(size.w>width-62)font=fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD);graphics_draw_text(ctx,T(labels[r]),font,GRect(left,0,width-62,26),GTextOverflowModeTrailingEllipsis,GTextAlignmentLeft,NULL);graphics_draw_text(ctx,count,fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD),GRect(260-left-60,0,60,31),GTextOverflowModeTrailingEllipsis,GTextAlignmentRight,NULL);
+  int count_width=goal?60:(strlen(count)>2?48:32);GFont font=fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD);GSize size=graphics_text_layout_get_content_size(T(labels[r]),font,GRect(0,0,1000,28),GTextOverflowModeWordWrap,GTextAlignmentLeft);if(size.w>width-count_width-2)font=fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD);graphics_draw_text(ctx,T(labels[r]),font,GRect(left,0,width-count_width-2,26),GTextOverflowModeTrailingEllipsis,GTextAlignmentLeft,NULL);graphics_draw_text(ctx,count,fonts_get_system_font(strlen(count)>5?FONT_KEY_GOTHIC_18_BOLD:FONT_KEY_GOTHIC_24_BOLD),GRect(260-left-count_width,0,count_width,31),GTextOverflowModeTrailingEllipsis,GTextAlignmentRight,NULL);
+  if(!goal){
+   graphics_draw_text(ctx,T("Kein festes Minimum"),fonts_get_system_font(FONT_KEY_GOTHIC_14),GRect(left,26,width,18),GTextOverflowModeTrailingEllipsis,GTextAlignmentLeft,NULL);
+   if(rest)snprintf(note,sizeof(note),T("+ %u Minuten"),rest);else snprintf(note,sizeof(note),"%s",T(r==4||r==5?"90-Minuten-Einheiten":"45-Minuten-Einheiten"));
+   graphics_draw_text(ctx,note,fonts_get_system_font(FONT_KEY_GOTHIC_14),GRect(left,40,width,16),GTextOverflowModeTrailingEllipsis,GTextAlignmentLeft,NULL);
+  }else{
   graphics_context_set_fill_color(ctx,GColorWhite);graphics_fill_rect(ctx,GRect(left,29,width,8),0,GCornerNone);graphics_context_set_fill_color(ctx,selected?GColorOxfordBlue:GColorCyan);int fill=goal?(int)((width-2)*(value<goal?value:goal)/goal):0;if(fill)graphics_fill_rect(ctx,GRect(left+1,30,fill,6),0,GCornerNone);graphics_context_set_stroke_width(ctx,1);graphics_draw_rect(ctx,GRect(left,29,width,8));if(rest)snprintf(note,sizeof(note),T("+ %u Minuten"),rest);else snprintf(note,sizeof(note),"%s",T(goal?(r==4||r==5?"90-Minuten-Einheiten":"45-Minuten-Einheiten"):"Kein festes Minimum"));graphics_draw_text(ctx,note,fonts_get_system_font(FONT_KEY_GOTHIC_14),GRect(left,38,width,18),GTextOverflowModeTrailingEllipsis,GTextAlignmentLeft,NULL);
- }else if(page==TOPICS){static char text[96];if(r>=12&&cfg.cls!=4)snprintf(text,sizeof(text),T("Zusatzstoff %d"),r-11);else snprintf(text,sizeof(text),"%s",T(topic_label(cfg.cls,r)));graphics_context_set_stroke_width(ctx,2);graphics_draw_rect(ctx,GRect(left,16,17,17));if(topics[cfg.cls]&(1u<<r)){graphics_draw_line(ctx,GPoint(left+3,24),GPoint(left+7,28));graphics_draw_line(ctx,GPoint(left+7,28),GPoint(left+15,19));}GFont font=fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD);GSize size=graphics_text_layout_get_content_size(text,font,GRect(0,0,width-26,48),GTextOverflowModeWordWrap,GTextAlignmentLeft);graphics_draw_text(ctx,text,font,GRect(left+26,(48-size.h)/2-3,width-26,47),GTextOverflowModeWordWrap,GTextAlignmentLeft,NULL);
+  }
+ }else if(page==TOPICS){static char text[96];if(r>=12&&cfg.cls!=4)snprintf(text,sizeof(text),T("Zusatzstoff %d"),r-11);else snprintf(text,sizeof(text),"%s",T(topic_label(cfg.cls,r)));graphics_context_set_stroke_width(ctx,2);graphics_draw_rect(ctx,GRect(left,16,17,17));if(topics[cfg.cls]&(1u<<r)){graphics_draw_line(ctx,GPoint(left+3,24),GPoint(left+7,28));graphics_draw_line(ctx,GPoint(left+7,28),GPoint(left+15,19));}GFont font=fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD);GSize size=graphics_text_layout_get_content_size(text,font,GRect(0,0,width-26,160),GTextOverflowModeWordWrap,GTextAlignmentLeft);if(size.h>h-8){font=fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD);size=graphics_text_layout_get_content_size(text,font,GRect(0,0,width-26,160),GTextOverflowModeWordWrap,GTextAlignmentLeft);}int y=(h-size.h)/2-3;if(y<0)y=0;graphics_draw_text(ctx,text,font,GRect(left+26,y,width-26,h-y-2),GTextOverflowModeWordWrap,GTextAlignmentLeft,NULL);
  }else if(page==CLASSES){class_icon(ctx,r,GPoint(left,7));graphics_context_set_text_color(ctx,GColorOxfordBlue);graphics_draw_text(ctx,title,fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD),GRect(left+44,0,width-44,29),GTextOverflowModeTrailingEllipsis,GTextAlignmentLeft,NULL);graphics_draw_text(ctx,sub,fonts_get_system_font(FONT_KEY_GOTHIC_14),GRect(left+44,28,width-44,18),GTextOverflowModeTrailingEllipsis,GTextAlignmentLeft,NULL);
  }else if(page==KINDS||(page==EDIT&&r==0)){GFont font=fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD);GSize size=graphics_text_layout_get_content_size(title,font,GRect(0,0,width,48),GTextOverflowModeWordWrap,GTextAlignmentLeft);graphics_draw_text(ctx,title,font,GRect(left,(48-size.h)/2-3,width,48),GTextOverflowModeWordWrap,GTextAlignmentLeft,NULL);
  }else if((page==LIST&&r>0)||page==PENDING||(page==ALERT&&r<alert_count)){GFont font=fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD);GSize size=graphics_text_layout_get_content_size(title,font,GRect(0,0,width-18,44),GTextOverflowModeWordWrap,GTextAlignmentLeft);int y=size.h<18?18:size.h>36?36:size.h;graphics_draw_text(ctx,title,font,GRect(left,0,width-18,y+2),GTextOverflowModeWordWrap,GTextAlignmentLeft,NULL);font=fonts_get_system_font(FONT_KEY_GOTHIC_24);size=graphics_text_layout_get_content_size(sub,font,GRect(0,0,1000,34),GTextOverflowModeWordWrap,GTextAlignmentLeft);if(size.w>width-18)font=fonts_get_system_font(FONT_KEY_GOTHIC_18);graphics_draw_text(ctx,sub,font,GRect(left,y-1,width-18,34),GTextOverflowModeTrailingEllipsis,GTextAlignmentLeft,NULL);
@@ -585,7 +599,7 @@ static void select_row(MenuLayer *m,MenuIndex *idx,void *ctx){(void)m;(void)ctx;
 }break;
  case EXPLANATIONS:switch(r){
  case 2:show_info(T("Handy-Eingabe"),2,T("HANDY-EINGABE\n\nIn der Pebble-App beim Fahrschul Planer die Einstellungen öffnen. Dort Termine anlegen, bearbeiten und löschen.\n\nZur Übertragung die Uhr-App öffnen und Bluetooth verbinden.\n\nDie Uhr bleibt vollständig ohne diese Zusatzfunktion bedienbar."));break;
- case 1:show_info(T("Bedingungen & Kürzel"),1,T("FAHRSCHUL PLANER 3.8.2\n\n24 Termine, 2 Erinnerungen und 10-Min.-Schlummern.\nNach dem geplanten Ende fragt die Uhr nach Stunden. Gebucht wird nur nach Bestätigung.\n\nLA Landstraße / AU Autobahn\nNA Nacht / UE Übung\nGA Grundausbildung\nGS Grundstoff / ZS Zusatzstoff\n\nPraxis ab 45 Min., +5-Min.-Schritte.\n45 Restminuten ergeben 1 Einheit.\nTheorie je 90 Min.\nTheorie-Häkchen zählen als eine 90-Minuten-Einheit. Entfernen zieht diese Einheit ab. Zugeordnete Theorie-Termine zählen dasselbe Thema nicht doppelt.\nGS/ZS manuell bearbeitet nur zusätzliche Einheiten. Häkchen bleiben geschützt und können nur in der Themenliste entfernt werden.\n\nOben/Unten scrollen. Mitte wählt, Zurück schließt. OK unter Pflichtstunden halten: Zusätze bearbeiten oder löschen. Neue Termine: 01:00 und 00:30 vorher. Erinnerung 2 lässt sich direkt im Termin auf Aus stellen.\n\nVersion 3.8.2\n(Idee by Traumlewis | Code by Codex)"));break;
+ case 1:show_info(T("Bedingungen & Kürzel"),1,T("FAHRSCHUL PLANER 3.8.3\n\n24 Termine, 2 Erinnerungen und 10-Min.-Schlummern.\nNach dem geplanten Ende fragt die Uhr nach Stunden. Gebucht wird nur nach Bestätigung.\n\nLA Landstraße / AU Autobahn\nNA Nacht / UE Übung\nGA Grundausbildung\nGS Grundstoff / ZS Zusatzstoff\n\nPraxis ab 45 Min., +5-Min.-Schritte.\n45 Restminuten ergeben 1 Einheit.\nTheorie je 90 Min.\nTheorie-Häkchen zählen als eine 90-Minuten-Einheit. Entfernen zieht diese Einheit ab. Zugeordnete Theorie-Termine zählen dasselbe Thema nicht doppelt.\nGS/ZS manuell bearbeitet nur zusätzliche Einheiten. Häkchen bleiben geschützt und können nur in der Themenliste entfernt werden.\n\nOben/Unten scrollen. Mitte wählt, Zurück schließt. OK unter Pflichtstunden halten: Zusätze bearbeiten oder löschen. Neue Termine: 01:00 und 00:30 vorher. Erinnerung 2 lässt sich direkt im Termin auf Aus stellen.\n\nVersion 3.8.3\n(Idee by Traumlewis | Code by Codex)"));break;
  case 0:show_info(T("Rechtliche Vorgaben"),0,T("PFLICHTSTUNDEN\n\nFahrschAusbO: Par. 4, Anlagen 1, 2.2, 2.8, 4 und 5. Stand 06.11.2026.\n\nProfil passend zum Vorbesitz wählen. 0 = keine feste Mindestzahl, nicht keine Ausbildung.\n\nThemen sind eine Lernhilfe; Reihenfolge mit Fahrschule abstimmen. Zusatzstoff außer B wird als nummerierte Liste geführt.\n\nDetails in QUELLEN.md."));break;}break;
  case LIST:case PENDING:if(page==LIST&&!r){begin_edit(-1);break;}r-=page==LIST?1:0;if(r>=0&&r<list_count){selected=list_map[r];show_page(ACTIONS);}break;
  case CLASSES:choose_class(r);break;
@@ -619,17 +633,15 @@ static void menu_up(ClickRecognizerRef r,void *c){(void)r;(void)c;move_menu(true
 static void menu_down(ClickRecognizerRef r,void *c){(void)r;(void)c;move_menu(false);}
 static void move_menu(bool up){
  MenuIndex current=menu_layer_get_selected_index(menu);int count=rows(menu,0,NULL),next=(int)current.row+(up?-1:1);if(next<0||next>=count)return;
- ScrollLayer *scroll=menu_layer_get_scroll_layer(menu);int offset=scroll_layer_get_content_offset(scroll).y,viewport=layer_get_bounds(scroll_layer_get_layer(scroll)).size.h,top=header_height(menu,0,NULL);
- for(int row=0;row<next;row++){MenuIndex index=MenuIndex(0,row);top+=row_height(menu,&index,NULL);}
- MenuIndex index=MenuIndex(0,next);int bottom=top+row_height(menu,&index,NULL);
- MenuRowAlign align=MenuRowAlignNone;if(!next)align=page==HOME?MenuRowAlignBottom:MenuRowAlignTop;else if(bottom+offset>viewport-24||top+offset<24)align=MenuRowAlignCenter;
- menu_layer_set_selected_next(menu,up,align,true);
+ ScrollLayer *scroll=menu_layer_get_scroll_layer(menu);
+ menu_layer_set_selected_next(menu,up,next?MenuRowAlignCenter:MenuRowAlignNone,true);
+ if(!next)scroll_layer_set_content_offset(scroll,GPointZero,true);
 }
 
 static void menu_select(ClickRecognizerRef r,void *c){(void)r;(void)c;MenuIndex i=menu_layer_get_selected_index(menu);select_row(menu,&i,NULL);}
 static void cancel_progress_touch(void){if(progress_hold_timer){app_timer_cancel(progress_hold_timer);progress_hold_timer=NULL;}}
 static void progress_touch_timeout(void *context){(void)context;progress_hold_timer=NULL;if(page!=PROGRESS||window_stack_get_top_window()!=window)return;progress_counter=progress_touch_row;menu_layer_set_selected_index(menu,MenuIndex(0,progress_counter),MenuRowAlignNone,false);progress_hold_fired=true;show_page(PROGRESS_ACTIONS);}
-static void start_progress_touch(int y){if(page!=PROGRESS)return;int content=y-scroll_layer_get_content_offset(menu_layer_get_scroll_layer(menu)).y-header_height(menu,0,NULL);if(content<0)return;for(int row=0;row<7;row++){MenuIndex index=MenuIndex(0,row);int height=row_height(menu,&index,NULL);if(content<height){progress_touch_row=row;progress_hold_timer=app_timer_register(650,progress_touch_timeout,NULL);return;}content-=height;}}
+static void start_progress_touch(int y){if(page!=PROGRESS)return;int content=y-layer_get_frame(menu_layer_get_layer(menu)).origin.y-scroll_layer_get_content_offset(menu_layer_get_scroll_layer(menu)).y-header_height(menu,0,NULL);if(content<0)return;for(int row=0;row<7;row++){MenuIndex index=MenuIndex(0,row);int height=row_height(menu,&index,NULL);if(content<height){progress_touch_row=row;progress_hold_timer=app_timer_register(650,progress_touch_timeout,NULL);return;}content-=height;}}
 static void menu_hold(ClickRecognizerRef r,void *c){(void)r;(void)c;if(page==PROGRESS){progress_counter=menu_layer_get_selected_index(menu).row;show_page(PROGRESS_ACTIONS);}else menu_select(NULL,NULL);}
 static void menu_clicks(void *ctx){(void)ctx;window_single_click_subscribe(BUTTON_ID_BACK,back);window_single_repeating_click_subscribe(BUTTON_ID_UP,150,menu_up);window_single_repeating_click_subscribe(BUTTON_ID_DOWN,150,menu_down);window_single_click_subscribe(BUTTON_ID_SELECT,menu_select);window_long_click_subscribe(BUTTON_ID_SELECT,650,menu_hold,NULL);}
 static void minute_tick(struct tm *t,TimeUnits u){(void)t;(void)u;process_events(true);}
@@ -637,15 +649,16 @@ static void init(void){
  store_load();if(cfg.cls>=0){load_rules();profiles[cfg.cls]=cfg.profile;}
  if(persist_exists(WAKE_KEY))wake_id=persist_read_int(WAKE_KEY);
  if(persist_exists(28))test_at=persist_read_int(28);
- window=window_create();window_set_background_color(window,GColorOxfordBlue);GRect b=GRect(UI_LEFT,UI_TOP,UI_WIDTH,UI_HEIGHT);menu=menu_layer_create(b);menu_layer_pad_bottom_enable(menu,false);menu_layer_set_center_focused(menu,false);menu_layer_set_normal_colors(menu,GColorWhite,GColorOxfordBlue);menu_layer_set_highlight_colors(menu,UI_SELECTION,UI_SELECTION_TEXT);
+ window=window_create();window_set_background_color(window,GColorOxfordBlue);GRect b=GRect(UI_LEFT,UI_TOP,UI_WIDTH,UI_HEIGHT);menu=menu_layer_create(b);menu_layer_pad_bottom_enable(menu,true);menu_layer_set_center_focused(menu,false);menu_layer_set_normal_colors(menu,GColorWhite,GColorOxfordBlue);menu_layer_set_highlight_colors(menu,UI_SELECTION,UI_SELECTION_TEXT);
  menu_layer_set_callbacks(menu,NULL,(MenuLayerCallbacks){.get_num_rows=rows,.get_separator_height=separator_height,.draw_separator=separator_draw,.get_header_height=header_height,.get_cell_height=row_height,.draw_header=header_draw,.draw_row=row_draw});layer_add_child(window_get_root_layer(window),menu_layer_get_layer(menu));window_set_click_config_provider(window,menu_clicks);
+ menu_header_layer=layer_create(GRect(0,0,260,78));layer_set_update_proc(menu_header_layer,menu_header_draw);layer_add_child(window_get_root_layer(window),menu_header_layer);layer_set_hidden(menu_header_layer,true);
  msg_window=window_create();window_set_background_color(msg_window,GColorWhite);msg_scroll=scroll_layer_create(b);scroll_layer_set_shadow_hidden(msg_scroll,true);scroll_layer_set_click_config_onto_window(msg_scroll,msg_window);layer_add_child(window_get_root_layer(msg_window),scroll_layer_get_layer(msg_scroll));msg_text=text_layer_create(GRect(8,5,184,1600));text_layer_set_background_color(msg_text,GColorClear);text_layer_set_text_color(msg_text,GColorOxfordBlue);text_layer_set_font(msg_text,fonts_get_system_font(FONT_KEY_GOTHIC_24));scroll_layer_add_child(msg_scroll,text_layer_get_layer(msg_text));
  info_header=layer_create(GRect(UI_LEFT,UI_TOP,UI_WIDTH,UI_INFO_HEADER));layer_set_update_proc(info_header,info_header_draw);layer_add_child(window_get_root_layer(msg_window),info_header);layer_set_hidden(info_header,true);
  num_window=window_create();window_set_background_color(num_window,GColorOxfordBlue);num_layer=layer_create(b);layer_set_update_proc(num_layer,num_draw);layer_add_child(window_get_root_layer(num_window),num_layer);window_set_click_config_provider(num_window,num_clicks);
  date_window=window_create();window_set_background_color(date_window,GColorOxfordBlue);date_layer=layer_create(b);layer_set_update_proc(date_layer,date_draw);layer_add_child(window_get_root_layer(date_window),date_layer);window_set_click_config_provider(date_window,date_clicks);
  status_window=window_create();window_set_background_color(status_window,GColorOxfordBlue);status_layer=layer_create(b);layer_set_update_proc(status_layer,status_draw);layer_add_child(window_get_root_layer(status_window),status_layer);window_set_touch_bridge_disabled(status_window,true);
  footer_layer=layer_create(GRect(0,224,260,36));layer_set_update_proc(footer_layer,footer_draw);layer_add_child(window_get_root_layer(window),footer_layer);layer_set_hidden(footer_layer,true);
- ui_ready=true;page=cfg.cls<0?CLASSES:HOME;build_list();window_stack_push(window,true);
+ ui_ready=true;page=cfg.cls<0?CLASSES:HOME;refresh();window_stack_push(window,true);
 #if !defined(PBL_PLATFORM_FLINT)
  app_touch_navigation_enable(true);touch_service_subscribe(touch_handler,NULL);
  window_set_touch_bridge_disabled(window,true);window_set_touch_bridge_disabled(num_window,true);window_set_touch_bridge_disabled(date_window,true);window_set_touch_bridge_disabled(msg_window,true);
@@ -653,7 +666,7 @@ static void init(void){
  wakeup_service_subscribe(wake_handler);tick_timer_service_subscribe(MINUTE_UNIT,minute_tick);phone_init();process_events(true);
  if(storage_error)show_notice(T("Speicherfehler"),4,T("SPEICHERFEHLER\n\nBitte Uhr-App neu starten. Gespeicherte Daten werden beim Start erneut geladen. Bis dahin keine weiteren Änderungen vornehmen."));
 }
-static void deinit(void){layer_destroy(info_header);layer_destroy(footer_layer);dismiss_status();layer_destroy(status_layer);window_destroy(status_window);cancel_progress_touch();
+static void deinit(void){layer_destroy(menu_header_layer);layer_destroy(info_header);layer_destroy(footer_layer);dismiss_status();layer_destroy(status_layer);window_destroy(status_window);cancel_progress_touch();
 #if !defined(PBL_PLATFORM_FLINT)
  touch_service_unsubscribe();app_touch_navigation_enable(false);
 #endif
