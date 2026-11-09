@@ -1,0 +1,320 @@
+{
+  "experimentalFormat": "LP5P/self-contained-bpe-huffman",
+  "productionVersionUnchanged": "3.8.49",
+  "oldWatchQuota": 4096,
+  "reservedAppBytes": 1500,
+  "currentPacketLimit": 2560,
+  "manifestBytes": 16,
+  "results": [
+    {
+      "locale": "de",
+      "name": "Deutsch",
+      "textCount": 296,
+      "rawBytes": 8658,
+      "headerBytes": 32,
+      "nameBytes": 7,
+      "dictionaryBytes": 760,
+      "bookBytes": 268,
+      "directoryBytes": 321,
+      "compressedTextBytes": 3218,
+      "dictionaryEntries": 256,
+      "packetBytes": 4606,
+      "storedBytes": 4622,
+      "combinedWithAppReserve": 6122,
+      "exceedsCurrentPacketBy": 2046,
+      "exceedsOldQuotaBy": 2026,
+      "fitsCurrentReceiver": false,
+      "fitsOldStorage": false,
+      "roundtripAllTexts": true,
+      "corruptAndTruncatedRejected": true,
+      "deflateRawByWindow": {
+        "512": 4147,
+        "1024": 3883,
+        "2048": 3598,
+        "4096": 3374,
+        "8192": 3328,
+        "32768": 3326
+      },
+      "bzip2Bytes": 3283,
+      "candidateSizes": [
+        {
+          "dictionaryEntries": 0,
+          "packetBytes": 5723
+        },
+        {
+          "dictionaryEntries": 32,
+          "packetBytes": 5193
+        },
+        {
+          "dictionaryEntries": 64,
+          "packetBytes": 4982
+        },
+        {
+          "dictionaryEntries": 96,
+          "packetBytes": 4814
+        },
+        {
+          "dictionaryEntries": 128,
+          "packetBytes": 4726
+        },
+        {
+          "dictionaryEntries": 192,
+          "packetBytes": 4617
+        },
+        {
+          "dictionaryEntries": 256,
+          "packetBytes": 4606
+        },
+        {
+          "dictionaryEntries": 384,
+          "packetBytes": 4690
+        },
+        {
+          "dictionaryEntries": 512,
+          "packetBytes": 4910
+        },
+        {
+          "dictionaryEntries": 768,
+          "packetBytes": 5506
+        }
+      ]
+    },
+    {
+      "locale": "en",
+      "name": "English",
+      "textCount": 296,
+      "rawBytes": 7873,
+      "headerBytes": 32,
+      "nameBytes": 7,
+      "dictionaryBytes": 729,
+      "bookBytes": 250,
+      "directoryBytes": 321,
+      "compressedTextBytes": 3035,
+      "dictionaryEntries": 256,
+      "packetBytes": 4374,
+      "storedBytes": 4390,
+      "combinedWithAppReserve": 5890,
+      "exceedsCurrentPacketBy": 1814,
+      "exceedsOldQuotaBy": 1794,
+      "fitsCurrentReceiver": false,
+      "fitsOldStorage": false,
+      "roundtripAllTexts": true,
+      "corruptAndTruncatedRejected": true,
+      "deflateRawByWindow": {
+        "512": 3752,
+        "1024": 3518,
+        "2048": 3330,
+        "4096": 3149,
+        "8192": 3113,
+        "32768": 3113
+      },
+      "bzip2Bytes": 3042,
+      "candidateSizes": [
+        {
+          "dictionaryEntries": 0,
+          "packetBytes": 5065
+        },
+        {
+          "dictionaryEntries": 32,
+          "packetBytes": 4796
+        },
+        {
+          "dictionaryEntries": 64,
+          "packetBytes": 4607
+        },
+        {
+          "dictionaryEntries": 96,
+          "packetBytes": 4515
+        },
+        {
+          "dictionaryEntries": 128,
+          "packetBytes": 4470
+        },
+        {
+          "dictionaryEntries": 192,
+          "packetBytes": 4384
+        },
+        {
+          "dictionaryEntries": 256,
+          "packetBytes": 4374
+        },
+        {
+          "dictionaryEntries": 384,
+          "packetBytes": 4498
+        },
+        {
+          "dictionaryEntries": 512,
+          "packetBytes": 4706
+        },
+        {
+          "dictionaryEntries": 768,
+          "packetBytes": 5306
+        }
+      ]
+    },
+    {
+      "locale": "es",
+      "name": "Español",
+      "textCount": 296,
+      "rawBytes": 8838,
+      "headerBytes": 32,
+      "nameBytes": 8,
+      "dictionaryBytes": 762,
+      "bookBytes": 245,
+      "directoryBytes": 326,
+      "compressedTextBytes": 3410,
+      "dictionaryEntries": 256,
+      "packetBytes": 4783,
+      "storedBytes": 4799,
+      "combinedWithAppReserve": 6299,
+      "exceedsCurrentPacketBy": 2223,
+      "exceedsOldQuotaBy": 2203,
+      "fitsCurrentReceiver": false,
+      "fitsOldStorage": false,
+      "roundtripAllTexts": true,
+      "corruptAndTruncatedRejected": true,
+      "deflateRawByWindow": {
+        "512": 4275,
+        "1024": 3999,
+        "2048": 3748,
+        "4096": 3503,
+        "8192": 3434,
+        "32768": 3432
+      },
+      "bzip2Bytes": 3308,
+      "candidateSizes": [
+        {
+          "dictionaryEntries": 0,
+          "packetBytes": 5646
+        },
+        {
+          "dictionaryEntries": 32,
+          "packetBytes": 5374
+        },
+        {
+          "dictionaryEntries": 64,
+          "packetBytes": 5124
+        },
+        {
+          "dictionaryEntries": 96,
+          "packetBytes": 4973
+        },
+        {
+          "dictionaryEntries": 128,
+          "packetBytes": 4901
+        },
+        {
+          "dictionaryEntries": 192,
+          "packetBytes": 4814
+        },
+        {
+          "dictionaryEntries": 256,
+          "packetBytes": 4783
+        },
+        {
+          "dictionaryEntries": 384,
+          "packetBytes": 4903
+        },
+        {
+          "dictionaryEntries": 512,
+          "packetBytes": 5107
+        },
+        {
+          "dictionaryEntries": 768,
+          "packetBytes": 5686
+        }
+      ]
+    },
+    {
+      "locale": "fr",
+      "name": "Français",
+      "textCount": 296,
+      "rawBytes": 8614,
+      "headerBytes": 32,
+      "nameBytes": 9,
+      "dictionaryBytes": 766,
+      "bookBytes": 263,
+      "directoryBytes": 323,
+      "compressedTextBytes": 3326,
+      "dictionaryEntries": 256,
+      "packetBytes": 4719,
+      "storedBytes": 4735,
+      "combinedWithAppReserve": 6235,
+      "exceedsCurrentPacketBy": 2159,
+      "exceedsOldQuotaBy": 2139,
+      "fitsCurrentReceiver": false,
+      "fitsOldStorage": false,
+      "roundtripAllTexts": true,
+      "corruptAndTruncatedRejected": true,
+      "deflateRawByWindow": {
+        "512": 4124,
+        "1024": 3857,
+        "2048": 3597,
+        "4096": 3335,
+        "8192": 3271,
+        "32768": 3272
+      },
+      "bzip2Bytes": 3199,
+      "candidateSizes": [
+        {
+          "dictionaryEntries": 0,
+          "packetBytes": 5614
+        },
+        {
+          "dictionaryEntries": 32,
+          "packetBytes": 5172
+        },
+        {
+          "dictionaryEntries": 64,
+          "packetBytes": 4936
+        },
+        {
+          "dictionaryEntries": 96,
+          "packetBytes": 4799
+        },
+        {
+          "dictionaryEntries": 128,
+          "packetBytes": 4756
+        },
+        {
+          "dictionaryEntries": 192,
+          "packetBytes": 4723
+        },
+        {
+          "dictionaryEntries": 256,
+          "packetBytes": 4719
+        },
+        {
+          "dictionaryEntries": 384,
+          "packetBytes": 4812
+        },
+        {
+          "dictionaryEntries": 512,
+          "packetBytes": 5002
+        },
+        {
+          "dictionaryEntries": 768,
+          "packetBytes": 5554
+        }
+      ]
+    }
+  ],
+  "shipped": false,
+  "allLanguagesFitOldStorage": false,
+  "decision": "do-not-migrate-storage-budget-exceeded",
+  "existingProductionUnchanged": true,
+  "applicationRecordsEvidence": {
+    "entryBytes": 32,
+    "appointmentSlots": 24,
+    "appointmentRecordBytes": 768,
+    "allClassProgressBytes": 384,
+    "bookingRecordBytes": 20,
+    "configBytes": 4,
+    "note": "Other keys, profiles, alarms and migration flags are additional. The existing quota test reserves 1500 bytes for app records."
+  },
+  "limitsOfExperiment": [
+    "Desktop encoder/decoder only; no native LP5P build was produced because all tested bundles exceeded the old-device storage budget.",
+    "This result concerns the tested BPE/Huffman format and standard compression comparisons, not a proof that every possible future encoding is impossible.",
+    "Modern-device larger runtime quotas were not measured; the result is enough to reject an all-supported-devices migration."
+  ]
+}
