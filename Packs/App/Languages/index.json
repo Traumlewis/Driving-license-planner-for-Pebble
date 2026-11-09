@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "trainingCountry": "DE",
+  "settings": {
+    "format": "settings-v1",
+    "languages": [
+      {
+        "locale": "de",
+        "name": "Deutsch",
+        "file": "de/settings.json",
+        "sha256": "6fa43857379911280ce209b729865b944b6ff2d0ad33dd5bd17f3fca38b6d064",
+        "watchLanguage": 0
+      },
+      {
+        "locale": "en",
+        "name": "English",
+        "file": "en/settings.json",
+        "sha256": "b30deb6793527f221462581720cba23b04ca88a04872d4041d88b0fd4a04677f",
+        "watchLanguage": 1
+      }
+    ]
+  }
+}
