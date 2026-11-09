@@ -115,11 +115,11 @@
           "locale": "fr",
           "name": "Français",
           "language": 3,
-          "id": 879794766,
-          "crc": 3672353306,
-          "size": 2398,
+          "id": 1861070256,
+          "crc": 2664731240,
+          "size": 2407,
           "file": "watch/37bc2f9e-f48e0f24/fr.json",
-          "sha256": "e8c2647517221b9956ec3b61e387fbd54933ab5be23158def98b312fe50015d9"
+          "sha256": "bdc1cbe806d4fd7938f41e5782b8b63ee9db8c0fd2ac8e69e92e04f986369e2e"
         }
       ]
     }
