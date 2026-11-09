@@ -3,12 +3,12 @@
 #include <pebble.h>
 #include <string.h>
 #include <stdlib.h>
-#define APP_VERSION "3.8.50"
+#define APP_VERSION "3.8.51"
 #define TEXT_COUNT 296
 #define WATCH_SCHEMA_ID 935079838u
-#define WATCH_CODEC_ID 4102950692u
-#define CODEC_TOKENS 2841
-#define CODEC_TREES 3096
+#define WATCH_CODEC_ID 21543174u
+#define CODEC_TOKENS 4849
+#define CODEC_TREES 5104
 static const char *emergency_text(unsigned id){switch(id){
 case 1:return "%02d:%02d vorher";
 case 2:return "%d Min. | Klasse %s";

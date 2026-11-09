@@ -13,8 +13,8 @@ const create=require(project+'/remote-language').create,state={},storage={getIte
 const client=create(metadata,storage),out=path.resolve('/tmp/real-github-language-'+metadata.appVersion);fs.mkdirSync(out,{recursive:true});
 function ensure(api,language){return new Promise((resolve,reject)=>api.ensure(language,(error,packet)=>error?reject(Error(error)):resolve(packet)));}
 (async()=>{
- for(const language of [0,1,2,3]){const packet=await ensure(client,language),record=JSON.parse(state['fahrschul.v2.languagePacket']);assert.strictEqual(record.descriptor.language,language);assert.strictEqual(packet.language,language);fs.writeFileSync(path.join(out,packet.locale+'.json'),record.raw);}
- const count=calls.length;offline=true;const copy=JSON.stringify(state),fresh=create(metadata,storage);await ensure(fresh,3);assert.strictEqual(calls.length,count);let failed=false;try{await ensure(fresh,0);}catch(e){failed=true;}assert(failed);assert.strictEqual(JSON.stringify(state),copy);
+ for(const language of [0,1,2,3,4,5,6,7]){const packet=await ensure(client,language),record=JSON.parse(state['fahrschul.v2.languagePacket']);assert.strictEqual(record.descriptor.language,language);assert.strictEqual(packet.language,language);fs.writeFileSync(path.join(out,packet.locale+'.json'),record.raw);}
+ await ensure(client,3);const count=calls.length;offline=true;const copy=JSON.stringify(state),fresh=create(metadata,storage);await ensure(fresh,3);assert.strictEqual(calls.length,count);let failed=false;try{await ensure(fresh,0);}catch(e){failed=true;}assert(failed);assert.strictEqual(JSON.stringify(state),copy);
  fs.writeFileSync(path.join(out,'download-report.json'),JSON.stringify({version:metadata.appVersion,urls:calls,cachedLanguage:client.info().cachedLanguage,offlineReuse:true,failedReplacementPreservedCache:true},null,2)+'\n');
- console.log('PASS real GitHub client: verified DE/EN/ES/FR catalogue+packet HTTPS downloads, one cache, offline reload and failed replacement preserve FR');
+ console.log('PASS real GitHub client: verified eight-language catalogue+packet HTTPS downloads, one cache, offline reload and failed replacement preserve FR');
 })().catch(e=>{console.error(e);process.exitCode=1;});

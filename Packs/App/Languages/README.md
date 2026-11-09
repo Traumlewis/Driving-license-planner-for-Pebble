@@ -14,7 +14,7 @@ The settings-v1 schema retains its trainingCountry DE compatibility field. Curre
 
 See [directory migration](../../../docs/DEV-3.8.47.md) and [format and behavior](../../../docs/DEV-3.8.46.md). Use 3.8.47 or newer for this download path. Repository updates do not publish a GitHub Release.
 
-Available settings languages: Deutsch, English, Español and Français. Spanish/French are phone-only on 3.8.47; watch support depends on the compatible LP4 catalogue. Germany’s training rules remain unchanged.
+Available settings languages: Deutsch, English, Español, Français, Italiano, Português, Nederlands and Polski. Spanish/French are phone-only on 3.8.47; watch support depends on the compatible LP4 catalogue. Germany’s training rules remain unchanged.
 
 ## Watch packets (3.8.48+)
 
@@ -24,6 +24,6 @@ DE/EN/ES also have watch-source.json translations and packed LP4 data under watc
 
 French settings: `fr/settings.json`; all 296 watch translations: `fr/watch-source.json`. French is watch language 3. The expanded frozen v2 codec uses compatibility tag `37bc2f9e-f48e0f24`; French requires the 3.8.49 DEV PBW. Its payload is 2,407 bytes, within the unchanged 2,560-byte limit. The previous codec variant remains published for 3.8.48. Translations still download from GitHub; do not train a codec during normal language registration. See [French testing and memory](../../../docs/DEV-3.8.49.md).
 
-## Italian, Portuguese, Dutch and Polish
+## Italian, Portuguese, Dutch and Polish (3.8.51+)
 
-Phone settings now also include Italiano (`it`), Português (`pt`, European Portuguese), Nederlands (`nl`) and Polski (`pl`), downloaded without a PBW rebuild. Complete 296-string `watch-draft.json` translations are provided, but **watch support is not enabled**: all four exceed the existing frozen LP4 codec's 2,560-byte packet limit. These sources are not installable watch packets. See [sizes, compatibility and tests](../../../docs/LANGUAGES-IT-PT-NL-PL.md). The existing 3.8.50 DEV PBW and DE/EN/ES/FR watch languages remain unchanged.
+Phone settings and full 296-string watch sources are available for Italiano (`it`), Português (`pt`, European Portuguese), Nederlands (`nl`) and Polski (`pl`). Watch support requires the 3.8.51 DEV PBW and frozen v3 codec (`37bc2f9e-0148b906`). Its catalogue contains all eight languages below the unchanged 2,560-byte payload limit. Older variants stay available and keep the new languages phone-only. No language text was removed. See [sizes, compatibility and tests](../../../docs/DEV-3.8.51.md).

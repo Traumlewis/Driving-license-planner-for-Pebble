@@ -22,11 +22,11 @@ function transfer(target,old){
  }
  assert.strictEqual(app.last()[1],3);assert.strictEqual(app.last()[17],target);app.state(commandRid,target,true,mask);assert(!app.storage['fahrschul.v2.pending']);
 }
-transfer(1,0);transfer(0,1);transfer(1,0);assert.strictEqual(app.requests.length,4);assert.strictEqual(JSON.parse(app.storage['fahrschul.v2.languagePacket']).descriptor.language,1);assert.strictEqual(app.command(7).error,'INVALID_COMMAND');
+transfer(1,0);transfer(0,1);transfer(1,0);assert.strictEqual(app.requests.length,4);assert.strictEqual(JSON.parse(app.storage['fahrschul.v2.languagePacket']).descriptor.language,1);assert.strictEqual(app.command(63).error,'INVALID_COMMAND');
 assert(app.command(1).queued);assert.strictEqual(app.last()[1],3,'active pack should be reused');app.state(app.last()[2],1);
 const resume=setup();resume.state();resume.command(1);resume.state(resume.last()[2],0,true,0,0,-3);assert(resume.storage['fahrschul.v2.pending']);
 const restart=setup(resume.storage);restart.events.ready();assert.strictEqual(restart.last()[1],4);assert.strictEqual(restart.last()[14],0);assert.strictEqual(restart.requests.length,0,'verified phone cache should resume without Internet');
 const already=setup();already.state(0,0,true);assert(already.command(0).queued);assert.strictEqual(already.last()[1],3);assert.strictEqual(already.requests.length,0,'current verified watch packet should work without a phone payload cache');
-transfer(3,1);
-for(const selected of [0,1,2,3]){const cold=setup();cold.state(0,selected,false,0,selected);assert.strictEqual(cold.last()[1],4);assert.strictEqual(cold.last()[3],packs[selected].id);}
+let previous=1;for(const target of packs.filter(p=>p.language>=2).map(p=>p.language)){transfer(target,previous);previous=target;}
+for(const selected of packs.map(p=>p.language)){const cold=setup();cold.state(0,selected,false,0,selected);assert.strictEqual(cold.last()[1],4);assert.strictEqual(cold.last()[3],packs[selected].id);}
 console.log('PASS remote phone swap: DE→EN→DE→EN reloads the absent pack; active reuse, old-language ACKs, stale ACK rejection, restart and either-language bootstrap');

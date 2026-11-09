@@ -1,3 +1,10 @@
+# 3.8.51 (development)
+
+- Enable Italian, European Portuguese, Dutch and Polish watch menus and explanations, downloaded from GitHub alongside DE/EN/ES/FR.
+- Expand the frozen shared dictionary in an explicitly authorized codec migration. Keep the LP4 receiver, 2,560-byte limit and one selected packet; retain older build catalogues.
+- All eight complete payloads fit in 2,169–2,489 bytes. SDK application RAM is unchanged; resources grow by 16,064 bytes per platform.
+- Preserve compact appointments/progress, class/profile and language settings. Source/data update and combined DEV PBW only; no GitHub Release.
+
 # 3.8.50 (development)
 
 - Store empty appointment slots sparsely and encode appointments, class profiles and progress records compactly. Preserve IDs, transfer tokens, reminders, theory checks, counts and additional minutes.
