@@ -2,7 +2,7 @@
 
 The canonical catalogue is now `Packs/Germany/Languages/<app-version>/`. The generator, exporter, phone download URL, manifest ruleset identity and client validation use `Germany`. Germany is the training country; `de` and `en` are interface languages.
 
-Archived 3.8.43/3.8.44 packets are also accessible under Germany without rewriting their original manifests or payload bytes. The immutable `Packs/German/Languages/3.8.44/` files remain at their original URLs solely for the already distributed 3.8.44 PBW, whose downloader has that URL and file hashes built in. New versions are exported only under Germany. This compatibility directory can be removed only when continued downloads from the older test build are no longer required.
+Archived 3.8.43/3.8.44 packets are accessible under Germany without rewriting their original manifests or payload bytes. The old `Packs/German` directory has been removed at the owner’s request. The distributed 3.8.44 PBW pins that old URL and can no longer download an uncached packet. Use 3.8.45 or newer for downloads. Existing installed packets and the selected cached packet remain usable.
 
 The phone settings language selector (Deutsch/English) and the settings page's own translations are bundled in the PBW. The selection list is not fetched from GitHub. Adding another supported language still requires a build, including support in the watch decoder and phone page. Only the selected watch menu packet is downloaded. Cache, offline behavior, integrity checks and longer bundled explanations remain as documented for [3.8.44](DEV-3.8.44.md).
 

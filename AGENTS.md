@@ -10,4 +10,4 @@
 
 - Repository packet layout: Packs/Germany/Languages/<app-version>/. Germany denotes Germany’s training rules, while de/en denote interface languages. Export with tools/export_language_packs.py after synchronization. The phone downloads the version-pinned selected packet from GitHub and caches only that packet; full developer fixtures live in tools/language-packets.json outside the phone bundle. Publish matching versioned packets before distributing a build.
 
-- Keep Packs/German/Languages/3.8.44 unchanged as a compatibility path for the already distributed 3.8.44 PBW. New versions use Germany. The settings language selector and phone-page translations are bundled; only watch menu packets are remotely downloaded.
+- Use only Packs/Germany; the owner explicitly requested removal of the old German compatibility directory. Do not recreate it. The settings language selector and phone-page translations are bundled; only watch menu packets are remotely downloaded.

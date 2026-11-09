@@ -16,4 +16,4 @@ Starting with development 3.8.44, the phone client downloads the selected versio
 
 Only the selected menu packet is retained on the watch. Longer explanation texts and the small emergency/loading fallback remain bundled in the current prototype.
 
-From 3.8.45 the canonical country directory is `Germany` and new manifests use `rulesetDirectory: Germany`. Archived 3.8.43/3.8.44 manifests retain their original identity. The old `Packs/German/Languages/3.8.44` download URLs remain available for compatibility with that already distributed build. The phone-settings language selector and its own translations are bundled, rather than fetched from this catalogue.
+From 3.8.45 the canonical country directory is `Germany` and new manifests use `rulesetDirectory: Germany`. Archived 3.8.43/3.8.44 manifests retain their original identity. The old `Packs/German` directory has been removed at the owner’s request; use app version 3.8.45 or newer for downloads. The phone-settings language selector and its own translations are bundled, rather than fetched from this catalogue.

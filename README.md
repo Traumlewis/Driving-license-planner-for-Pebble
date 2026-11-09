@@ -73,7 +73,7 @@ Idee by Traumlewis | Code by Codex
 
 ## Package catalogue
 
-[Packs/German/Languages](Packs/German/Languages/README.md) holds version-bound German/English menu packets for Germany’s training rules. Country and interface language are separate. The app currently uses its bundled phone catalogue; these exported files prepare future remote downloads.
+[Packs/Germany/Languages](Packs/Germany/Languages/README.md) holds version-bound German/English menu packets for Germany’s training rules. Country and interface language are separate. The phone client downloads the selected packet; the phone-settings language selector and page translations remain bundled. Use 3.8.45 or newer; the old German directory has been removed.
 
 ## GitHub Releases
 
