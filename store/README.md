@@ -2,12 +2,12 @@
 
 - **Name:** Driving Planner (English) / Fahrschul Planer (German)
 - **Developer:** Traumlewis
-- **Version:** 3.8.3
+- **Version:** 3.8.4
 - **Suggested category:** Tools & Utilities
 - **Keywords:** driving school, licence, lessons, theory, practice, reminder, Germany, Fahrschule, Führerschein
 - **Description:** description-en.md / description-de.md
 - **Marketing banner:** banner.png, 720 × 320 PNG, exact 9:4 aspect ratio, based on the phone settings design. The banner is promotional artwork, not a screenshot.
-- **Binary:** ../release/Fahrschul-Planer-v3.8.3.pbw
+- **Binary:** ../release/Fahrschul-Planer-v3.8.4.pbw
 
 ## Screenshots
 

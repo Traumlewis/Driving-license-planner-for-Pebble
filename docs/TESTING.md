@@ -1,3 +1,16 @@
+# Release 3.8.4 validation
+
+All six native targets build with Pebble SDK 4.44. Version 3.8.4 retains the application UUID, storage schema and developer Traumlewis.
+
+- `tests/progress_renderer_test.py` executes all five production renderers across six platform variants for every class/profile/counter, with 0, 1, 2 and 999 units, 0–40 extra minutes and selected/unselected rows: 22,176 render cases per platform. Bars with no statutory target are always present, empty at zero whole units and full from one whole unit. Defined targets remain proportional and saturate at their minimum. Stroke, background and fill colors are checked for contrast, including selected monochrome rows.
+- Native captures under `docs/verification/3.8.4/` cover zero/one/two units for AM and a defined B target on all six platforms. AppMessage snapshots verify original progress, remainders, topics, appointments, class, profile and language are restored, with healthy storage/alarm status.
+- The circular menu code is retained from 3.8.3; only progress rendering and release metadata change. Earlier round boundary verification is documented below.
+- `tests/release_validation.py` validates current metadata, credits, the combined PBW, shared phone configuration, platform payload manifests and checksums. Store artwork remains the existing release set.
+
+Tests use native emulators; no physical-watch tests were performed.
+
+---
+
 # Release 3.8.3 validation
 
 Built all six native programs with Pebble SDK 4.44, version 3.8.3, developer Traumlewis. The application UUID and storage format are unchanged.

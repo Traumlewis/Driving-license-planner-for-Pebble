@@ -2,11 +2,11 @@
 
 Driving lessons, reminders and German licence progress on your wrist.
 
-**Release 3.8.3 · Developer: Traumlewis**
+**Release 3.8.4 · Developer: Traumlewis**
 
 ![Driving Planner](store/banner.png)
 
-[Download the latest GitHub Release](https://github.com/Traumlewis/Driving-license-planner-for-Pebble/releases/latest) · [PBW in this repository](release/Fahrschul-Planer-v3.8.3.pbw) · [English store description](store/description-en.md) · [Deutsche Beschreibung](store/description-de.md)
+[Download the latest GitHub Release](https://github.com/Traumlewis/Driving-license-planner-for-Pebble/releases/latest) · [PBW in this repository](release/Fahrschul-Planer-v3.8.4.pbw) · [English store description](store/description-en.md) · [Deutsche Beschreibung](store/description-de.md)
 
 ## Features
 
@@ -33,9 +33,9 @@ One PBW contains all six platforms. Touch controls are available on Time 2 and R
 
 ## Install
 
-Open `release/Fahrschul-Planer-v3.8.3.pbw` with the Pebble app and install over an existing copy. Keep the existing installation to retain data; do not uninstall first. The application UUID and storage format remain unchanged.
+Open `release/Fahrschul-Planer-v3.8.4.pbw` with the Pebble app and install over an existing copy. Keep the existing installation to retain data; do not uninstall first. The application UUID and storage format remain unchanged.
 
-Release 3.8.3 clarifies progress without a fixed legal minimum and fixes scrolling at the edges of circular displays. All native programs use version 3.8.3 and developer Traumlewis.
+Release 3.8.4 restores progress bars for counters without a fixed legal minimum: empty at zero units and full from one whole unit. Circular-display scrolling fixes from 3.8.3 remain included. All native programs use version 3.8.4 and developer Traumlewis.
 
 ## Build
 

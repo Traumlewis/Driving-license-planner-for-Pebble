@@ -449,19 +449,27 @@ static bool cell_selected(const Layer *layer){return menu_cell_layer_is_highligh
 static void progress_row(GContext *ctx,const Layer *layer,int row){
 
  const char *const labels[]={"Landstraße","Autobahn","Nachtfahrt","Grundausbildung","Grundstoff","Zusatzstoff","Übungsfahrten"};unsigned value=row<6?counts[cfg.cls][row]:practice[cfg.cls].exercise_units,goal=row<6?targets()[row]:0,rest=(row<4||row==6)?practice[cfg.cls].remainder[row<4?row:4]:0;static char count[32],note[64];if(goal)snprintf(count,sizeof(count),"%u/%u",value,goal);else snprintf(count,sizeof(count),"%u",value);
- int count_width=goal?51:(strlen(count)>2?40:26);graphics_draw_text(ctx,T(labels[row]),fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD),GRect(6,1,UI_WIDTH-count_width-16,23),GTextOverflowModeTrailingEllipsis,GTextAlignmentLeft,NULL);graphics_draw_text(ctx,count,fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD),GRect(UI_WIDTH-6-count_width,0,count_width,25),GTextOverflowModeTrailingEllipsis,GTextAlignmentRight,NULL);
- if(!goal){
-  graphics_draw_text(ctx,T("Kein festes Minimum"),fonts_get_system_font(FONT_KEY_GOTHIC_14),GRect(6,26,UI_WIDTH-12,18),GTextOverflowModeTrailingEllipsis,GTextAlignmentLeft,NULL);
-  if(rest)snprintf(note,sizeof(note),T("+ %u Minuten"),rest);else snprintf(note,sizeof(note),"%s",T(row==4||row==5?"90-Minuten-Einheiten":"45-Minuten-Einheiten"));
-  graphics_draw_text(ctx,note,fonts_get_system_font(FONT_KEY_GOTHIC_14),GRect(6,40,UI_WIDTH-12,16),GTextOverflowModeTrailingEllipsis,GTextAlignmentLeft,NULL);return;
- }
- bool selected=cell_selected(layer);graphics_context_set_fill_color(ctx,GColorWhite);graphics_fill_rect(ctx,GRect(6,28,UI_WIDTH-12,7),0,GCornerNone);
+ int count_width=51;graphics_draw_text(ctx,T(labels[row]),fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD),GRect(6,1,UI_WIDTH-count_width-16,23),GTextOverflowModeTrailingEllipsis,GTextAlignmentLeft,NULL);graphics_draw_text(ctx,count,fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD),GRect(UI_WIDTH-6-count_width,0,count_width,25),GTextOverflowModeTrailingEllipsis,GTextAlignmentRight,NULL);
+ 
+ bool selected=cell_selected(layer);
 #if defined(PBL_PLATFORM_DIORITE)
- graphics_context_set_fill_color(ctx,GColorBlack);
+ graphics_context_set_fill_color(ctx,selected?GColorBlack:GColorWhite);
+#else
+ graphics_context_set_fill_color(ctx,GColorWhite);
+#endif
+ graphics_fill_rect(ctx,GRect(6,28,UI_WIDTH-12,7),0,GCornerNone);
+#if defined(PBL_PLATFORM_DIORITE)
+ graphics_context_set_fill_color(ctx,selected?GColorWhite:GColorBlack);
 #else
  graphics_context_set_fill_color(ctx,selected?GColorOxfordBlue:GColorCyan);
 #endif
- int fill=goal?(int)((UI_WIDTH-14)*(value<goal?value:goal)/goal):0;if(fill)graphics_fill_rect(ctx,GRect(7,29,fill,5),0,GCornerNone);graphics_context_set_stroke_color(ctx,GColorOxfordBlue);graphics_context_set_stroke_width(ctx,1);graphics_draw_rect(ctx,GRect(6,28,UI_WIDTH-12,7));graphics_context_set_text_color(ctx,selected?UI_SELECTION_TEXT:GColorOxfordBlue);
+ int fill=goal?(int)((UI_WIDTH-14)*(value<goal?value:goal)/goal):(value?UI_WIDTH-14:0);if(fill)graphics_fill_rect(ctx,GRect(7,29,fill,5),0,GCornerNone);
+#if defined(PBL_PLATFORM_DIORITE)
+ graphics_context_set_stroke_color(ctx,selected?GColorWhite:GColorBlack);
+#else
+ graphics_context_set_stroke_color(ctx,GColorOxfordBlue);
+#endif
+ graphics_context_set_stroke_width(ctx,1);graphics_draw_rect(ctx,GRect(6,28,UI_WIDTH-12,7));graphics_context_set_text_color(ctx,selected?UI_SELECTION_TEXT:GColorOxfordBlue);
  if(rest)snprintf(note,sizeof(note),T("+ %u Minuten"),rest);else snprintf(note,sizeof(note),"%s",T(row==4||row==5?"90-Minuten-Einheiten":"45-Minuten-Einheiten"));graphics_draw_text(ctx,note,fonts_get_system_font(FONT_KEY_GOTHIC_14),GRect(6,35,UI_WIDTH-12,19),GTextOverflowModeTrailingEllipsis,GTextAlignmentLeft,NULL);
 }
 static void topic_row(GContext *ctx,int topic){
@@ -486,7 +494,7 @@ static void row_draw(GContext *ctx,const Layer *l,MenuIndex *idx,void *c){(void)
  case 2:snprintf(title,sizeof(title),T("%s"),alarm_ok?T("Alarm testen"):T("Alarm erneut aktivieren"));snprintf(sub,sizeof(sub),T("%s"),alarm_ok?T("App schließen: Test in 1 Min."):T("Alle gespeicherten Termine prüfen"));break;}break;
  case EXPLANATIONS:switch(r){
  case 0:snprintf(title,sizeof(title),T("Rechtliche Vorgaben"));snprintf(sub,sizeof(sub),T("FahrschAusbO / Stand 06.11.26"));break;
- case 1:snprintf(title,sizeof(title),T("Bedingungen & Kürzel"));snprintf(sub,sizeof(sub),T("Fahrschul Planer 3.8.3"));break;
+ case 1:snprintf(title,sizeof(title),T("Bedingungen & Kürzel"));snprintf(sub,sizeof(sub),T("Fahrschul Planer 3.8.4"));break;
  case 2:snprintf(title,sizeof(title),T("Handy-Eingabe"));snprintf(sub,sizeof(sub),T("Einstellungen in der Pebble-App"));break;}break;
  case LIST:case PENDING:{if(page==LIST&&r==0){snprintf(title,sizeof(title),T("+ Neuer Termin"));snprintf(sub,sizeof(sub),T("%d von 24 Plätzen belegt"),active_count());break;}int pos=page==LIST?r-1:r;if(pos>=list_count){snprintf(title,sizeof(title),T("Alles erledigt!"));break;}Entry *x=&entries[list_map[pos]];list_entry_title(x,title,sizeof(title));char dt[32];time_t when=x->when;strftime(dt,sizeof(dt),T("%d.%m. · %H:%M"),localtime(&when));snprintf(sub,sizeof(sub),T("%s%s"),end_time(x)<=time(NULL)?T("Offen: "):T(""),dt);break;}
  case CLASSES:snprintf(title,sizeof(title),T("Klasse %s"),classes[r]);snprintf(sub,sizeof(sub),T("%s"),r==cfg.cls?T("Aktuell ausgewählt"):T("Termine und Fortschritt behalten"));break;
@@ -540,7 +548,7 @@ static void select_row(MenuLayer *m,MenuIndex *idx,void *ctx){(void)m;(void)ctx;
 }break;
  case EXPLANATIONS:switch(r){
  case 2:show_info(T("Handy-Eingabe"),2,T("HANDY-EINGABE\n\nIn der Pebble-App beim Fahrschul Planer die Einstellungen öffnen. Dort Termine anlegen, bearbeiten und löschen.\n\nZur Übertragung die Uhr-App öffnen und Bluetooth verbinden.\n\nDie Uhr bleibt vollständig ohne diese Zusatzfunktion bedienbar."));break;
- case 1:show_info(T("Bedingungen & Kürzel"),1,T("FAHRSCHUL PLANER 3.8.3\n\n24 Termine, 2 Erinnerungen und 10-Min.-Schlummern.\nNach dem geplanten Ende fragt die Uhr nach Stunden. Gebucht wird nur nach Bestätigung.\n\nLA Landstraße / AU Autobahn\nNA Nacht / UE Übung\nGA Grundausbildung\nGS Grundstoff / ZS Zusatzstoff\n\nPraxis ab 45 Min., +5-Min.-Schritte.\n45 Restminuten ergeben 1 Einheit.\nTheorie je 90 Min.\nTheorie-Häkchen zählen als eine 90-Minuten-Einheit. Entfernen zieht diese Einheit ab. Zugeordnete Theorie-Termine zählen dasselbe Thema nicht doppelt.\nGS/ZS manuell bearbeitet nur zusätzliche Einheiten. Häkchen bleiben geschützt und können nur in der Themenliste entfernt werden.\n\nOben/Unten scrollen. Mitte wählt, Zurück schließt. OK unter Pflichtstunden halten: Zusätze bearbeiten oder löschen. Neue Termine: 01:00 und 00:30 vorher. Erinnerung 2 lässt sich direkt im Termin auf Aus stellen.\n\nVersion 3.8.3\n(Idee by Traumlewis | Code by Codex)"));break;
+ case 1:show_info(T("Bedingungen & Kürzel"),1,T("FAHRSCHUL PLANER 3.8.4\n\n24 Termine, 2 Erinnerungen und 10-Min.-Schlummern.\nNach dem geplanten Ende fragt die Uhr nach Stunden. Gebucht wird nur nach Bestätigung.\n\nLA Landstraße / AU Autobahn\nNA Nacht / UE Übung\nGA Grundausbildung\nGS Grundstoff / ZS Zusatzstoff\n\nPraxis ab 45 Min., +5-Min.-Schritte.\n45 Restminuten ergeben 1 Einheit.\nTheorie je 90 Min.\nTheorie-Häkchen zählen als eine 90-Minuten-Einheit. Entfernen zieht diese Einheit ab. Zugeordnete Theorie-Termine zählen dasselbe Thema nicht doppelt.\nGS/ZS manuell bearbeitet nur zusätzliche Einheiten. Häkchen bleiben geschützt und können nur in der Themenliste entfernt werden.\n\nOben/Unten scrollen. Mitte wählt, Zurück schließt. OK unter Pflichtstunden halten: Zusätze bearbeiten oder löschen. Neue Termine: 01:00 und 00:30 vorher. Erinnerung 2 lässt sich direkt im Termin auf Aus stellen.\n\nVersion 3.8.4\n(Idee by Traumlewis | Code by Codex)"));break;
  case 0:show_info(T("Rechtliche Vorgaben"),0,T("PFLICHTSTUNDEN\n\nFahrschAusbO: Par. 4, Anlagen 1, 2.2, 2.8, 4 und 5. Stand 06.11.2026.\n\nProfil passend zum Vorbesitz wählen. 0 = keine feste Mindestzahl, nicht keine Ausbildung.\n\nThemen sind eine Lernhilfe; Reihenfolge mit Fahrschule abstimmen. Zusatzstoff außer B wird als nummerierte Liste geführt.\n\nDetails in QUELLEN.md."));break;}break;
  case LIST:case PENDING:if(page==LIST&&!r){begin_edit(-1);break;}r-=page==LIST?1:0;if(r>=0&&r<list_count){selected=list_map[r];show_page(ACTIONS);}break;
  case CLASSES:choose_class(r);break;

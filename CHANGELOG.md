@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.8.4 — Restore progress bars
+
+- Keep monochrome bars visible in selected rows.
+- Restore the previous progress-row layout when no statutory minimum applies. The bar is empty at zero whole units and full from one whole unit; extra minutes alone do not fill it.
+- Keep proportional bars for counters with a statutory minimum and all Round scrolling fixes from 3.8.3.
+- Leave stored progress, theory protection, appointments and booking logic unchanged.
+
 ## 3.8.3 — Progress and round-display fixes
 
 - Show recorded units and “No fixed minimum” instead of an empty percentage track where the selected class/profile has no statutory target. Checked all 16 classes and 44 profiles.

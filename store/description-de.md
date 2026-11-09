@@ -1,7 +1,7 @@
 # Fahrschul Planer
 
 **Entwickler:** Traumlewis  
-**Version:** 3.8.3  
+**Version:** 3.8.4  
 **Kurzbeschreibung:** Fahrstunden planen, Erinnerungen erhalten und den Führerschein-Fortschritt im Blick behalten.
 
 Deine Fahrstunden direkt am Handgelenk: Der Fahrschul Planer verbindet Praxis- und Theorietermine, Erinnerungen und Ausbildungsfortschritt auf deiner Pebble.
