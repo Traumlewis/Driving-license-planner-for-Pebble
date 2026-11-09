@@ -17,6 +17,7 @@
 <div id="status" class="notice" role="status" aria-live="polite"></div>
 <section class="section" aria-labelledby="generalTitle"><h2 class="general-heading" id="generalTitle"><svg class="icon" aria-hidden="true"><use href="#i-gear"/></svg><span data-t="general">Allgemein</span></h2>
 <label for="language" data-t="languageShort">Sprache</label><select id="language"><option value="0">Deutsch</option><option value="1">English</option></select><button id="applyLanguage" type="button" class="outline preference-action" data-t="languageSave">Sprache übernehmen</button>
+<p id="languagePackStatus" class="field-hint" role="status"></p>
 <div class="timeline-preference"><div class="timeline-row"><div><div class="field-label">Pebble Timeline</div><p id="timelineLabel" data-t="timelineLabel"></p></div><label class="switch"><input type="checkbox" id="timeline" role="switch" aria-labelledby="timelineLabel"><span class="switch-track" aria-hidden="true"></span></label></div><button id="applyTimeline" type="button" class="outline preference-action" data-t="timelineSave"></button><p id="timelineStatus" role="status"></p><details><summary data-t="timelineDetails">Hinweise zur Timeline</summary><p data-t="timelineHint"></p></details></div>
 </section>
 <section class="section" id="planning" aria-labelledby="formTitle"><h2 class="section-heading"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg><span id="formTitle"></span></h2>
@@ -101,6 +102,8 @@ function applyState(next,result){
  if(state.fresh&&!next.fresh)return;
  var firstFresh=!state.fresh&&next.fresh;
  state=next;extras=state.extras||extras;
+ var lp=state.languagePack;
+ if(lp)$('languagePackStatus').textContent=lp.transferring?(Number(state.language)?'Transferring English language pack…':'Englisches Sprachpaket wird übertragen…'):lp.ready?(Number(state.language)?'English pack saved on watch · available offline':'Englisch-Paket auf der Uhr gespeichert · offline verfügbar'):(Number(state.language)?'English pack will be transferred when selected':'Englisch-Paket wird bei Auswahl übertragen');
  var nextLang=Number(state.language||0);
  // Polling updates data, never rebuilds the form's option lists or overwrites a language preview.
  if(!languageDirty&&lang!==nextLang){lang=nextLang;$('language').value=lang;localize();}

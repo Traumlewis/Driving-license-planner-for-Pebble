@@ -1,6 +1,6 @@
 {
   "name": "fahrschul-planer",
-  "version": "3.8.41",
+  "version": "3.8.42",
   "author": "Traumlewis",
   "private": true,
   "pebble": {
@@ -341,6 +341,11 @@
           ],
           "memoryFormat": "1bit",
           "storageFormat": "pbi"
+        },
+        {
+          "type": "raw",
+          "name": "LANGUAGE_CODEC",
+          "file": "data/language-codec.bin"
         }
       ]
     },

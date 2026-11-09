@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.8.42 — Development language-pack prototype
+
+- Transfer the English menu/control translations from the phone in acknowledged, small chunks and retain the verified package for offline use. German remains available as the fallback; longer English explanations remain bundled for this first test.
+- Verify package identity, length and checksum before activation. Resume pending transfers and repair missing selected-language packages when connected. Reuse a valid cached package for language switches.
+- Preserve appointment/progress storage and show language-package status in phone settings. Use read-only decoder resources and bounded native caches.
+- Keep GitHub source updates separate from public release publication.
+
 ## 3.8.41 — Development
 
 - Hide extra-minute hold actions for practical counters without a required minimum; whole units remain editable through a normal selection. Theory manual-unit management stays protected.

@@ -1,6 +1,6 @@
 {
   "name": "fahrschul-planer",
-  "version": "3.8.41",
+  "version": "3.8.42",
   "author": "Traumlewis",
   "private": true,
   "pebble": {
@@ -100,6 +100,11 @@
           "type": "bitmap",
           "name": "CLASS_15",
           "file": "images/class-15.png"
+        },
+        {
+          "type": "raw",
+          "name": "LANGUAGE_CODEC",
+          "file": "data/language-codec.bin"
         }
       ]
     },

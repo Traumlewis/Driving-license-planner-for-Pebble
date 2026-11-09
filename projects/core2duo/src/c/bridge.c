@@ -22,7 +22,8 @@ static void build_snapshot(void) {
  add("],\"entries\":[");bool first=true;
  for(int i=0;i<MAX_ENTRIES;i++)if(entries[i].active){Entry *e=&entries[i];add("%s[%lu,%d,%u,%u,%u,%u,%u,%u,%u]",first?"":",",(unsigned long)e->id,(int)e->when,e->cls,e->kind,e->units,e->lead[0],e->lead[1],e->topic,e->extra_minutes);first=false;}
  uint32_t saved_id=0;for(int i=0;i<MAX_ENTRIES;i++)if(request_id&&entries[i].active&&entries[i].token==request_id){saved_id=entries[i].id;break;}
- add("],\"savedId\":%lu,\"error\":\"%s\"}",(unsigned long)saved_id,error_text);
+ add("],\"savedId\":%lu,\"error\":\"%s\",",(unsigned long)saved_id,error_text);
+ add("\"languagePack\":{\"id\":%lu,\"bytes\":%u,\"ready\":%s,\"received\":%u}}",(unsigned long)language_pack_id(),language_pack_size(),language_pack_ready()?"true":"false",language_pack_received());
 }
 static void send_part(void) {
  DictionaryIterator *d;if(app_message_outbox_begin(&d)!=APP_MSG_OK){sending=false;return;}
@@ -51,9 +52,15 @@ static void inbox(DictionaryIterator *d,void *ctx) {
  integer(d,RID,&rid);
  if(op==0){phone_push(rid,0,NULL);return;}
  if(!rid){phone_push(0,-1,"Ungültige Anfrage");return;}
+ if(op==4){
+  int32_t identity=0,p=0,total=0;Tuple *payload=dict_find(d,PAYLOAD);
+  if(!integer(d,ID,&identity)||!integer(d,PART,&p)||!integer(d,TOTAL,&total)||!payload||payload->type!=TUPLE_CSTRING||!payload->length||payload->length>513||payload->value->cstring[payload->length-1]){phone_push(rid,-1,"Ungültige Anfrage");return;}
+  int status=language_pack_receive((uint32_t)identity,(unsigned)p,(unsigned)total,payload->value->cstring);
+  phone_push(rid,status,status?"Sprachpaket fehlt. Bitte Handy verbinden.":NULL);return;
+ }
  if(last_request==(uint32_t)rid){phone_push(rid,0,NULL);return;}
  for(int i=0;i<MAX_ENTRIES;i++)if(entries[i].active&&entries[i].token==(uint32_t)rid){phone_push(rid,0,NULL);return;}
- if(op==3){int32_t value;if(!integer(d,LANGUAGE,&value)||value<0||value>1){phone_push(rid,-1,"Ungültige Sprache");return;}if(!store_language(value)){phone_push(rid,-3,"Sprache nicht gespeichert");return;}store_request(rid);store_revision();state_changed();phone_push(rid,0,NULL);show_status("Sprache gespeichert", "Einstellungen");return;}
+ if(op==3){int32_t value;if(!integer(d,LANGUAGE,&value)||value<0||value>1){phone_push(rid,-1,"Ungültige Sprache");return;}if(value==1&&!language_pack_ready()){phone_push(rid,-4,"Sprachpaket fehlt. Bitte Handy verbinden.");return;}if(!store_language(value)){phone_push(rid,-3,"Sprache nicht gespeichert");return;}store_request(rid);store_revision();state_changed();phone_push(rid,0,NULL);show_status("Sprache gespeichert", "Einstellungen");return;}
  if(!integer(d,REV,&rev)||(uint32_t)rev!=revision){phone_push(rid,-2,"Daten geändert. Bitte neu laden.");return;}
  if(storage_error){phone_push(rid,-3,"Speicherfehler. Bitte Uhr-App neu starten.");return;}
  if(!integer(d,ID,&id)){phone_push(rid,-1,"Termin-ID fehlt");return;}

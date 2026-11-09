@@ -42,7 +42,7 @@ bool alarm_ok=true;
 static WakeupId wake_id=-1;
 static int32_t test_at;
 static int number_field,number_value,number_min,number_max;
-static const char *number_title;
+static char number_title[80];
 static char msg_buf[2048];
 static int alert_queue[MAX_ENTRIES],alert_count,completion_queue[MAX_ENTRIES],completion_count;
 static bool alert_seen[MAX_ENTRIES],completion_seen[MAX_ENTRIES];
@@ -308,7 +308,7 @@ static void num_up(ClickRecognizerRef r,void *c){(void)r;(void)c;if(++number_val
 static void num_down(ClickRecognizerRef r,void *c){(void)r;(void)c;if(--number_value<number_min)number_value=number_field>=14?number_min:number_max;layer_mark_dirty(num_layer);}
 static void num_select(ClickRecognizerRef r,void *c){(void)r;(void)c;apply_number();window_stack_pop(true);if(storage_error)show_notice(T("Fortschritt"),5,T("Fortschritt nicht gespeichert. Bitte App neu starten."));}
 static void num_clicks(void *ctx){(void)ctx;window_single_repeating_click_subscribe(BUTTON_ID_UP,100,num_up);window_single_repeating_click_subscribe(BUTTON_ID_DOWN,100,num_down);window_single_click_subscribe(BUTTON_ID_SELECT,num_select);}
-static void edit_number(int field,const char *title,int value,int min,int max){number_field=field;number_title=title;number_value=value;number_min=min;number_max=max;layer_mark_dirty(num_layer);window_stack_push(num_window,true);}
+static void edit_number(int field,const char *title,int value,int min,int max){number_field=field;snprintf(number_title,sizeof(number_title),"%s",title);number_value=value;number_min=min;number_max=max;layer_mark_dirty(num_layer);window_stack_push(num_window,true);}
 static int month_days(int year,int month) {static const int days[]={31,28,31,30,31,30,31,31,30,31,30,31};return days[month]+(month==1&&year%4==0&&(year%100!=0||year%400==0));}
 static void date_draw(Layer *l,GContext *ctx) {
  GRect b=layer_get_bounds(l);char value[32];graphics_context_set_fill_color(ctx,GColorOxfordBlue);graphics_fill_rect(ctx,b,0,GCornerNone);graphics_context_set_text_color(ctx,GColorWhite);
@@ -534,7 +534,7 @@ static void row_draw(GContext *ctx,const Layer *l,MenuIndex *idx,void *c){(void)
  case 2:snprintf(title,sizeof(title),T("%s"),alarm_ok?T("Alarm testen"):T("Alarm erneut aktivieren"));snprintf(sub,sizeof(sub),T("%s"),alarm_ok?T("App schließen: Test in 1 Min."):T("Alle gespeicherten Termine prüfen"));break;}break;
  case EXPLANATIONS:switch(r){
  case 0:snprintf(title,sizeof(title),T("Rechtliche Vorgaben"));snprintf(sub,sizeof(sub),T("FahrschAusbO / Stand 06.11.26"));break;
- case 1:snprintf(title,sizeof(title),T("Bedingungen & Kürzel"));snprintf(sub,sizeof(sub),T("Fahrschul Planer 3.8.41"));break;
+ case 1:snprintf(title,sizeof(title),T("Bedingungen & Kürzel"));snprintf(sub,sizeof(sub),T("Fahrschul Planer 3.8.42"));break;
  case 2:snprintf(title,sizeof(title),T("Handy-Eingabe"));snprintf(sub,sizeof(sub),T("Einstellungen in der Pebble-App"));break;}break;
  case LIST:case PENDING:{if(page==LIST&&r==0){snprintf(title,sizeof(title),T("+ Neuer Termin"));snprintf(sub,sizeof(sub),T("%d von 24 Plätzen belegt"),active_count());break;}int pos=page==LIST?r-1:r;if(pos>=list_count){snprintf(title,sizeof(title),T("Alles erledigt!"));break;}Entry *x=&entries[list_map[pos]];list_entry_title(x,title,sizeof(title));char dt[32];time_t when=x->when;strftime(dt,sizeof(dt),T("%d.%m. · %H:%M"),localtime(&when));snprintf(sub,sizeof(sub),T("%s%s"),end_time(x)<=time(NULL)?T("Offen: "):T(""),dt);break;}
  case CLASSES:snprintf(title,sizeof(title),T("Klasse %s"),classes[r]);snprintf(sub,sizeof(sub),T("%s"),r==cfg.cls?T("Aktuell ausgewählt"):T("Termine und Fortschritt behalten"));break;
@@ -596,7 +596,7 @@ static void select_row(MenuLayer *m,MenuIndex *idx,void *ctx){(void)m;(void)ctx;
 }break;
  case EXPLANATIONS:switch(r){
  case 2:show_info(T("Handy-Eingabe"),2,T("HANDY-EINGABE\n\nIn der Pebble-App beim Fahrschul Planer die Einstellungen öffnen. Dort Termine anlegen, bearbeiten und löschen.\n\nZur Übertragung die Uhr-App öffnen und Bluetooth verbinden.\n\nDie Uhr bleibt vollständig ohne diese Zusatzfunktion bedienbar."));break;
- case 1:show_info(T("Bedingungen & Kürzel"),1,T("FAHRSCHUL PLANER 3.8.41\n\n24 Termine, 2 Erinnerungen und 10-Min.-Schlummern.\nNach dem geplanten Ende fragt die Uhr nach Stunden. Gebucht wird nur nach Bestätigung.\n\nLA Landstraße / AU Autobahn\nNA Nacht / UE Übung\nGA Grundausbildung\nGS Grundstoff / ZS Zusatzstoff\n\nPraxis ab 45 Min., +5-Min.-Schritte.\n45 Restminuten ergeben 1 Einheit.\nTheorie je 90 Min.\nTheorie-Häkchen zählen als eine 90-Minuten-Einheit. Entfernen zieht diese Einheit ab. Zugeordnete Theorie-Termine zählen dasselbe Thema nicht doppelt.\nGS/ZS manuell bearbeitet nur zusätzliche Einheiten. Häkchen bleiben geschützt und können nur in der Themenliste entfernt werden.\n\nOben/Unten scrollen. Mitte wählt, Zurück schließt. OK unter Pflichtstunden halten: Zusätze bearbeiten oder löschen. Neue Termine: 01:00 und 00:30 vorher. Erinnerung 2 lässt sich direkt im Termin auf Aus stellen.\n\nVersion 3.8.41\n(Idee by Traumlewis | Code by Codex)"));break;
+ case 1:show_info(T("Bedingungen & Kürzel"),1,T("FAHRSCHUL PLANER 3.8.42\n\n24 Termine, 2 Erinnerungen und 10-Min.-Schlummern.\nNach dem geplanten Ende fragt die Uhr nach Stunden. Gebucht wird nur nach Bestätigung.\n\nLA Landstraße / AU Autobahn\nNA Nacht / UE Übung\nGA Grundausbildung\nGS Grundstoff / ZS Zusatzstoff\n\nPraxis ab 45 Min., +5-Min.-Schritte.\n45 Restminuten ergeben 1 Einheit.\nTheorie je 90 Min.\nTheorie-Häkchen zählen als eine 90-Minuten-Einheit. Entfernen zieht diese Einheit ab. Zugeordnete Theorie-Termine zählen dasselbe Thema nicht doppelt.\nGS/ZS manuell bearbeitet nur zusätzliche Einheiten. Häkchen bleiben geschützt und können nur in der Themenliste entfernt werden.\n\nOben/Unten scrollen. Mitte wählt, Zurück schließt. OK unter Pflichtstunden halten: Zusätze bearbeiten oder löschen. Neue Termine: 01:00 und 00:30 vorher. Erinnerung 2 lässt sich direkt im Termin auf Aus stellen.\n\nVersion 3.8.42\n(Idee by Traumlewis | Code by Codex)"));break;
  case 0:show_info(T("Rechtliche Vorgaben"),0,T("PFLICHTSTUNDEN\n\nFahrschAusbO: Par. 4, Anlagen 1, 2.2, 2.8, 4 und 5. Stand 06.11.2026.\n\nProfil passend zum Vorbesitz wählen. 0 = keine feste Mindestzahl, nicht keine Ausbildung.\n\nThemen sind eine Lernhilfe; Reihenfolge mit Fahrschule abstimmen. Zusatzstoff außer B wird als nummerierte Liste geführt.\n\nDetails in QUELLEN.md."));break;}break;
  case LIST:case PENDING:if(page==LIST&&!r){begin_edit(-1);break;}r-=page==LIST?1:0;if(r>=0&&r<list_count){selected=list_map[r];show_page(ACTIONS);}break;
  case CLASSES:choose_class(r);break;
@@ -645,7 +645,7 @@ static void menu_hold(ClickRecognizerRef r,void *c){(void)r;(void)c;if(page==PRO
 static void menu_clicks(void *ctx){(void)ctx;window_single_click_subscribe(BUTTON_ID_BACK,back);window_single_repeating_click_subscribe(BUTTON_ID_UP,150,menu_up);window_single_repeating_click_subscribe(BUTTON_ID_DOWN,150,menu_down);window_single_click_subscribe(BUTTON_ID_SELECT,menu_select);window_long_click_subscribe(BUTTON_ID_SELECT,650,menu_hold,NULL);}
 static void minute_tick(struct tm *t,TimeUnits u){(void)t;(void)u;process_events(true);}
 static void init(void){
- store_load();if(cfg.cls>=0){load_rules();profiles[cfg.cls]=cfg.profile;}
+ store_load();language_pack_init();if(cfg.cls>=0){load_rules();profiles[cfg.cls]=cfg.profile;}
  if(persist_exists(WAKE_KEY))wake_id=persist_read_int(WAKE_KEY);
  if(persist_exists(28))test_at=persist_read_int(28);
  window=window_create();GRect b=layer_get_bounds(window_get_root_layer(window));menu=menu_layer_create(b);menu_layer_pad_bottom_enable(menu,false);menu_layer_set_normal_colors(menu,GColorWhite,GColorOxfordBlue);menu_layer_set_highlight_colors(menu,GColorOxfordBlue,GColorWhite);
