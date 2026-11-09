@@ -1,0 +1,32 @@
+name: Publish GitHub Release
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-release.yml'
+      - 'release/*.pbw'
+      - 'release.json'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pebble-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate, package and publish the release downloads
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash tools/publish_release.sh

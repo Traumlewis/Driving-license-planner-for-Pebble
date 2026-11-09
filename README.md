@@ -6,7 +6,7 @@ Driving lessons, reminders and German licence progress on your wrist.
 
 ![Driving Planner](store/banner.png)
 
-[Download the multi-platform PBW](release/Fahrschul-Planer-v3.8.2.pbw) · [English store description](store/description-en.md) · [Deutsche Beschreibung](store/description-de.md)
+[Download the latest GitHub Release](https://github.com/Traumlewis/Driving-license-planner-for-Pebble/releases/latest) · [PBW in this repository](release/Fahrschul-Planer-v3.8.2.pbw) · [English store description](store/description-en.md) · [Deutsche Beschreibung](store/description-de.md)
 
 ## Features
 
@@ -68,3 +68,7 @@ The build script cleans/builds each project, verifies common JS/configuration an
 ## Credits
 
 Idee by Traumlewis | Code by Codex
+
+## GitHub Releases
+
+The Publish GitHub Release workflow validates the checked-in PBW, packages source/store ZIPs and checksum files, uploads them to a draft, and publishes the completed release. It runs when a PBW or release metadata is pushed to main and can also be started manually from Actions. Existing published releases are kept unchanged.

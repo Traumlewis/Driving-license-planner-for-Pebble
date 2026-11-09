@@ -6,3 +6,5 @@ projects/*/.waf-*
 output/
 *.log
 .DS_Store
+release-assets/
+release-assets-status.json
