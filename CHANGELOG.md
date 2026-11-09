@@ -1,3 +1,10 @@
+# 3.8.52 (development)
+
+- Add complete Danish and Swedish phone/watch translations, downloaded from GitHub.
+- Extend and freeze the shared v4 dictionary with explicit locale weights. All ten full packets fit the unchanged 2,560-byte LP4 limit; retain all earlier compatibility variants.
+- Keep one selected language packet, compact user data and six supported platforms. Record packet/memory measurements and native offline/migration verification.
+- Combined DEV PBW and source/data update only; no GitHub Release.
+
 # 3.8.51 (development)
 
 - Enable Italian, European Portuguese, Dutch and Polish watch menus and explanations, downloaded from GitHub alongside DE/EN/ES/FR.

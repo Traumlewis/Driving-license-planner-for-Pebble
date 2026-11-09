@@ -1,5 +1,7 @@
 # Danish and Swedish feasibility test with DEV 3.8.51
 
+**Resolved in [DEV 3.8.52](DEV-3.8.52.md):** the owner authorized an expanded shared dictionary. Both languages now fit and are available on the watch with that build. The measurements below describe the earlier frozen v3 codec; the drafts have been promoted to watch-source.json translations.
+
 The owner asked to test whether complete Danish and Swedish watch translations can be added using the current dictionary, without a PBW rebuild. Both complete drafts were encoded with the production LP4 encoder and the unchanged frozen v3 codec (`37bc2f9e-0148b906`).
 
 | Language | Translated texts | Required LP4 payload | Limit | Over limit |
@@ -9,9 +11,9 @@ The owner asked to test whether complete Danish and Swedish watch translations c
 
 Neither fits the current receiver. These are measured payload sizes including the LP4 header, name, directory and compressed texts, not uncompressed JSON sizes. The production encoder validates all required text keys, UTF-8 byte limits and printf/date signatures before reporting the packet-size failure. The original credits and running-version placeholders are retained. Menus, statuses, theory topics and long explanations are translated; no texts were removed to make an incomplete packet appear to fit.
 
-Sources are stored as `Packs/App/Languages/da/watch-draft.json` and `sv/watch-draft.json`. The draft name deliberately excludes them from normal build/export discovery. They are not installable watch packets and are not advertised in the phone or watch catalogue. No phone-only language entries were added. Existing eight-language availability, the live catalogue, published packets, schema, dictionary, native source, app version and PBW remain unchanged. No watch data was touched.
+At the time of this test, sources were stored as `Packs/App/Languages/da/watch-draft.json` and `sv/watch-draft.json`. The draft name deliberately excludes them from normal build/export discovery. They are not installable watch packets and are not advertised in the phone or watch catalogue. No phone-only language entries were added. Existing eight-language availability, the live catalogue, published packets, schema, dictionary, native source, app version and PBW remain unchanged. No watch data was touched.
 
-Measurements and source checksums are in `language-probe-da-sv.json`. Reproduce the production failure with:
+Measurements and source checksums are in `language-probe-da-sv.json`. To reproduce the earlier failure, use this document's original source commit (`c3e7b41`) and v3 encoder:
 
 ```
 python tools/register_watch_language.py Packs/App/Languages/da/watch-draft.json

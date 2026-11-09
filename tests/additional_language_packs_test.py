@@ -5,7 +5,7 @@ from playwright.sync_api import sync_playwright
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT/'tools'))
 from watch_packets import encode,signature,compatibility
 BASE=ROOT/'Packs/App/Languages';REMOTE='https://raw.githubusercontent.com/Traumlewis/Driving-license-planner-for-Pebble/main/Packs/App/Languages/'
-index=json.loads((BASE/'index.json').read_text());english=json.loads((BASE/'en/settings.json').read_text());schema=json.loads((ROOT/'tools/watch-schema.json').read_text());variant=index['watchPacks'][compatibility()['tag']];new={'it':'Italiano','pt':'Português','nl':'Nederlands','pl':'Polski'};report={}
+index=json.loads((BASE/'index.json').read_text());english=json.loads((BASE/'en/settings.json').read_text());schema=json.loads((ROOT/'tools/watch-schema.json').read_text());variant=index['watchPacks'][compatibility()['tag']];new={'it':'Italiano','pt':'Português','nl':'Nederlands','pl':'Polski','da':'Dansk','sv':'Svenska'};report={}
 for locale,name in new.items():
  descriptor=next(d for d in index['settings']['languages'] if d['locale']==locale);raw=(BASE/descriptor['file']).read_bytes();assert hashlib.sha256(raw).hexdigest()==descriptor['sha256'];packet=json.loads(raw)
  assert packet['locale']==locale and set(packet['strings'])==set(english['strings'])
@@ -34,7 +34,7 @@ try:
    raw=files.get(r.request.url[len(REMOTE):])
    return r.fulfill(status=200 if raw is not None else 404,body=raw or 'missing',content_type='application/json',headers={'Access-Control-Allow-Origin':'*'})
   page.route(REMOTE+'**',route);page.add_init_script('window.__FAHRSCHUL_INITIAL_STATE__='+json.dumps(state));url=f'http://127.0.0.1:{server.server_port}/projects/time2/phone/config.html'
-  out=ROOT/'docs/verification/dev/languages-it-pt-nl-pl';out.mkdir(parents=True,exist_ok=True)
+  out=ROOT/'docs/verification/dev/languages-additional';out.mkdir(parents=True,exist_ok=True)
   for locale,name in new.items():
    packet=json.loads(files[locale+'/settings.json']);s=packet['strings'];offline=False;page.goto(url);page.wait_for_function("!document.querySelector('#language').disabled")
    page.locator('#date').fill('2030-04-01');page.locator('#time').fill('12:30');page.locator('#units').fill('65');page.locator('#lead2').select_option('0');page.locator('#language').select_option(locale)

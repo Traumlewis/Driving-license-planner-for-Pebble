@@ -5,9 +5,13 @@ import argparse, collections, heapq, itertools, json
 
 ROOT = Path(__file__).resolve().parents[1]
 
-def train(limit=8192, frequency_scale=1024, weights=None):
+def train(limit=8192, frequency_scale=1024, weights=None, locales=None):
     if not 1<=limit<=8192 or not 1<=frequency_scale<=1024: raise ValueError("Invalid codec training limits")
     sources = [json.loads(p.read_text()) for p in sorted((ROOT/'Packs/App/Languages').glob('*/watch-source.json'))]
+    if locales is not None:
+        chosen=set(locales)
+        if not chosen or chosen-{s['locale'] for s in sources}: raise ValueError('Missing training locale')
+        sources=[s for s in sources if s['locale'] in chosen]
     sequences = [list(text.encode()) for source in sources for text in source['strings'].values()]
     dictionary = []
     for i in range(limit):
@@ -50,8 +54,9 @@ if __name__ == '__main__':
     parser.add_argument('--limit',type=int,default=8192,help='Maximum merge count, at most 8192')
     parser.add_argument('--frequency-scale',type=int,default=1024,help='Weight actual tokens relative to unused fallback tokens')
     parser.add_argument('--weights',type=Path,help='Optional locale weights for a deliberately balanced shared book')
+    parser.add_argument('--locales',help='Comma-separated frozen training locales for reproducibility')
     args = parser.parse_args()
     if args.output.exists(): parser.error('Output exists; published codecs must remain frozen')
-    codec = train(args.limit,args.frequency_scale,json.loads(args.weights.read_text()) if args.weights else None)
+    codec = train(args.limit,args.frequency_scale,json.loads(args.weights.read_text()) if args.weights else None,args.locales.split(',') if args.locales else None)
     args.output.write_text(json.dumps(codec, separators=(',', ':'))+'\n')
     print(len(codec['dictionary']), 'shared tokens; rebuild and publish a new compatibility variant')

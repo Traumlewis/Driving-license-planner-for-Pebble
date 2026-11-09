@@ -23,7 +23,7 @@ try:
   png.from_array(Screenshot(pebble).grab_image(),mode='RGB;8').save(str(out/(pack['locale']+'-home.png')))
  # Codec and binary are already built. Only new data is generated here.
  late=json.loads(Path('Packs/App/Languages/es/watch-source.json').read_text());late.update(locale='es-XX',name='Prueba',language=17);install(encode(late));home();assert raw_request({1:0,2:0})['state']['language']==17;late_verified=True
- print('PASS native language 17 added after build, offline restart, all eight languages, memory samples',json.dumps(rows),flush=True)
+ print('PASS native language 17 added after build, offline restart, all supported languages, memory samples',json.dumps(rows),flush=True)
 finally:
  install(next(p for p in packs if p['language']==before['language']));after=raw_request({1:0,2:0})['state']
  for key in ['entries','counts','topics','remainders','language','cls','profile']:assert before[key]==after[key],key

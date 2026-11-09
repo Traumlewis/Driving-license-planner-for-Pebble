@@ -14,7 +14,7 @@ The settings-v1 schema retains its trainingCountry DE compatibility field. Curre
 
 See [directory migration](../../../docs/DEV-3.8.47.md) and [format and behavior](../../../docs/DEV-3.8.46.md). Use 3.8.47 or newer for this download path. Repository updates do not publish a GitHub Release.
 
-Available settings languages: Deutsch, English, Español, Français, Italiano, Português, Nederlands and Polski. Spanish/French are phone-only on 3.8.47; watch support depends on the compatible LP4 catalogue. Germany’s training rules remain unchanged.
+Available settings languages: Deutsch, English, Español, Français, Italiano, Português, Nederlands, Polski, Dansk and Svenska. Spanish/French are phone-only on 3.8.47; watch support depends on the compatible LP4 catalogue. Germany’s training rules remain unchanged.
 
 ## Watch packets (3.8.48+)
 
@@ -28,6 +28,6 @@ French settings: `fr/settings.json`; all 296 watch translations: `fr/watch-sourc
 
 Phone settings and full 296-string watch sources are available for Italiano (`it`), Português (`pt`, European Portuguese), Nederlands (`nl`) and Polski (`pl`). Watch support requires the 3.8.51 DEV PBW and frozen v3 codec (`37bc2f9e-0148b906`). Its catalogue contains all eight languages below the unchanged 2,560-byte payload limit. Older variants stay available and keep the new languages phone-only. No language text was removed. See [sizes, compatibility and tests](../../../docs/DEV-3.8.51.md).
 
-## Danish/Swedish feasibility drafts
+## Danish and Swedish (3.8.52+)
 
-Complete Danish and Swedish watch translations were tested with the frozen 3.8.51 codec. They need 4,920 and 4,965 bytes respectively, exceeding the 2,560-byte limit. The `da/watch-draft.json` and `sv/watch-draft.json` files are source drafts, excluded from build/export discovery and all language catalogues. Existing eight-language support is unchanged. See [measured results](../../../docs/LANGUAGES-DA-SV-TEST.md).
+Dansk (`da`, watch ID 8) and Svenska (`sv`, ID 9) now include full phone settings and 296 watch texts. They require the 3.8.52 DEV PBW with the frozen v4 shared dictionary. The complete payloads are 2,177 and 2,205 bytes, below the unchanged 2,560-byte limit. The old oversized drafts are replaced by watch-source.json files. Older codec variants remain frozen and show these languages as phone-only. See [sizes, memory and testing](../../../docs/DEV-3.8.52.md).

@@ -15,7 +15,7 @@ The Huffman trainer balances the largest packets using explicit locale weights a
 Reproduce this deliberate migration into a NEW file:
 
 ```
-python tools/train_watch_codec.py --output /tmp/reproduced-watch-codec-v3.json --limit 8192 --frequency-scale 1024 --weights tools/watch-codec-v3-weights.json
+python tools/train_watch_codec.py --output /tmp/reproduced-watch-codec-v3.json --limit 8192 --frequency-scale 1024 --weights tools/watch-codec-v3-weights.json --locales de,en,es,fr,it,nl,pl,pt
 ```
 
 The generated file was compared byte for byte with the frozen v3 codec.
