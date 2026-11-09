@@ -1,6 +1,6 @@
 'use strict';
 const fs=require('fs'),assert=require('assert'),crypto=require('crypto'),path=require('path'),create=require('../src/pkjs/settings-language').create;
-const base='https://example.test/',folder=path.resolve(__dirname,'../../../Packs/Germany/Languages'),files={};
+const base='https://example.test/',folder=path.resolve(__dirname,'../../../Packs/App/Languages'),files={};
 files['index.json']=fs.readFileSync(folder+'/index.json','utf8');for(const locale of ['de','en'])files[locale+'/settings.json']=fs.readFileSync(folder+'/'+locale+'/settings.json','utf8');
 const state={},storage={getItem:k=>state[k]||null,setItem:(k,v)=>state[k]=v},calls=[];let failure=false,pending=[];
 function request(url,cb){calls.push(url);if(failure)return cb('NETWORK_ERROR');cb(null,files[url.slice(base.length)]);}

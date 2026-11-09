@@ -1,22 +1,23 @@
 # Packs
 
-Packets are organized first by the country whose driving-training rules apply, then by packet type. `Germany` identifies **Germany (DE)**; it does not restrict the interface language to German.
+Phone-settings translations and native watch menu packets have separate catalogues:
 
 ```
 Packs/
+├── App/
+│   └── Languages/
+│       ├── index.json
+│       ├── de/settings.json
+│       └── en/settings.json
 └── Germany/
     └── Languages/
         ├── index.json
-        └── 3.8.45/
+        └── 3.8.47/
             ├── manifest.json
             ├── de.json
             └── en.json
 ```
 
-Both language files describe the interface for the German training ruleset. Additional countries and additional interface languages are separate extensions; their presence must not be inferred from a translated interface.
+[App languages](App/Languages/README.md) are loaded dynamically by phone settings. Compatible phone-only translations can be added without a PBW build. Native [watch menu packets](Germany/Languages/README.md) remain bound to their matching app version and Germany's training rules. Additional countries and watch-language support are separate work.
 
-See [the language catalogue](Germany/Languages/README.md) for format and compatibility details. Repository updates do not publish a GitHub Release.
-
-The old `German` directory has been removed at the owner’s request. Use version 3.8.45 or newer for downloads from `Germany`.
-
-From 3.8.46 the live index also lists settings-v1 packets at `<locale>/settings.json`. Compatible settings languages can be registered without a PBW build; additional watch-language support remains deferred. See [the guide](../docs/DEV-3.8.46.md).
+The old German directory and old settings copies under Germany are removed. Use 3.8.47 or newer for the App settings catalogue. Source updates do not publish a GitHub Release.

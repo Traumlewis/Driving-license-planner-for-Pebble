@@ -3,8 +3,8 @@ from pathlib import Path
 import json,hashlib
 ROOT=Path(__file__).resolve().parents[1]
 def export():
-    translations=json.loads((ROOT/'tools/settings-translations.json').read_text());base=ROOT/'Packs/Germany/Languages';base.mkdir(parents=True,exist_ok=True)
-    index_path=base/'index.json';index=json.loads(index_path.read_text()) if index_path.exists() else dict(schemaVersion=1,trainingCountry='DE',versions={})
+    translations=json.loads((ROOT/'tools/settings-translations.json').read_text());base=ROOT/'Packs/App/Languages';base.mkdir(parents=True,exist_ok=True)
+    index_path=base/'index.json';index=json.loads(index_path.read_text()) if index_path.exists() else dict(schemaVersion=1,trainingCountry='DE')
     existing={d['locale']:d for d in index.get('settings',{}).get('languages',[])}
     schema=dict(keys=list(translations['en']['strings']),kinds=7,grounds=12)
     for locale,name,watch in [('de','Deutsch',0),('en','English',1)]:

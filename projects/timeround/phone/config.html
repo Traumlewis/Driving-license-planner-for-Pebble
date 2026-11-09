@@ -235,7 +235,7 @@ if(!window.Pebble||typeof Pebble.sendMessage!=='function'){
  var memory={},seed=state.settingsCache;
  var storage={getItem:function(k){try{return localStorage.getItem(k)||memory[k]||null;}catch(e){return memory[k]||null;}},setItem:function(k,v){memory[k]=v;try{localStorage.setItem(k,v);}catch(e){}}};
  if(seed&&!storage.getItem('fahrschul.v2.settingsPacket')){if(seed.catalogue)storage.setItem('fahrschul.v2.settingsCatalogue',seed.catalogue);if(seed.packet)storage.setItem('fahrschul.v2.settingsPacket',seed.packet);}
- settingsBrowser=window.SettingsLanguages.create('https://raw.githubusercontent.com/Traumlewis/Driving-license-planner-for-Pebble/main/Packs/Germany/Languages/',storage);
+ settingsBrowser=window.SettingsLanguages.create('https://raw.githubusercontent.com/Traumlewis/Driving-license-planner-for-Pebble/main/Packs/App/Languages/',storage);
  adoptSettings(settingsBrowser.state());settingsBrowser.refresh(state.language===1?'en':'de',function(error,info){adoptSettings(info||settingsBrowser.state());});adoptSettings(settingsBrowser.state());
 }
 

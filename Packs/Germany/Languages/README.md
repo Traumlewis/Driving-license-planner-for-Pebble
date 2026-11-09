@@ -16,8 +16,8 @@ Starting with development 3.8.44, the phone client downloads the selected versio
 
 Only the selected menu packet is retained on the watch. Longer explanation texts and the small emergency/loading fallback remain bundled in the current prototype.
 
-From 3.8.45 the canonical country directory is `Germany` and new manifests use `rulesetDirectory: Germany`. Archived 3.8.43/3.8.44 manifests retain their original identity. The old `Packs/German` directory has been removed at the owner’s request; use app version 3.8.45 or newer for downloads. From 3.8.46 the settings-language selector and translations are fetched from the settings-v1 catalogue; an English fallback remains bundled.
+From 3.8.45 the canonical country directory is `Germany` and new manifests use `rulesetDirectory: Germany`. Archived 3.8.43/3.8.44 manifests retain their original identity. The old `Packs/German` directory has been removed at the owner’s request; use app version 3.8.45 or newer for downloads. From 3.8.47 the settings-language selector and translations are fetched from Packs/App/Languages; an English fallback remains bundled.
 
-## Dynamic settings catalogue (3.8.46+)
+## Phone settings translations
 
-The index retains `versions` for native menu packets and adds `settings: {format: settings-v1, languages: [...]}`. Each entry has locale, native language name, relative `<locale>/settings.json` path, SHA-256 and watchLanguage (0 for de, 1 for en, null for additional phone-only languages). Settings JSON contains schemaVersion, format, trainingCountry, locale, a flat strings object and the kinds/grounds arrays. See [adding a language without a build](../../../docs/DEV-3.8.46.md#adding-a-language-without-a-build). New custom languages are preserved during export.
+From 3.8.47 the dynamic settings list and its `<locale>/settings.json` files live in [Packs/App/Languages](../../App/Languages/README.md). This directory retains only the versioned native menu packets. Use 3.8.47 or newer to download settings translations from their new App path.

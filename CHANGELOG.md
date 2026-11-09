@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.8.47 — Development: App settings language path
+
+- Move the live settings catalogue and translations to `Packs/App/Languages` and remove their old Germany copies.
+- Separate phone-settings and native watch download URLs; update clients, exporters, registration helper and tests.
+- Retain verified offline settings caches. Existing 3.8.46 builds need updating to download from the new settings path.
+- Combined six-target DEV PBW; source/data update only, no GitHub Release.
+
+
 ## 3.8.46 — Development: dynamic phone settings languages
 
 - Load the settings-language list and translations from GitHub; add compatible phone-only translations without rebuilding the PBW.

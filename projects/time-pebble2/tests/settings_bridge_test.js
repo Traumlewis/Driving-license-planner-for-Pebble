@@ -1,11 +1,11 @@
 'use strict';
 const fs=require('fs'),path=require('path'),vm=require('vm'),assert=require('assert'),crypto=require('crypto');
-const folder=path.resolve(__dirname,'../../../Packs/Germany/Languages'),metadata=require('../src/pkjs/lang-pack'),urls=[],packets={};
+const folder=path.resolve(__dirname,'../../../Packs/App/Languages'),metadata=require('../src/pkjs/lang-pack'),urls=[],packets={};
 let index=JSON.parse(fs.readFileSync(folder+'/index.json','utf8'));
 for(const locale of ['de','en'])packets[locale+'/settings.json']=fs.readFileSync(folder+'/'+locale+'/settings.json','utf8');
 const fr=JSON.parse(packets['en/settings.json']);fr.locale='fr';fr.strings.appName='Planificateur';packets['fr/settings.json']=JSON.stringify(fr);index.settings.languages.push({locale:'fr',name:'Français',file:'fr/settings.json',sha256:crypto.createHash('sha256').update(packets['fr/settings.json']).digest('hex'),watchLanguage:null});
 let offline=false;
-global.XMLHttpRequest=class {open(m,url){this.url=url;}send(){urls.push(this.url);setImmediate(()=>{if(offline)return this.onerror();this.status=200;this.responseText=this.url.endsWith('/index.json')?JSON.stringify(index):packets[this.url.slice(metadata.baseURL.length)];this.onload();});}abort(){}};
+global.XMLHttpRequest=class {open(m,url){this.url=url;}send(){urls.push(this.url);setImmediate(()=>{if(offline)return this.onerror();this.status=200;this.responseText=this.url.endsWith('/index.json')?JSON.stringify(index):packets[this.url.slice(metadata.settingsBaseURL.length)];this.onload();});}abort(){}};
 const storage={},events={},sent=[],published=[],localStorage={getItem:k=>storage[k]||null,setItem:(k,v)=>storage[k]=String(v),removeItem:k=>delete storage[k]};
 function start(){const ctx={require:n=>n==='./config-html'?'/*__INITIAL_STATE__*/':require('../src/pkjs/'+n.slice(2)),Date,Number,JSON,Array,String,Math,encodeURIComponent,decodeURIComponent,console,localStorage,setTimeout:()=>1,clearTimeout:()=>{},Pebble:{addEventListener:(n,f)=>events[n]=f,sendAppMessage:m=>sent.push(m),sendConfigMessage:m=>published.push(m),insertTimelinePin:()=>{},deleteTimelinePin:()=>{}}};vm.runInNewContext(fs.readFileSync(__dirname+'/../src/pkjs/index.js','utf8'),ctx);return ctx;}
 function rpc(data){return new Promise(resolve=>events.configmessage({data,respond:resolve}));}

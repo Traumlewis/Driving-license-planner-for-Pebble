@@ -4,7 +4,7 @@ import json,time
 from playwright.sync_api import sync_playwright
 root=Path(__file__).resolve().parents[1]
 state={'version':2,'language':0,'revision':7,'cls':4,'fresh':True,'alarmOk':True,'storageOk':True,'timeline':{'enabled':True,'status':'submitted'},'entries':[[1,1794504600,4,3,1,60,30,255,0],[2,1794672000,4,5,1,60,0,0,0]],'extras':[2,4,4,4,2,0,6,0,10,4,10,0,18,0,2,6]}
-catalogue=json.loads((root.parents[1]/'Packs/Germany/Languages/index.json').read_text())['settings']['languages'];packets={locale:json.loads((root.parents[1]/'Packs/Germany/Languages'/locale/'settings.json').read_text()) for locale in ['de','en']}
+catalogue=json.loads((root.parents[1]/'Packs/App/Languages/index.json').read_text())['settings']['languages'];packets={locale:json.loads((root.parents[1]/'Packs/App/Languages'/locale/'settings.json').read_text()) for locale in ['de','en']}
 state['settingsLanguage']={'catalogue':catalogue,'active':{'locale':'de','watchLanguage':0,'packet':packets['de']},'loading':False,'error':None}
 html=(root/'phone/config.html').read_text().replace('/*__INITIAL_STATE__*/','window.__FAHRSCHUL_INITIAL_STATE__='+json.dumps(state)+';')
 bridge='''<script>window.callbacks={};window.testState=STATE;window.Pebble={addEventListener:(name,cb)=>callbacks[name]=cb,readyTargets:()=>['pkjs'],sendMessage:async(target,data)=>{if(data.type==='settingsSelect')testState.settingsLanguage.active={locale:data.locale,watchLanguage:data.locale==='de'?0:1,packet:PACKETS[data.locale]};return {state:testState};}};</script>'''.replace('STATE',json.dumps(state)).replace('PACKETS',json.dumps(packets))

@@ -4,7 +4,7 @@ const fs=require('fs'),path=require('path'),cp=require('child_process'),vm=requi
 const platform=process.argv[2],root=path.resolve(__dirname,'..'),project=root+'/projects/time2/src/pkjs',metadata=require(project+'/lang-pack');
 let offline=false,stopping=false,hello=null,restarted=0,finished=null,bridgeError=null;const urls=[],state={},events={},results=[],httpChildren=new Set(),timerIds=new Set();
 class XHR {
- open(method,url){assert.strictEqual(method,'GET');assert(url.startsWith(metadata.baseURL));this.url=url;}
+ open(method,url){assert.strictEqual(method,'GET');assert(url.startsWith(metadata.baseURL)||url.startsWith(metadata.settingsBaseURL));this.url=url;}
  send(){urls.push(this.url);if(offline){setImmediate(()=>this.onerror());return;}this.child=cp.execFile('curl',['--fail','--silent','--show-error','--location','--max-time','15','--max-filesize','20000',this.url],{encoding:'utf8',maxBuffer:30000},(error,stdout)=>{httpChildren.delete(this.child);if(this.aborted)return;if(error){this.onerror();return;}this.status=200;this.responseText=stdout;this.onload();});httpChildren.add(this.child);}
  abort(){this.aborted=true;if(this.child)this.child.kill();}
 }
@@ -38,4 +38,4 @@ async function language(value){let response;events.configmessage({data:{type:'co
  const out=root+'/docs/verification/dev/'+metadata.appVersion+'/'+platform;fs.mkdirSync(out,{recursive:true});fs.writeFileSync(out+'/remote-native.json',JSON.stringify({platform,version:metadata.appVersion,urls,offlineNativeRestart:true,singlePhoneCache:!!state['fahrschul.v2.languagePacket'],appDataPreserved:finished.appDataPreserved},null,2)+'\n');
  if(process.argv.includes('--settings'))console.log('PASS '+platform+': production settings bridge downloaded live GitHub catalogue and DE/EN settings packets without changing native watch data');
  console.log('PASS '+platform+': real GitHub → production phone client → native watch transfer, DE/EN replacement, one cache, offline native restart and original data preserved');
-})().catch(e=>{console.error(e);process.exitCode=1;if(!stopping){stopping=true;child.stdin.write(JSON.stringify({action:'finish'})+'\n');}}).finally(()=>{for(const id of timerIds)clearTimeout(id);for(const c of httpChildren)c.kill();});
+})().catch(e=>{console.error(e);console.error('Integration state',JSON.stringify({urls,pending:state['fahrschul.v2.pending'],packet:context.snapshot&&context.snapshot.languagePack,download:context.languageStore.info(),settings:context.settingsStore.state().error,hello:!!hello,bridgeError}));process.exitCode=1;if(!stopping){stopping=true;child.stdin.write(JSON.stringify({action:'finish'})+'\n');}}).finally(()=>{for(const id of timerIds)clearTimeout(id);for(const c of httpChildren)c.kill();});

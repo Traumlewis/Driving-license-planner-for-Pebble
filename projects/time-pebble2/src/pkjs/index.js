@@ -1,7 +1,7 @@
 'use strict';
 var configHTML=require('./config-html');
 var languageMetadata=require('./lang-pack');
-var settingsStore=require('./settings-language').create(languageMetadata.baseURL,localStorage);
+var settingsStore=require('./settings-language').create(languageMetadata.settingsBaseURL,localStorage);
 var languagePacks=languageMetadata.packs;
 var languageStore=require('./remote-language').create(languageMetadata,localStorage);
 function packForLanguage(value){return languagePacks[value===1?1:0];}
@@ -110,9 +110,9 @@ Pebble.addEventListener('webviewclosed',function(event){
 function importSettingsCache(cache){
  if(!cache||typeof cache.catalogue!=='string'||cache.catalogue.length>60000||typeof cache.packet!=='string'||cache.packet.length>160000)return;
  var memory={'fahrschul.v2.settingsCatalogue':cache.catalogue,'fahrschul.v2.settingsPacket':cache.packet};
- var candidate=require('./settings-language').create(languageMetadata.baseURL,{getItem:function(k){return memory[k]||null;},setItem:function(){}});
+ var candidate=require('./settings-language').create(languageMetadata.settingsBaseURL,{getItem:function(k){return memory[k]||null;},setItem:function(){}});
  if(!candidate.state().active)return;
  localStorage.setItem('fahrschul.v2.settingsCatalogue',cache.catalogue);localStorage.setItem('fahrschul.v2.settingsPacket',cache.packet);settingsStore=candidate;
  // Recreate with persistent storage so later selections are retained.
- settingsStore=require('./settings-language').create(languageMetadata.baseURL,localStorage);
+ settingsStore=require('./settings-language').create(languageMetadata.settingsBaseURL,localStorage);
 }

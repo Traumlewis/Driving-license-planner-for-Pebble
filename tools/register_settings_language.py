@@ -4,7 +4,7 @@ from pathlib import Path
 import argparse,json,re,hashlib
 ROOT=Path(__file__).resolve().parents[1]
 def register(source,name,base=None):
-    base=Path(base) if base else ROOT/'Packs/Germany/Languages'
+    base=Path(base) if base else ROOT/'Packs/App/Languages'
     packet=json.loads(Path(source).read_text());locale=packet.get('locale')
     if not isinstance(locale,str) or not re.fullmatch(r'[a-z]{2,3}(?:-[A-Za-z0-9]{2,8}){0,2}',locale):raise ValueError('Invalid locale')
     if locale in {'de','en'}:raise ValueError('Edit tools/settings-translations.json and run tools/export_settings_languages.py for DE/EN')

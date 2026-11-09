@@ -2,8 +2,8 @@
 from pathlib import Path
 import json,hashlib,threading,http.server,functools
 from playwright.sync_api import sync_playwright
-ROOT=Path(__file__).resolve().parents[1];BASE='https://raw.githubusercontent.com/Traumlewis/Driving-license-planner-for-Pebble/main/Packs/Germany/Languages/'
-files={name:(ROOT/'Packs/Germany/Languages'/name).read_text() for name in ['index.json','de/settings.json','en/settings.json']}
+ROOT=Path(__file__).resolve().parents[1];BASE='https://raw.githubusercontent.com/Traumlewis/Driving-license-planner-for-Pebble/main/Packs/App/Languages/'
+files={name:(ROOT/'Packs/App/Languages'/name).read_text() for name in ['index.json','de/settings.json','en/settings.json']}
 state={'version':2,'language':0,'revision':7,'cls':4,'fresh':True,'alarmOk':True,'storageOk':True,'timeline':{'enabled':True,'status':'submitted'},'entries':[[1,1900000000,4,3,1,60,30,255,0]],'extras':[2,4,4,4,2,0,6,0,10,4,10,0,18,0,2,6]}
 state['settingsCache']={'catalogue':files['index.json'],'packet':json.dumps({'locale':'de','catalogue':files['index.json'],'raw':files['de/settings.json']})}
 class Quiet(http.server.SimpleHTTPRequestHandler):
