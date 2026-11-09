@@ -15,3 +15,7 @@ The existing settings-v1 schema retains its trainingCountry DE compatibility fie
 See [directory migration](../../../docs/DEV-3.8.47.md) and [format and behavior](../../../docs/DEV-3.8.46.md). Use 3.8.47 or newer for this download path. Repository updates do not publish a GitHub Release.
 
 Available settings languages: Deutsch, English and Español. Spanish is phone-only and works with the existing 3.8.47 build; it does not change the watch language or Germany’s training rules.
+
+## Watch packets (3.8.48+)
+
+DE/EN/ES also have watch-source.json translations and packed LP4 data under watch/<schema>-<codec>/. The live index maps compatible builds to their watch languages. Use tools/register_watch_language.py to add another complete watch translation without rebuilding; see [the guide and memory limits](../../../docs/DEV-3.8.48.md). Spanish is phone-only on 3.8.47, and available on the watch after installing 3.8.48. Keep legacy settings watchLanguage fields unchanged; watchPacks supplies the generic receiver mapping.

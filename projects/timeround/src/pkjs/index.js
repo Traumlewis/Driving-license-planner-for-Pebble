@@ -1,10 +1,9 @@
 'use strict';
 var configHTML=require('./config-html');
 var languageMetadata=require('./lang-pack');
-var settingsStore=require('./settings-language').create(languageMetadata.settingsBaseURL,localStorage);
-var languagePacks=languageMetadata.packs;
-var languageStore=require('./remote-language').create(languageMetadata,localStorage);
-function packForLanguage(value){return languagePacks[value===1?1:0];}
+var settingsStore=require('./settings-language').create(languageMetadata.settingsBaseURL,localStorage,{watch:languageMetadata.watch});
+var languageStore=require('./remote-language').create(languageMetadata,localStorage,{catalogue:function(){return settingsStore.exportCache().catalogue;}});
+function packForLanguage(value){return languageStore.descriptor(value);}
 var packTransfer=null;
 var timeline=require('./timeline').create(Pebble,localStorage);
 var KEYS={op:1,rid:2,id:3,cls:4,kind:5,when:6,lead1:7,lead2:8,units:9,topic:10,revision:11,status:12,payload:13,part:14,total:15,extra:16,language:17};
@@ -18,7 +17,7 @@ function freshState(){
  var s=snapshot?JSON.parse(JSON.stringify(snapshot)):empty();s.fresh=lastReply>0&&Date.now()-lastReply<20000;s.timeline=timeline.state();s.settingsLanguage=settingsStore.state();
  if(!s.error)s.error=localStorage.getItem(STORE+'lastError')||'';
  var command=pending();
- if(command&&command.action==='language'){s.language=command.language;if(s.languagePack)s.languagePack.transferring=(!s.languagePack.ready||s.languagePack.id!==packForLanguage(command.language).id);}
+ if(command&&command.action==='language'){s.language=command.language;if(s.languagePack)s.languagePack.transferring=!languageStore.matches(s.languagePack,command.language);}
  var remote=languageStore.info();if(s.languagePack){s.languagePack.downloading=remote.downloading;s.languagePack.cachedLanguage=remote.cachedLanguage;if(remote.error){
   var incompatible=/CHECKSUM|INVALID|INCOMPATIBLE/.test(remote.error),missing=remote.error==='HTTP_404';
   s.error=incompatible?(s.language?'Language pack could not be verified. Please try again later.':'Sprachpaket konnte nicht geprüft werden. Bitte später erneut versuchen.'):missing?(s.language?'Language pack for this app version is not available yet.':'Sprachpaket für diese App-Version ist noch nicht verfügbar.'):(s.language?'Language pack download failed. Check Internet access and reopen settings.':'Sprachpaket-Download fehlgeschlagen. Internetverbindung prüfen und Einstellungen erneut öffnen.');s.languagePack.downloadError=s.error;
@@ -37,14 +36,20 @@ function sendPackPart(){
 }
 function transmit(){
  var p=pending();if(!p||waiting)return;
- if(p.action==='language'&&snapshot&&snapshot.languagePack&&(!snapshot.languagePack.ready||snapshot.languagePack.id!==packForLanguage(p.language).id)){
+ if(p.action==='language'&&!snapshot){requestSnapshot();retryTimer=setTimeout(transmit,500);return;}
+ if(p.action==='language'&&snapshot&&languageStore.matches(snapshot.languagePack,p.language)){sendCommand(p);return;}
+ if(p.action==='language'&&snapshot&&snapshot.languagePack){
   waiting=true;var commandId=p.rid;
   languageStore.ensure(p.language,function(error,packet){
    var current=pending();if(!current||current.rid!==commandId){waiting=false;return;}
    if(error){waiting=false;publish();if(retries++<2)retryTimer=setTimeout(transmit,2000);return;}
+   if(snapshot.languagePack.ready&&snapshot.languagePack.id===packet.id){waiting=false;sendCommand(current);return;}
    packTransfer={rid:nextRequestId(),part:0,pack:packet};sendPackPart();
   });publish();return;
  }
+ sendCommand(p);
+}
+function sendCommand(p){
  waiting=true;var data={};
  data[KEYS.op]=p.action==='delete'?2:p.action==='language'?3:1;data[KEYS.rid]=p.rid;data[KEYS.id]=p.id||0;data[KEYS.revision]=p.revision||0;
  if(p.action==='save')['cls','kind','when','lead1','lead2','units','topic','extra'].forEach(function(k){data[KEYS[k]]=p[k]||0;});
@@ -55,7 +60,7 @@ function transmit(){
 }
 function queueCommand(p){
  if(!p||['save','delete','language'].indexOf(p.action)===-1)return {error:'INVALID_COMMAND'};
- if(p.action==='language'&&p.language!==0&&p.language!==1)return {error:'INVALID_COMMAND'};
+ if(p.action==='language'&&(!Number.isInteger(p.language)||p.language<0||p.language>63||p.language>1&&!languageStore.descriptor(p.language)))return {error:'INVALID_COMMAND'};
  if(pending())return {error:'TRANSFER_PENDING',state:freshState()};
  p.rid=nextRequestId();
  localStorage.setItem(STORE+'nonce',String(p.rid));localStorage.setItem(STORE+'pending',JSON.stringify(p));
@@ -65,7 +70,7 @@ Pebble.addEventListener('ready',function(){requestSnapshot();retries=0;transmit(
 // Older mobile apps still get an immediate, synchronous configuration page. No waiting for
 // a watch response before openURL, and no navigation from a timer callback.
 Pebble.addEventListener('showConfiguration',function(){
- languageStore.retry();settingsStore.refresh(snapshot&&snapshot.language===1?'en':'de',function(){publish();});
+ languageStore.retry();settingsStore.refresh(snapshot?snapshot.language:0,function(){publish();});
  var initial=freshState();initial.settingsCache=settingsStore.exportCache();var state=JSON.stringify(initial).replace(/</g,'\\u003c');
  var html=configHTML.replace('/*__INITIAL_STATE__*/','window.__FAHRSCHUL_INITIAL_STATE__='+state+';');
  Pebble.openURL('data:text/html;charset=utf-8,'+encodeURIComponent(html));requestSnapshot();
@@ -73,7 +78,7 @@ Pebble.addEventListener('showConfiguration',function(){
 // Current mobile apps load the bundled configPage directly; it stays open while syncing.
 Pebble.addEventListener('configmessage',function(e){
  var m=e.data||{};
- if(m.type==='settingsRefresh'){settingsStore.refresh(snapshot&&snapshot.language===1?'en':'de',function(){publish();});e.respond({state:freshState()});return;}
+ if(m.type==='settingsRefresh'){languageStore.retry();settingsStore.refresh(snapshot?snapshot.language:0,function(){publish();});e.respond({state:freshState()});return;}
  if(m.type==='settingsSelect'){settingsStore.select(m.locale,function(error){e.respond({error:error||null,state:freshState()});publish();});return;}
  if(m.type==='timeline'&&typeof m.enabled==='boolean'){timeline.setEnabled(m.enabled);e.respond({state:freshState()});publish();requestSnapshot();return;}
  if(m.type==='snapshot'){e.respond({state:freshState()});requestSnapshot();if(pending()&&!waiting){retries=0;transmit();}return;}
@@ -96,8 +101,8 @@ Pebble.addEventListener('appmessage',function(event){
  }
  var p=pending(),result=null;
  if(p&&p.rid===rid){if(retryTimer)clearTimeout(retryTimer);waiting=false;localStorage.removeItem(STORE+'pending');result={rid:rid,status:status,action:p.action,id:p.id||snapshot.savedId||0};if(status<0){snapshot.error=snapshot.error||'Die Uhr hat die Änderung abgelehnt. Bitte Eingabe prüfen.';localStorage.setItem(STORE+'lastError',snapshot.error);}else localStorage.removeItem(STORE+'lastError');}
- timeline.sync(snapshot);publish(result);
- if(snapshot.languagePack&&(!snapshot.languagePack.ready||snapshot.languagePack.id!==packForLanguage(snapshot.language).id)&&!pending())queueCommand({action:'language',language:snapshot.language||0,revision:snapshot.revision});
+ timeline.sync(snapshot);publish(result);if(pending()&&!waiting)transmit();
+ if(snapshot.languagePack&&!languageStore.matches(snapshot.languagePack,snapshot.language)&&!pending()){var desired=snapshot.language||0;languageStore.ensure(desired,function(error){if(!error&&!pending()&&snapshot.language===desired)queueCommand({action:'language',language:desired,revision:snapshot.revision});publish();});}
 });
 Pebble.addEventListener('webviewclosed',function(event){
  if(!event.response||event.response==='CANCELLED')return;var p;try{p=JSON.parse(decodeURIComponent(event.response));}catch(e){return;}
@@ -110,9 +115,9 @@ Pebble.addEventListener('webviewclosed',function(event){
 function importSettingsCache(cache){
  if(!cache||typeof cache.catalogue!=='string'||cache.catalogue.length>60000||typeof cache.packet!=='string'||cache.packet.length>160000)return;
  var memory={'fahrschul.v2.settingsCatalogue':cache.catalogue,'fahrschul.v2.settingsPacket':cache.packet};
- var candidate=require('./settings-language').create(languageMetadata.settingsBaseURL,{getItem:function(k){return memory[k]||null;},setItem:function(){}});
+ var candidate=require('./settings-language').create(languageMetadata.settingsBaseURL,{getItem:function(k){return memory[k]||null;},setItem:function(){}},{watch:languageMetadata.watch});
  if(!candidate.state().active)return;
  localStorage.setItem('fahrschul.v2.settingsCatalogue',cache.catalogue);localStorage.setItem('fahrschul.v2.settingsPacket',cache.packet);settingsStore=candidate;
  // Recreate with persistent storage so later selections are retained.
- settingsStore=require('./settings-language').create(languageMetadata.settingsBaseURL,localStorage);
+ settingsStore=require('./settings-language').create(languageMetadata.settingsBaseURL,localStorage,{watch:languageMetadata.watch});
 }

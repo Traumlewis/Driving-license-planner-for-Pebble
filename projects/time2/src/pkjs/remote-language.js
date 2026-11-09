@@ -1,50 +1,23 @@
 'use strict';
-var sha256=require('./sha256');
-var CACHE='fahrschul.v2.languagePacket';
-function crc32(chunks){var crc=0xffffffff;chunks.forEach(function(chunk){for(var i=0;i<chunk.length;i+=2){crc^=parseInt(chunk.substr(i,2),16);for(var b=0;b<8;b++)crc=(crc>>>1)^((crc&1)?0xedb88320:0);}});return (crc^0xffffffff)>>>0;}
-function download(url,callback){
- var done=false,xhr,timer;function finish(error,raw){if(done)return;done=true;if(timer)clearTimeout(timer);callback(error,raw);}
- try{
-  xhr=new XMLHttpRequest();xhr.open('GET',url,true);
-  xhr.onload=function(){if(xhr.status!==200)return finish('HTTP_'+xhr.status);if(typeof xhr.responseText!=='string'||xhr.responseText.length>20000)return finish('INVALID_DOWNLOAD');finish(null,xhr.responseText);};
-  xhr.onerror=function(){finish('NETWORK_ERROR');};xhr.ontimeout=function(){finish('DOWNLOAD_TIMEOUT');};
-  timer=setTimeout(function(){finish('DOWNLOAD_TIMEOUT');try{if(xhr.abort)xhr.abort();}catch(e){}},15000);xhr.send();
- }catch(e){finish('NETWORK_ERROR');}
-}
+var sha256=require('./sha256'),CACHE='fahrschul.v2.languagePacket',INDEX='fahrschul.v2.watchCatalogue';
+function crcBytes(bytes){var crc=0xffffffff;bytes.forEach(function(v){crc^=v;for(var b=0;b<8;b++)crc=(crc>>>1)^((crc&1)?0xedb88320:0);});return (crc^0xffffffff)>>>0;}
+function download(url,callback){var done=false,xhr,timer;function finish(error,raw){if(done)return;done=true;if(timer)clearTimeout(timer);callback(error,raw);}try{xhr=new XMLHttpRequest();xhr.open('GET',url,true);xhr.onload=function(){if(xhr.status!==200)return finish('HTTP_'+xhr.status);if(typeof xhr.responseText!=='string'||xhr.responseText.length>60000)return finish('INVALID_DOWNLOAD');finish(null,xhr.responseText);};xhr.onerror=function(){finish('NETWORK_ERROR');};xhr.ontimeout=function(){finish('DOWNLOAD_TIMEOUT');};timer=setTimeout(function(){finish('DOWNLOAD_TIMEOUT');try{xhr.abort();}catch(e){}},15000);xhr.send();}catch(e){finish('NETWORK_ERROR');}}
 exports.create=function(metadata,storage,options){
- options=options||{};var request=options.request||download,cached=null,flight=null,lastError=null,nextAttempt=0;var now=options.now||Date.now;
- function descriptor(language){if(language!==0&&language!==1)throw Error('INVALID_LANGUAGE');return metadata.packs[language];}
- function validate(raw,language){
-  var p=descriptor(language);if(typeof raw!=='string'||raw.length>20000||sha256(raw)!==p.sha256)throw Error('CHECKSUM_MISMATCH');
-  var packet=JSON.parse(raw);
-  if(packet.language!==language||packet.id!==p.id||packet.crc!==p.crc||packet.size!==p.size||!Array.isArray(packet.chunks)||packet.chunks.length!==Math.ceil(p.size/128))throw Error('INCOMPATIBLE_PACKET');
-  var size=0;packet.chunks.forEach(function(c,i){if(typeof c!=='string'||!/^(?:[0-9a-f]{2}){1,128}$/i.test(c)||i<packet.chunks.length-1&&c.length!==256)throw Error('INVALID_PACKET');size+=c.length/2;});
-  if(size!==p.size||crc32(packet.chunks)!==p.crc)throw Error('INVALID_PACKET');return packet;
- }
- try{var stored=JSON.parse(storage.getItem(CACHE)||'null');if(stored&&stored.appVersion===metadata.appVersion){cached={language:stored.language,packet:validate(stored.raw,stored.language),raw:stored.raw};}else if(stored)storage.removeItem(CACHE);}catch(e){try{storage.removeItem(CACHE);}catch(ignore){}}
- function info(){return {downloading:!!flight,cachedLanguage:cached?cached.language:-1,error:lastError};}
+ options=options||{};var compat=metadata.watch,request=options.request||download,data=null,indexRaw=null,cached=null,flight=null,error=null,nextAttempt=0,now=options.now||Date.now;
+ function parseCatalogue(raw){if(typeof raw!=='string'||raw.length>60000)throw Error('INVALID_CATALOGUE');var index=JSON.parse(raw),variant=index.watchPacks&&index.watchPacks[compat.tag];if(index.schemaVersion!==1||index.trainingCountry!=='DE'||!variant||variant.format!==compat.format||variant.schemaId!==compat.schemaId||variant.codecId!==compat.codecId||!Array.isArray(variant.languages)||!variant.languages.length||variant.languages.length>64)throw Error('INCOMPATIBLE_CATALOGUE');var seen={},locales={};variant.languages.forEach(function(d){if(!Number.isInteger(d.language)||d.language<0||d.language>63||seen[d.language]||typeof d.locale!=='string'||!/^[a-z]{2,3}(?:-[A-Za-z0-9]{2,8}){0,2}$/.test(d.locale)||locales[d.locale]||d.file!=='watch/'+compat.tag+'/'+d.locale+'.json'||!Number.isInteger(d.id)||d.id<=0||d.id>0xffffffff||!Number.isInteger(d.crc)||d.crc<0||d.crc>0xffffffff||!Number.isInteger(d.size)||d.size<128||d.size>compat.maxBytes||typeof d.sha256!=='string'||!/^[0-9a-f]{64}$/.test(d.sha256))throw Error('INVALID_CATALOGUE');seen[d.language]=true;locales[d.locale]=true;});return variant;}
+ function setCatalogue(raw){if(data&&raw===indexRaw)return true;try{var next=parseCatalogue(raw);data=next;indexRaw=raw;try{storage.setItem(INDEX,raw);}catch(e){}return true;}catch(e){return false;}}
+ function current(){if(options.catalogue){var raw=options.catalogue();if(raw)setCatalogue(raw);}return data;}
+ function descriptor(language){var index=current();if(index)for(var i=0;i<index.languages.length;i++)if(index.languages[i].language===language)return index.languages[i];return cached&&cached.packet.language===language?cached.descriptor:null;}
+ function validate(raw,d){if(typeof raw!=='string'||raw.length>20000||sha256(raw)!==d.sha256)throw Error('CHECKSUM_MISMATCH');var p=JSON.parse(raw);if(p.format!==compat.format||p.schemaId!==compat.schemaId||p.codecId!==compat.codecId||p.locale!==d.locale||p.language!==d.language||p.id!==d.id||p.crc!==d.crc||p.size!==d.size||!Array.isArray(p.chunks)||p.chunks.length!==Math.ceil(p.size/128))throw Error('INCOMPATIBLE_PACKET');var bytes=[];p.chunks.forEach(function(c,i){if(typeof c!=='string'||!/^(?:[0-9a-f]{2}){1,128}$/i.test(c)||i<p.chunks.length-1&&c.length!==256)throw Error('INVALID_PACKET');for(var j=0;j<c.length;j+=2)bytes.push(parseInt(c.substr(j,2),16));});if(bytes.length!==p.size||crcBytes(bytes)!==p.crc)throw Error('INVALID_PACKET');function u32(i){return (bytes[i]|bytes[i+1]<<8|bytes[i+2]<<16|bytes[i+3]<<24)>>>0;}if(bytes[0]!==76||bytes[1]!==80||bytes[2]!==52||bytes[3]!==1||u32(4)!==compat.schemaId||u32(8)!==compat.codecId||u32(12)!==p.id||(bytes[16]|bytes[17]<<8)!==p.size||bytes[18]!==p.language||!bytes[19]||bytes[19]>23||u32(20)!==crcBytes(bytes.slice(24)))throw Error('INVALID_HEADER');return p;}
+ try{var index=storage.getItem(INDEX);if(index)setCatalogue(index);var saved=JSON.parse(storage.getItem(CACHE)||'null');if(saved&&saved.tag===compat.tag){cached={packet:validate(saved.raw,saved.descriptor),descriptor:saved.descriptor,raw:saved.raw};}else if(saved)storage.removeItem(CACHE);}catch(e){try{storage.removeItem(CACHE);}catch(ignore){}}
  function ensure(language,callback){
-  var p;try{p=descriptor(language);}catch(e){callback(e.message);return;}
-  if(cached&&cached.language===language){lastError=null;callback(null,cached.packet);return;}
-  if(lastError&&now()<nextAttempt){callback(lastError);return;}
-  if(flight){if(flight.language===language)flight.callbacks.push(callback);else callback('DOWNLOAD_BUSY');return;}
-  var job={language:language,callbacks:[callback]};flight=job;lastError=null;
-  function finish(error,raw,packet){
-   if(flight!==job)return;flight=null;lastError=error||null;nextAttempt=error?now()+30000:0;
-   if(!error){cached={language:language,packet:packet,raw:raw};try{storage.setItem(CACHE,JSON.stringify({appVersion:metadata.appVersion,language:language,raw:raw}));}catch(e){/* The verified packet can still be forwarded from memory. */}}
-   job.callbacks.forEach(function(cb){cb(error,packet);});
-  }
-  var base=metadata.baseURL+metadata.appVersion+'/';
-  request(base+'manifest.json',function(error,raw){
-   if(flight!==job)return;if(error){finish(error);return;}
-   try{
-    if(typeof raw!=='string'||raw.length>20000)throw Error('INVALID_MANIFEST');var m=JSON.parse(raw);
-    if(m.schemaVersion!==1||m.trainingCountry!=='DE'||m.rulesetDirectory!=='Germany'||m.appVersion!==metadata.appVersion||m.format!=='LP3/swap128'||m.scope!=='menu'||!Array.isArray(m.languages))throw Error('INCOMPATIBLE_MANIFEST');
-    var matches=m.languages.filter(function(x){return x.language===language;});if(matches.length!==1)throw Error('INVALID_MANIFEST');var entry=matches[0];
-    if(entry.locale!==p.locale||entry.file!==p.file||entry.packId!==p.id||entry.crc32!==p.crc||entry.payloadBytes!==p.size||entry.sha256!==p.sha256)throw Error('INCOMPATIBLE_MANIFEST');
-   }catch(e){finish(e.message||'INVALID_MANIFEST');return;}
-   request(base+p.file,function(error,raw){if(flight!==job)return;if(error){finish(error);return;}try{var packet=validate(raw,language);}catch(e){finish(e.message||'INVALID_PACKET');return;}finish(null,raw,packet);});
-  });
+  if(!Number.isInteger(language)||language<0||language>63){callback('INVALID_LANGUAGE');return;}
+  var d=descriptor(language);if(cached&&cached.packet.language===language&&(!d||d.id===cached.packet.id)){error=null;callback(null,cached.packet);return;}
+  if(error&&now()<nextAttempt){callback(error);return;}if(flight){if(flight.language===language)flight.callbacks.push(callback);else callback('DOWNLOAD_BUSY');return;}
+  var job={language:language,callbacks:[callback]};flight=job;error=null;
+  function finish(err,raw,packet,entry){if(flight!==job)return;flight=null;error=err||null;nextAttempt=err?now()+30000:0;if(!err){cached={packet:packet,descriptor:entry,raw:raw};try{storage.setItem(CACHE,JSON.stringify({tag:compat.tag,descriptor:entry,raw:raw}));}catch(e){}}job.callbacks.forEach(function(cb){cb(err,packet);});}
+  function fetchPacket(){var entry=descriptor(language);if(!entry){finish('UNKNOWN_LANGUAGE');return;}request(metadata.baseURL+entry.file,function(err,raw){if(flight!==job)return;if(err){finish(err);return;}var p;try{p=validate(raw,entry);}catch(e){finish(e.message);return;}finish(null,raw,p,entry);});}
+  if(d)fetchPacket();else request(metadata.baseURL+'index.json',function(err,raw){if(flight!==job)return;if(err){finish(err);return;}if(!setCatalogue(raw)){finish('INCOMPATIBLE_CATALOGUE');return;}fetchPacket();});
  }
- return {ensure:ensure,info:info,descriptor:descriptor,retry:function(){nextAttempt=0;}};
+ return {ensure:ensure,descriptor:descriptor,setCatalogue:setCatalogue,info:function(){return {downloading:!!flight,cachedLanguage:cached?cached.packet.language:-1,error:error};},retry:function(){nextAttempt=0;},matches:function(packet,language){var d=descriptor(language);return !!(packet&&packet.ready&&packet.language===language&&packet.schemaId===compat.schemaId&&packet.codecId===compat.codecId&&(!d||packet.id===d.id));}};
 };

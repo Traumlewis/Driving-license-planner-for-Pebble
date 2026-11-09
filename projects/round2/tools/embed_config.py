@@ -4,7 +4,7 @@ root=Path(__file__).resolve().parents[1]
 repo=root.parents[1]
 translations=json.loads((repo/'tools/settings-translations.json').read_text())
 page=root/'phone/config.html';html=page.read_text()
-fallback=translations['en'];fallback_js='var strings='+json.dumps(fallback['strings'],ensure_ascii=False)+';\nvar kinds='+json.dumps(fallback['kinds'],ensure_ascii=False)+';\nvar grounds='+json.dumps(fallback['grounds'],ensure_ascii=False)+';'
+fallback=translations['en'];metadata=json.loads((root/'src/pkjs/lang-pack.js').read_text().split('=',1)[1].strip().rstrip(';'));fallback_js='var watchCompatibility='+json.dumps(metadata['watch'])+';\nvar strings='+json.dumps(fallback['strings'],ensure_ascii=False)+';\nvar kinds='+json.dumps(fallback['kinds'],ensure_ascii=False)+';\nvar grounds='+json.dumps(fallback['grounds'],ensure_ascii=False)+';'
 def replace_block(text,label,content):
  return re.sub(r'/\*__'+label+r'_START__\*/.*?/\*__'+label+r'_END__\*/',lambda m:'/*__'+label+'_START__*/\n'+content+'\n/*__'+label+'_END__*/',text,flags=re.S)
 html=replace_block(html,'SETTINGS_FALLBACK',fallback_js)

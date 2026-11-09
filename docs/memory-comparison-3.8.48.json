@@ -1,0 +1,208 @@
+{
+  "baseline": "3.8.47",
+  "version": "3.8.48",
+  "builds": [
+    {
+      "platform": "emery",
+      "before": {
+        "resources": 10301,
+        "ram": 64104,
+        "heap": 66968
+      },
+      "after": {
+        "resources": 26833,
+        "ram": 62432,
+        "heap": 68640
+      },
+      "heapGain": 1672
+    },
+    {
+      "platform": "flint",
+      "before": {
+        "resources": 12300,
+        "ram": 55248,
+        "heap": 10288
+      },
+      "after": {
+        "resources": 28832,
+        "ram": 53730,
+        "heap": 11806
+      },
+      "heapGain": 1518
+    },
+    {
+      "platform": "basalt",
+      "before": {
+        "resources": 10769,
+        "ram": 55172,
+        "heap": 10364
+      },
+      "after": {
+        "resources": 27301,
+        "ram": 53646,
+        "heap": 11890
+      },
+      "heapGain": 1526
+    },
+    {
+      "platform": "diorite",
+      "before": {
+        "resources": 12300,
+        "ram": 55196,
+        "heap": 10340
+      },
+      "after": {
+        "resources": 28832,
+        "ram": 53678,
+        "heap": 11858
+      },
+      "heapGain": 1518
+    },
+    {
+      "platform": "gabbro",
+      "before": {
+        "resources": 10301,
+        "ram": 61470,
+        "heap": 69602
+      },
+      "after": {
+        "resources": 26833,
+        "ram": 60012,
+        "heap": 71060
+      },
+      "heapGain": 1458
+    },
+    {
+      "platform": "chalk",
+      "before": {
+        "resources": 10769,
+        "ram": 58084,
+        "heap": 7452
+      },
+      "after": {
+        "resources": 27301,
+        "ram": 56494,
+        "heap": 9042
+      },
+      "heapGain": 1590
+    }
+  ],
+  "runtime": {
+    "chalk": {
+      "platform": "chalk",
+      "version": "3.8.48",
+      "measurements": [
+        {
+          "locale": "de",
+          "language": 0,
+          "payloadBytes": 2512,
+          "storedBytes": 2528,
+          "heapBefore": 5448,
+          "heapDuring": 5448,
+          "stagedBytes": 0,
+          "heapAfter": 5448
+        },
+        {
+          "locale": "en",
+          "language": 1,
+          "payloadBytes": 2303,
+          "storedBytes": 2319,
+          "heapBefore": 5448,
+          "heapDuring": 3140,
+          "stagedBytes": 2303,
+          "heapAfter": 5448
+        },
+        {
+          "locale": "es",
+          "language": 2,
+          "payloadBytes": 2520,
+          "storedBytes": 2536,
+          "heapBefore": 5448,
+          "heapDuring": 2924,
+          "stagedBytes": 2520,
+          "heapAfter": 5448
+        },
+        {
+          "locale": "es-XX",
+          "language": 17,
+          "payloadBytes": 2518,
+          "storedBytes": 2534,
+          "heapBefore": 5448,
+          "heapDuring": 2924,
+          "stagedBytes": 2518,
+          "heapAfter": 5448
+        },
+        {
+          "locale": "de",
+          "language": 0,
+          "payloadBytes": 2512,
+          "storedBytes": 2528,
+          "heapBefore": 5448,
+          "heapDuring": 2932,
+          "stagedBytes": 2512,
+          "heapAfter": 5448
+        }
+      ],
+      "appDataPreserved": true,
+      "newLanguageWithoutBuild": true
+    },
+    "flint": {
+      "platform": "flint",
+      "version": "3.8.48",
+      "measurements": [
+        {
+          "locale": "de",
+          "language": 0,
+          "payloadBytes": 2512,
+          "storedBytes": 2528,
+          "heapBefore": 8456,
+          "heapDuring": 8456,
+          "stagedBytes": 0,
+          "heapAfter": 8456
+        },
+        {
+          "locale": "en",
+          "language": 1,
+          "payloadBytes": 2303,
+          "storedBytes": 2319,
+          "heapBefore": 8456,
+          "heapDuring": 6148,
+          "stagedBytes": 2303,
+          "heapAfter": 8456
+        },
+        {
+          "locale": "es",
+          "language": 2,
+          "payloadBytes": 2520,
+          "storedBytes": 2536,
+          "heapBefore": 8456,
+          "heapDuring": 5932,
+          "stagedBytes": 2520,
+          "heapAfter": 8456
+        },
+        {
+          "locale": "es-XX",
+          "language": 17,
+          "payloadBytes": 2518,
+          "storedBytes": 2534,
+          "heapBefore": 8456,
+          "heapDuring": 5932,
+          "stagedBytes": 2518,
+          "heapAfter": 8456
+        },
+        {
+          "locale": "de",
+          "language": 0,
+          "payloadBytes": 2512,
+          "storedBytes": 2528,
+          "heapBefore": 8456,
+          "heapDuring": 5940,
+          "stagedBytes": 2512,
+          "heapAfter": 8456
+        }
+      ],
+      "appDataPreserved": true,
+      "newLanguageWithoutBuild": true
+    }
+  }
+}

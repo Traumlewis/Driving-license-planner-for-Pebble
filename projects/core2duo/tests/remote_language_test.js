@@ -1,27 +1,18 @@
 'use strict';
 const assert=require('assert'),fs=require('fs'),path=require('path'),crypto=require('crypto');
-const create=require('../src/pkjs/remote-language').create,metadata=require('../src/pkjs/lang-pack'),sha=require('../src/pkjs/sha256');
-const folder=path.resolve(__dirname,'../../../Packs/Germany/Languages',metadata.appVersion),manifest=fs.readFileSync(path.join(folder,'manifest.json'),'utf8');
-const packets=metadata.packs.map(p=>fs.readFileSync(path.join(folder,p.file),'utf8'));
-function storage(){let state={};return {state,getItem:k=>state[k]||null,setItem:(k,v)=>state[k]=v,removeItem:k=>delete state[k]};}
-function setup(store=storage(),modify=(raw)=>raw){const requests=[];let clock=1;const api=create(metadata,store,{now:()=>clock,request:(url,cb)=>{requests.push(url);const name=url.split('/').pop();let raw=name==='manifest.json'?manifest:packets[name==='de.json'?0:1];raw=modify(raw,name);if(raw instanceof Error)cb(raw.message);else cb(null,raw);}});return {api,store,requests,later:()=>clock+=31000};}
+const create=require('../src/pkjs/remote-language').create,metadata=require('../src/pkjs/lang-pack'),sha=require('../src/pkjs/sha256'),folder=path.resolve(__dirname,'../../../Packs/App/Languages'),baseIndex=fs.readFileSync(folder+'/index.json','utf8');
+const files={};for(const d of JSON.parse(baseIndex).watchPacks[metadata.watch.tag].languages)files[d.file]=fs.readFileSync(folder+'/'+d.file,'utf8');
+function store(){const state={};return {state,getItem:k=>state[k]||null,setItem:(k,v)=>state[k]=v,removeItem:k=>delete state[k]};}
+function setup(storage=store(),mutate=s=>s,index=baseIndex){const requests=[];let clock=1;const api=create(metadata,storage,{now:()=>clock,request:(url,cb)=>{requests.push(url);const file=url.slice(metadata.baseURL.length);let raw=mutate(file==='index.json'?index:files[file],file);if(raw instanceof Error)cb(raw.message);else cb(null,raw);}});return {api,storage,requests,later:()=>clock+=31000};}
 function ensure(t,language){let result;t.api.ensure(language,(error,packet)=>result={error,packet});assert(result);return result;}
-for(const text of ['', 'abc','Umlaute äöü und 😎','a'.repeat(20000)])assert.strictEqual(sha(text),crypto.createHash('sha256').update(text).digest('hex'));
-const ok=setup();assert(!ensure(ok,0).error);assert.strictEqual(ok.requests.length,2);assert.strictEqual(ok.api.info().cachedLanguage,0);assert.strictEqual(Object.keys(ok.store.state).length,1);
-const before=ok.requests.length;assert(!ensure(ok,0).error);assert.strictEqual(ok.requests.length,before);assert(!ensure(ok,1).error);assert.strictEqual(ok.api.info().cachedLanguage,1);assert.strictEqual(Object.keys(ok.store.state).length,1);
-assert.strictEqual(JSON.parse(Object.values(ok.store.state)[0]).language,1);
-const offline=setup(ok.store,()=>new Error('NETWORK_ERROR'));assert(!ensure(offline,1).error);assert.strictEqual(offline.requests.length,0,'cached packet should work offline');assert(ensure(offline,0).error);assert.strictEqual(offline.api.info().cachedLanguage,1);
-const count=offline.requests.length;ensure(offline,0);assert.strictEqual(offline.requests.length,count,'failure backoff was ignored');offline.api.retry();ensure(offline,0);assert.strictEqual(offline.requests.length,count+1);
-for(const mutate of [
- (s,n)=>n==='manifest.json'?s.replace('"trainingCountry": "DE"','"trainingCountry": "AT"'):s,
- (s,n)=>n==='manifest.json'?s.replace(metadata.appVersion,'0.0.0'):s,
- (s,n)=>n==='manifest.json'?s.replace('de.json','../../foreign.json'):s,
- (s,n)=>n==='manifest.json'?s:s+' ',
- (s,n)=>n==='manifest.json'?s:'not json',
- ()=>new Error('HTTP_404')
-]){const bad=setup(storage(),mutate);assert(ensure(bad,0).error);assert.strictEqual(bad.api.info().cachedLanguage,-1);assert.strictEqual(Object.keys(bad.store.state).length,0);}
-const corrupt=storage();corrupt.setItem('fahrschul.v2.languagePacket',JSON.stringify({appVersion:metadata.appVersion,language:0,raw:'invalid'}));const fixed=setup(corrupt);assert(!ensure(fixed,0).error);assert.strictEqual(fixed.requests.length,2);
-// An unsuccessful replacement leaves the previous verified cache intact.
-const preserved=setup(ok.store,(s,n)=>n==='manifest.json'?s:s+'bad');const saved=JSON.stringify(ok.store.state);assert(ensure(preserved,0).error);assert.strictEqual(JSON.stringify(ok.store.state),saved);
-let callback;const lateStore=storage(),late=create(metadata,lateStore,{request:(url,cb)=>callback=cb});let calls=0;late.ensure(0,()=>calls++);callback('DOWNLOAD_TIMEOUT');callback(null,manifest);assert.strictEqual(calls,1);assert.strictEqual(Object.keys(lateStore.state).length,0);
-console.log('PASS remote language client: SHA-256/reference vectors, version/country/identity validation, single cache, offline reuse, corruption, backoff, timeout and preserved previous cache');
+for(const text of ['','abc','Umlaute äöü y español 😎','a'.repeat(20000)])assert.strictEqual(sha(text),crypto.createHash('sha256').update(text).digest('hex'));
+const ok=setup();for(const lang of [0,1,2,0,2]){const r=ensure(ok,lang);assert(!r.error,r.error);assert.strictEqual(r.packet.language,lang);assert.strictEqual(ok.api.info().cachedLanguage,lang);assert.strictEqual(JSON.parse(ok.storage.state['fahrschul.v2.languagePacket']).descriptor.language,lang);}
+assert.strictEqual(ok.requests.length,6);const count=ok.requests.length;assert(!ensure(ok,2).error);assert.strictEqual(ok.requests.length,count);
+const offline=setup(ok.storage,()=>new Error('NETWORK_ERROR'));assert(!ensure(offline,2).error);assert.strictEqual(offline.requests.length,0);const saved=offline.storage.state['fahrschul.v2.languagePacket'];assert(ensure(offline,0).error);assert.strictEqual(offline.storage.state['fahrschul.v2.languagePacket'],saved);const n=offline.requests.length;ensure(offline,0);assert.strictEqual(offline.requests.length,n);offline.api.retry();ensure(offline,0);assert.strictEqual(offline.requests.length,n+1);
+for(const mutate of [(s,f)=>f==='index.json'?s.replace('"trainingCountry": "DE"','"trainingCountry": "AT"'):s,(s,f)=>f==='index.json'?s.replace(metadata.watch.tag,'invalid'):s,(s,f)=>f==='index.json'?s.replace('watch/'+metadata.watch.tag+'/de.json','../../secret.json'):s,(s,f)=>f==='index.json'?s:s+' ',()=>new Error('HTTP_404')]){const bad=setup(store(),mutate);assert(ensure(bad,0).error);assert.strictEqual(bad.api.info().cachedLanguage,-1);assert(!bad.storage.state['fahrschul.v2.languagePacket']);}
+const sameSchema=create({...metadata,appVersion:'9.9.9'},ok.storage,{request:()=>assert.fail('Compatible packet should survive version changes')});sameSchema.ensure(2,e=>assert(!e));
+let callback;const late=create(metadata,store(),{request:(url,cb)=>callback=cb});let replies=0;late.ensure(0,()=>replies++);callback('TIMEOUT');callback(null,baseIndex);assert.strictEqual(replies,1);
+function crc(bytes){let c=0xffffffff;for(const b of bytes){c^=b;for(let i=0;i<8;i++)c=(c>>>1)^((c&1)?0xedb88320:0);}return (c^0xffffffff)>>>0;}
+// A new language number is introduced solely through catalogue/data after module load.
+const packet=JSON.parse(files['watch/'+metadata.watch.tag+'/es.json']),bytes=Buffer.from(packet.chunks.join(''),'hex');bytes[18]=17;const id=crc(Buffer.concat([bytes.subarray(0,12),bytes.subarray(16)]));bytes.writeUInt32LE(id,12);Object.assign(packet,{locale:'es-XX',language:17,id,crc:crc(bytes),chunks:Array.from({length:Math.ceil(bytes.length/128)},(_,i)=>bytes.subarray(i*128,(i+1)*128).toString('hex'))});const raw=JSON.stringify(packet),index=JSON.parse(baseIndex),file='watch/'+metadata.watch.tag+'/es-XX.json';files[file]=raw;index.watchPacks[metadata.watch.tag].languages.push({locale:'es-XX',name:'Prueba',language:17,file,id,crc:packet.crc,size:packet.size,sha256:sha(raw)});const added=setup(store(),s=>s,JSON.stringify(index));assert(!ensure(added,17).error);assert.strictEqual(added.api.info().cachedLanguage,17);
+console.log('PASS generic watch client: DE/EN/ES and data-only language 17, schema/codec/path/hash/header checks, one packet, offline restart, version-independent cache, backoff and stale callbacks');

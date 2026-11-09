@@ -23,7 +23,7 @@ static void build_snapshot(void) {
  for(int i=0;i<MAX_ENTRIES;i++)if(entries[i].active){Entry *e=&entries[i];add("%s[%lu,%d,%u,%u,%u,%u,%u,%u,%u]",first?"":",",(unsigned long)e->id,(int)e->when,e->cls,e->kind,e->units,e->lead[0],e->lead[1],e->topic,e->extra_minutes);first=false;}
  uint32_t saved_id=0;for(int i=0;i<MAX_ENTRIES;i++)if(request_id&&entries[i].active&&entries[i].token==request_id){saved_id=entries[i].id;break;}
  add("],\"savedId\":%lu,\"error\":\"%s\",",(unsigned long)saved_id,error_text);
- add("\"languagePack\":{\"id\":%lu,\"language\":%d,\"bytes\":%u,\"ready\":%s,\"received\":%u,\"storedBytes\":%u,\"stagedBytes\":%u,\"heapFree\":%u}}",(unsigned long)language_pack_id(),language_pack_language(),language_pack_size(),language_pack_ready()?"true":"false",language_pack_received(),language_pack_stored(),language_pack_staged(),(unsigned)heap_bytes_free());
+ add("\"languagePack\":{\"id\":%lu,\"language\":%d,\"bytes\":%u,\"ready\":%s,\"received\":%u,\"storedBytes\":%u,\"stagedBytes\":%u,\"heapFree\":%u,\"schemaId\":%lu,\"codecId\":%lu}}",(unsigned long)language_pack_id(),language_pack_language(),language_pack_size(),language_pack_ready()?"true":"false",language_pack_received(),language_pack_stored(),language_pack_staged(),(unsigned)heap_bytes_free(),(unsigned long)language_pack_schema(),(unsigned long)language_pack_codec());
 }
 static void send_part(void) {
  DictionaryIterator *d;if(app_message_outbox_begin(&d)!=APP_MSG_OK){sending=false;return;}
@@ -60,7 +60,7 @@ static void inbox(DictionaryIterator *d,void *ctx) {
  }
  if(last_request==(uint32_t)rid){phone_push(rid,0,NULL);return;}
  for(int i=0;i<MAX_ENTRIES;i++)if(entries[i].active&&entries[i].token==(uint32_t)rid){phone_push(rid,0,NULL);return;}
- if(op==3){int32_t value;if(!integer(d,LANGUAGE,&value)||value<0||value>1){phone_push(rid,-1,LK_Ungultige_Sprache_d25b4c48);return;}if(!language_pack_ready()||language_pack_language()!=value){phone_push(rid,-4,LK_Sprachpaket_fehlt_Bitte_Handy_verbinden_65009125);return;}if(!store_language(value)){phone_push(rid,-3,LK_Sprache_nicht_gespeichert_06c100db);return;}store_request(rid);store_revision();state_changed();phone_push(rid,0,NULL);show_status(LK_Sprache_gespeichert_6c9449dd, LK_Einstellungen_3e5af3d1);return;}
+ if(op==3){int32_t value;if(!integer(d,LANGUAGE,&value)||value<0||value>63){phone_push(rid,-1,LK_Ungultige_Sprache_d25b4c48);return;}if(!language_pack_ready()||language_pack_language()!=value){phone_push(rid,-4,LK_Sprachpaket_fehlt_Bitte_Handy_verbinden_65009125);return;}if(!store_language(value)){phone_push(rid,-3,LK_Sprache_nicht_gespeichert_06c100db);return;}store_request(rid);store_revision();state_changed();phone_push(rid,0,NULL);show_status(LK_Sprache_gespeichert_6c9449dd, LK_Einstellungen_3e5af3d1);return;}
  if(!integer(d,REV,&rev)||(uint32_t)rev!=revision){phone_push(rid,-2,LK_Daten_geandert_Bitte_neu_laden_54248958);return;}
  if(storage_error){phone_push(rid,-3,LK_Speicherfehler_Bitte_Uhr_App_neu_starten_60f44995);return;}
  if(!integer(d,ID,&id)){phone_push(rid,-1,LK_Termin_ID_fehlt_f2e5d47a);return;}

@@ -15,9 +15,11 @@ def home():
  pebble.send_packet(AppRunState(command=1,data=AppRunStateStart(uuid=app)));time.sleep(1)
 def raw_request(data):
  global awaiting_rid
- awaiting_rid=data.get(2,0);done.clear();service.send_message(app,{k:CString(v) if isinstance(v,str) else Uint32(v) if v>=0 else Int32(v) for k,v in data.items()})
- if not done.wait(12):raise AssertionError('No native reply during lab cleanup')
- return dict(received)
+ awaiting_rid=data.get(2,0);done.clear();message={k:CString(v) if isinstance(v,str) else Uint32(v) if v>=0 else Int32(v) for k,v in data.items()}
+ for attempt in range(6):
+  service.send_message(app,message)
+  if done.wait(2):return dict(received)
+ raise AssertionError('No native reply during lab cleanup')
 home();before=raw_request({1:0,2:0})['state'];forward=True;emit({'type':'hello','language':before['language']})
 try:
  for line in sys.stdin:

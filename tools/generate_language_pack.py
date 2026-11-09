@@ -1,106 +1,55 @@
-"""Build mutually exclusive DE/EN menu packs, symbolic text IDs and read-only codecs."""
+"""Generate a generic watch decoder. Translations are registered independently of builds."""
 from pathlib import Path
-import collections,heapq,itertools,json,zlib,struct,re,hashlib,unicodedata
-ROOT=Path(__file__).resolve().parents[1]
-PROJECTS=['time2','core2duo','time-pebble2','round2','timeround']
-SOURCES=['main.c','rules.h','topics.h','bridge.c']
+import json,re,hashlib,unicodedata,struct
+from watch_packets import ROOT,normalize,codec,compatibility,register,encode
+PROJECTS=['time2','core2duo','time-pebble2','round2','timeround'];SOURCES=['main.c','rules.h','topics.h','bridge.c']
 def restore_project(folder):
- mapping=folder/'tools/language-key-map.json'
- if not mapping.exists():return
- keys=json.loads(mapping.read_text())
- for filename in SOURCES:
-  path=folder/'src/c'/filename;s=path.read_text()
-  s=re.sub(r'\bLK_[A-Za-z0-9_]+\b',lambda m:json.dumps(keys[m.group()],ensure_ascii=False) if m.group() in keys else m.group(),s)
-  path.write_text(s)
-def encode(values,language,keys):
- parts=[list(s.encode())+[0] for s in values];dictionary=[]
- for i in range(192):
-  freq=collections.Counter((s[j],s[j+1]) for s in parts for j in range(len(s)-1) if s[j] and s[j+1]);pair,count=min(freq.items(),key=lambda x:(-x[1],x[0]))
-  if count<2:break
-  dictionary.append(pair)
-  for k,s in enumerate(parts):
-   out=[];j=0
-   while j<len(s):
-    if j+1<len(s) and tuple(s[j:j+2])==pair:out.append(256+i);j+=2
-    else:out.append(s[j]);j+=1
-   parts[k]=out
- freq=collections.Counter(v for s in parts for v in s);serial=itertools.count();heap=[(n,next(serial),v) for v,n in sorted(freq.items())];heapq.heapify(heap)
- while len(heap)>1:
-  a=heapq.heappop(heap);b=heapq.heappop(heap);heapq.heappush(heap,(a[0]+b[0],next(serial),(a[2],b[2])))
- tree=[];codes={}
- def visit(node,code):
-  if isinstance(node,int):codes[node]=code;return -node-1
-  index=len(tree);tree.append(None);left=visit(node[0],code+[0]);right=visit(node[1],code+[1]);tree[index]=(left,right);return index
- visit(heap[0][2],[]);bits=[];offsets=[]
- for seq in parts:
-  offsets.append(len(bits))
-  for token in seq:bits.extend(codes[token])
- payload=bytes(sum((bits[i+j] if i+j<len(bits) else 0)<<(7-j) for j in range(8)) for i in range(0,len(bits),8))
- assert len(payload)<=2400
- crc=zlib.crc32(payload);identity=zlib.crc32(b'LP3/swap128'+json.dumps([language,keys,values,dictionary,tree],ensure_ascii=False,separators=(',',':')).encode()+payload)
- packet=dict(language=language,id=identity,crc=crc,size=len(payload),chunks=[payload[i:i+128].hex() for i in range(0,len(payload),128)])
- codec=b''.join(struct.pack('<HH',a,b) for a,b in dictionary)+b''.join(struct.pack('<hh',a,b) for a,b in tree)
- return packet,codec,offsets,len(dictionary),len(tree)
+    mapping=folder/'tools/language-key-map.json'
+    if not mapping.exists():return
+    keys=json.loads(mapping.read_text())
+    for filename in SOURCES:
+        path=folder/'src/c'/filename;s=path.read_text();s=re.sub(r'\bLK_[A-Za-z0-9_]+\b',lambda m:json.dumps(keys[m.group()],ensure_ascii=False) if m.group() in keys else m.group(),s);path.write_text(s)
 def generate():
- for name in PROJECTS:restore_project(ROOT/'projects'/name)
- pairs={}
- for name in PROJECTS:
-  for de,en in json.loads((ROOT/'projects'/name/'tools/translations.json').read_text()).items():
-   if de in pairs and pairs[de]!=en:raise ValueError('Conflicting translation '+de)
-   pairs[de]=en
- short=sorted((de,en) for de,en in pairs.items() if len(en.encode())<=60 and de!=en)
- assert max(len(de.encode()) for de,en in short)<96
- macros={}
- for de,en in short:
-  label=unicodedata.normalize('NFKD',de.replace('ß','ss')).encode('ascii','ignore').decode();label=re.sub('[^A-Za-z0-9]+','_',label).strip('_')[:45] or 'Text'
-  macros[de]='LK_'+label+'_'+hashlib.sha1(de.encode()).hexdigest()[:8]
- encoded=[encode([s[lang] for s in short],lang,list(macros)) for lang in [0,1]]
- packets=[x[0] for x in encoded];codec=b''.join(x[1] for x in encoded);runtime=(ROOT/'tools/language_pack_runtime.c').read_text()
- # Only emergency reminder controls remain built in. Normal menu text requires the active packet.
- essential={'%d.%m. · %H:%M','%s | Klasse %s','%d Minuten | Klasse %s','%02d:%02d vorher','Aus','Sprachpaket fehlt. Bitte Handy verbinden.','Ungültige Anfrage','Fahrschul Planer','Termin-Erinnerung','Dein Termin','Alle in 10 Min. erinnern','Erinnerung schließen','%d Termin(e)','Details & Erinnerungen','In 10 Minuten erinnern','In 10 Minuten','Erneute Erinnerung','Alle schließen','%d Minuten','%d Min. | Klasse %s','Alarmstatus','Alarmfehler! Erneut aktivieren','Speicherfehler','Zurück','So','Mo','Di','Mi','Do','Fr','Sa'}
- for name in PROJECTS:
-  folder=ROOT/'projects'/name;local=json.loads((folder/'tools/translations.json').read_text())
-  header=['#pragma once','/* Symbolic menu keys; readable originals are in tools/language-key-map.json. */']
-  header += [f'#define {macros[de]} "~{i+1:04x}"' for i,(de,en) in enumerate(short)]
-  (folder/'src/c/language_keys.h').write_text('\n'.join(header)+'\n')
-  (folder/'tools/language-key-map.json').write_text(json.dumps({macros[d]:d for d,e in short},ensure_ascii=False,indent=2)+'\n')
-  for filename in SOURCES:
-   path=folder/'src/c'/filename;s=path.read_text()
-   def literal(m):
-    try:value=json.loads(m.group())
-    except ValueError:return m.group()
-    return macros.get(value,m.group())
-   s=re.sub(r'"(?:\\.|[^"\\])*"',literal,s)
-   if filename in ['rules.h','topics.h'] and '#include "language_keys.h"' not in s:s=s.replace('#pragma once','#pragma once\n#include "language_keys.h"',1)
-   path.write_text(s)
-  lines=['/* Generated by tools/generate_language_pack.py. One menu language is stored at a time. */','#include "i18n.h"','#include <pebble.h>','#include <string.h>','#include <stdlib.h>','#include <stddef.h>', 'typedef struct {uint32_t id,crc;uint16_t size,tokens,trees,codec_base;} PackDef;','static const PackDef packet_defs[2]={']
-  base=0
-  for packet,data,offsets,tokens,trees in encoded:lines.append(f'{{{packet["id"]}u,{packet["crc"]}u,{packet["size"]},{tokens},{trees},{base}}},');base+=len(data)
-  lines+=['};','static const uint16_t text_bits[][2]={']+[f'{{{encoded[0][2][i]},{encoded[1][2][i]}}},' for i in range(len(short))]+['};','typedef struct {const char *de,*en;} LongText;','static const LongText long_texts[]={']
-  lines += ['{'+json.dumps(de,ensure_ascii=False)+','+json.dumps(en,ensure_ascii=False)+'},' for de,en in local.items() if len(en.encode())>60 and de!=en]
-  lines+=['};','static const char *emergency_text(unsigned id){switch(id){']
-  for i,(de,en) in enumerate(short):
-   if de in essential or de.startswith('Praxis |') or de.startswith('Theorie |'):
-    value='Sprache / Language' if de=='Fahrschul Planer' else de
-    lines.append('case '+str(i+1)+':return '+json.dumps(value,ensure_ascii=False)+';')
-  lines+=['default:return "...";}}',runtime]
-  (folder/'src/c/i18n.c').write_text('\n'.join(lines)+'\n')
-  (folder/'resources/data').mkdir(exist_ok=True);(folder/'resources/data/language-codec.bin').write_bytes(codec)
-  (folder/'tools/language-packets.json').write_text(json.dumps(dict(packs=packets),separators=(',',':'))+'\n')
-  descriptors=[]
-  for packet in packets:
-   raw=(json.dumps(packet,ensure_ascii=False,indent=2)+'\n').encode();locale='de' if packet['language']==0 else 'en'
-   descriptors.append({k:packet[k] for k in ['language','id','crc','size']})
-   descriptors[-1].update(locale=locale,file=locale+'.json',sha256=hashlib.sha256(raw).hexdigest())
-  version=json.loads((ROOT/'release.json').read_text())['version']
-  metadata=dict(appVersion=version,baseURL='https://raw.githubusercontent.com/Traumlewis/Driving-license-planner-for-Pebble/main/Packs/Germany/Languages/',settingsBaseURL='https://raw.githubusercontent.com/Traumlewis/Driving-license-planner-for-Pebble/main/Packs/App/Languages/',packs=descriptors)
-  (folder/'src/pkjs/lang-pack.js').write_text('module.exports = '+json.dumps(metadata,separators=(',',':'))+';\n')
-  fixture=['static const unsigned char fixture_codec[]={'+','.join(map(str,codec))+'};','static const unsigned fixture_ids[]={'+','.join(str(p['id'])+'u' for p in packets)+'};','static const unsigned fixture_sizes[]={'+','.join(str(p['size']) for p in packets)+'};','static const char *fixture_chunks[2][20]={']
-  for p in packets:fixture.append('{'+','.join(json.dumps(x) for x in p['chunks'])+',0},')
-  fixture+=['};','static const char *fixture_pairs[][3]={']
-  fixture += ['{'+(macros[de] if de in macros else json.dumps(de,ensure_ascii=False))+','+json.dumps(de,ensure_ascii=False)+','+json.dumps(en,ensure_ascii=False)+'},' for de,en in local.items()]
-  fixture+=['};']
-  (folder/'tests/language_pack_fixture.h').write_text('\n'.join(fixture)+'\n')
- (ROOT/'docs/language-pack-metrics.json').write_text(json.dumps(dict(strings=len(short),languages=[dict(p, chunks=len(p['chunks'])) for p in packets],maxTextBytes=96),indent=2)+'\n')
- return packets
-if __name__=='__main__':print('Language swap packets:',[(p['language'],p['size']) for p in generate()])
+    for name in PROJECTS:restore_project(ROOT/'projects'/name)
+    schema=json.loads((ROOT/'tools/watch-schema.json').read_text());compat=compatibility();dictionary,codes,raw,trees=codec();version=json.loads((ROOT/'release.json').read_text())['version'];runtime=(ROOT/'tools/language_pack_runtime.c').read_text()
+    current={}
+    for path in (ROOT/'projects').glob('*/tools/translations.json'):current.update(json.loads(path.read_text()))
+    expected={normalize(de) for de,en in current.items() if de!=en}
+    if expected!={r['de'] for r in schema}:raise ValueError('Native text schema changed; update tools/watch-schema.json and translation sources deliberately before rebuilding')
+    macros={}
+    for row in schema:
+        de=row['de'];label=unicodedata.normalize('NFKD',de.replace('ß','ss')).encode('ascii','ignore').decode();label=re.sub('[^A-Za-z0-9]+','_',label).strip('_')[:45] or 'Text';macros[de]='LK_'+label+'_'+hashlib.sha1(de.encode()).hexdigest()[:8]
+    packets=[];sources=[]
+    for source_path in sorted((ROOT/'Packs/App/Languages').glob('*/watch-source.json')):
+        source=json.loads(source_path.read_text());sources.append(source);packets.append(register(source))
+    packets.sort(key=lambda p:p['language']);ids={p['language']:i for i,p in enumerate(packets)}
+    essential={'%d.%m. · %H:%M','%s | Klasse %s','%d Minuten | Klasse %s','%02d:%02d vorher','Aus','Sprachpaket fehlt. Bitte Handy verbinden.','Ungültige Anfrage','Fahrschul Planer','Termin-Erinnerung','Dein Termin','Alle in 10 Min. erinnern','Erinnerung schließen','%d Termin(e)','Details & Erinnerungen','In 10 Minuten erinnern','In 10 Minuten','Erneute Erinnerung','Alle schließen','%d Minuten','%d Min. | Klasse %s','Alarmstatus','Alarmfehler! Erneut aktivieren','Speicherfehler','Zurück','So','Mo','Di','Mi','Do','Fr','Sa'}
+    for name in PROJECTS:
+        folder=ROOT/'projects'/name;mapping={macro:de.replace('{version}',version) for de,macro in macros.items()}
+        (folder/'tools/language-key-map.json').write_text(json.dumps(mapping,ensure_ascii=False,indent=2)+'\n')
+        (folder/'src/c/language_keys.h').write_text('#pragma once\n'+''.join('#define '+macros[row['de']]+' "~%04x"\n'%(i+1) for i,row in enumerate(schema)))
+        for filename in SOURCES:
+            path=folder/'src/c'/filename;s=path.read_text()
+            def replace(m):
+                value=json.loads(m.group());return macros.get(normalize(value),m.group())
+            s=re.sub(r'"(?:\\.|[^"\\])*"',replace,s)
+            if filename in ['rules.h','topics.h'] and '#include "language_keys.h"' not in s:s=s.replace('#pragma once','#pragma once\n#include "language_keys.h"',1)
+            if filename=='main.c' and '(Idee by Traumlewis | Code by Codex)' not in s:s='/* (Idee by Traumlewis | Code by Codex) */\n'+s
+            path.write_text(s)
+        lines=['/* Generated generic decoder. (Idee by Traumlewis | Code by Codex) */','#include "i18n.h"','#include <pebble.h>','#include <string.h>','#include <stdlib.h>',f'#define APP_VERSION "{version}"',f'#define TEXT_COUNT {len(schema)}',f'#define WATCH_SCHEMA_ID {compat["schemaId"]}u',f'#define WATCH_CODEC_ID {compat["codecId"]}u',f'#define CODEC_TOKENS {len(dictionary)}',f'#define CODEC_TREES {trees}', 'static const char *emergency_text(unsigned id){switch(id){']
+        for i,row in enumerate(schema):
+            de=row['de']
+            if de in essential or de.startswith(('Praxis |','Theorie |')):lines.append('case %d:return '%(i+1)+json.dumps('Sprache / Language' if de=='Fahrschul Planer' else de,ensure_ascii=False)+';')
+        lines+=['default:return "...";}}',runtime];(folder/'src/c/i18n.c').write_text('\n'.join(lines)+'\n');(folder/'resources/data/language-codec.bin').write_bytes(raw+b''.join(struct.pack('<HH',r['maxBytes'],r['signature']) for r in schema))
+        (folder/'tools/language-packets.json').write_text(json.dumps(dict(packs=packets),separators=(',',':'))+'\n')
+        metadata=dict(appVersion=version,baseURL='https://raw.githubusercontent.com/Traumlewis/Driving-license-planner-for-Pebble/main/Packs/App/Languages/',settingsBaseURL='https://raw.githubusercontent.com/Traumlewis/Driving-license-planner-for-Pebble/main/Packs/App/Languages/',watch=compat)
+        (folder/'src/pkjs/lang-pack.js').write_text('module.exports = '+json.dumps(metadata,separators=(',',':'))+';\n')
+        late=dict(sources[[s['language'] for s in sources].index(2)],locale='es-XX',name='Prueba',language=17);test_packets=packets+[encode(late)];test_sources={s['language']:s for s in sources};test_sources[17]=late
+        fixture=['static const unsigned char fixture_codec[]={'+','.join(map(str,raw+b''.join(struct.pack('<HH',r['maxBytes'],r['signature']) for r in schema)))+'};','static const unsigned fixture_ids[]={'+','.join(str(p['id'])+'u' for p in test_packets)+'};','static const unsigned fixture_sizes[]={'+','.join(str(p['size']) for p in test_packets)+'};',f'static const char *fixture_chunks[{len(test_packets)}][21]={{']
+        for p in test_packets:fixture.append('{'+','.join(json.dumps(c) for c in p['chunks'])+',0},')
+        fixture+=['};','static const unsigned fixture_languages[]={'+','.join(str(p['language']) for p in test_packets)+'};',f'static const char *fixture_pairs[][{len(test_packets)+1}]={{']
+        by_language=test_sources
+        for row in schema:fixture.append('{'+macros[row['de']]+','+','.join(json.dumps(by_language[p['language']]['strings'][row['de']].replace('{version}',version),ensure_ascii=False) for p in test_packets)+'},')
+        fixture+=['};'];(folder/'tests/language_pack_fixture.h').write_text('\n'.join(fixture)+'\n')
+    (ROOT/'docs/language-pack-metrics.json').write_text(json.dumps(dict(strings=len(schema),languages=[dict(p,chunks=len(p['chunks'])) for p in packets],maxTextBytes=2048,compatibility=compat,codecBytes=len(raw)),indent=2)+'\n');return packets
+if __name__=='__main__':print([(p['locale'],p['size']) for p in generate()])

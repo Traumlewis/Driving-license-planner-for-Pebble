@@ -1,3 +1,4 @@
+/* (Idee by Traumlewis | Code by Codex) */
 #include <pebble.h>
 #include "app.h"
 #include "rules.h"
@@ -270,7 +271,7 @@ static void process_events(bool show) {
  bool test_due=test_at&&test_at<=now;if(test_due){test_at=0;persist_delete(28);}
  schedule_next();processing=false;refresh();
  if(show&&new_event&&(alert_count||completion_count))surface_alerts();
- else if(show&&test_due){buzz();show_info(T(LK_Alarmtest_c4d250b1),3,T("ALARMTEST\n\nAutomatisch gestartet.\n\nSo erinnert dich die Uhr auch bei geschlossener App."));}
+ else if(show&&test_due){buzz();show_info(T(LK_Alarmtest_c4d250b1),3,T(LK_ALARMTEST_Automatisch_gestartet_So_erinnert_d_7b793c51));}
 }
 void state_changed(void) {
  if(ui_ready&&language_setup_notice&&language_pack_ready()){window_stack_remove(msg_window,false);language_setup_notice=false;}
@@ -296,7 +297,7 @@ static void begin_edit(int index) {
 }
 static bool save_draft(void) {
  time_t when;
- if(!valid_date(&draft_tm,&when)){show_notice(T(LK_Datum_prufen_bd0ee609),4,T("Ungültiges Datum oder Uhrzeit. Bitte prüfen; auch die Zeitumstellung kann eine Uhrzeit ungültig machen."));return false;}
+ if(!valid_date(&draft_tm,&when)){show_notice(T(LK_Datum_prufen_bd0ee609),4,T(LK_Ungultiges_Datum_oder_Uhrzeit_Bitte_prufen_au_198b7d1d));return false;}
  if(when<=time(NULL)){show_notice(T(LK_Datum_prufen_bd0ee609),4,T(LK_Der_Termin_muss_in_der_Zukunft_liegen_d29418af));return false;}
  if(draft.lead[1]&&draft.lead[0]==draft.lead[1]){show_notice(T(LK_Erinnerungen_prufen_86dde7cf),4,T(LK_Bitte_zwei_unterschiedliche_Erinnerungszeiten_17f19057));return false;}
  if(edit_id&&find_id(entries,edit_id)<0){show_notice(T(LK_Termin_fehlt_c5e0c2c3),6,T(LK_Der_Termin_wurde_inzwischen_geloscht_Bitte_ne_9660c4ed));return false;}
@@ -308,7 +309,7 @@ static bool save_draft(void) {
  Entry old=entries[index];entries[index]=draft;
  if(!store_entry(index)){entries[index]=old;show_notice(T(LK_Speicherfehler_71eed920),4,T(LK_Speicherfehler_Termin_nicht_gespeichert_Bitte_4a235b6b));return false;}
  store_revision();state_changed();
- if(!alarm_ok)show_notice(T(LK_Alarmstatus_b0ff7d4e),3,T("TERMIN GESPEICHERT\n\nAlarm konnte nicht aktiviert werden! Unter Einstellungen den Alarm erneut aktivieren."));else show_status(T(LK_Termin_gespeichert_8224dbe3),skipped?T(LK_Vorwarnung_ubersprungen_ad5f6505):T(LK_Terminplanung_a6229b03));return true;
+ if(!alarm_ok)show_notice(T(LK_Alarmstatus_b0ff7d4e),3,T(LK_TERMIN_GESPEICHERT_Alarm_konnte_nicht_aktivie_de7d0f18));else show_status(T(LK_Termin_gespeichert_8224dbe3),skipped?T(LK_Vorwarnung_ubersprungen_ad5f6505):T(LK_Terminplanung_a6229b03));return true;
 }
 static void apply_number(void) {
  switch(number_field){
@@ -515,7 +516,7 @@ static void row_draw(GContext *ctx,const Layer *l,MenuIndex *idx,void *c){(void)
  case 2:snprintf(title,sizeof(title),T("%s"),alarm_ok?T(LK_Alarm_testen_9c4a140c):T(LK_Alarm_erneut_aktivieren_f18225d8));snprintf(sub,sizeof(sub),T("%s"),alarm_ok?T(LK_App_schliessen_Test_in_1_Min_bbc128d6):T(LK_Alle_gespeicherten_Termine_prufen_3317064f));break;}break;
  case EXPLANATIONS:switch(r){
  case 0:snprintf(title,sizeof(title),T(LK_Rechtliche_Vorgaben_88580760));snprintf(sub,sizeof(sub),T(LK_FahrschAusbO_Stand_06_11_26_f99f7725));break;
- case 1:snprintf(title,sizeof(title),T(LK_Bedingungen_Kurzel_dd2d41c3));snprintf(sub,sizeof(sub),T(LK_Fahrschul_Planer_3_8_47_59f18fe5));break;
+ case 1:snprintf(title,sizeof(title),T(LK_Bedingungen_Kurzel_dd2d41c3));snprintf(sub,sizeof(sub),T(LK_Fahrschul_Planer_version_5dbd37a6));break;
  case 2:snprintf(title,sizeof(title),T(LK_Handy_Eingabe_ded1a7d1));snprintf(sub,sizeof(sub),T(LK_Einstellungen_in_der_Pebble_App_3f190208));break;}break;
  case LIST:case PENDING:{if(page==LIST&&r==0){snprintf(title,sizeof(title),T(LK_Neuer_Termin_39e943e7));snprintf(sub,sizeof(sub),T(LK_d_von_24_Platzen_belegt_3ea313e3),active_count());break;}int pos=page==LIST?r-1:r;if(pos>=list_count){snprintf(title,sizeof(title),T(LK_Alles_erledigt_99db5fa9));break;}Entry *x=&entries[list_map[pos]];list_entry_title(x,title,sizeof(title));char dt[32];time_t when=x->when;strftime(dt,sizeof(dt),T(LK_d_m_H_M_191558b7),localtime(&when));snprintf(sub,sizeof(sub),T("%s%s"),end_time(x)<=time(NULL)?T(LK_Offen_708ea52e):T(""),dt);break;}
  case CLASSES:snprintf(title,sizeof(title),T(LK_Klasse_s_8e6c0375),classes[r]);snprintf(sub,sizeof(sub),T("%s"),r==cfg.cls?T(LK_Aktuell_ausgewahlt_70d8c2da):T(LK_Termine_und_Fortschritt_behalten_e899ec9f));break;
@@ -558,7 +559,7 @@ static void row_draw(GContext *ctx,const Layer *l,MenuIndex *idx,void *c){(void)
 static void clear_alerts(void){alert_count=0;memset(alert_seen,0,sizeof(alert_seen));}
 static void clear_completion(int index){completion_seen[index]=false;for(int i=0;i<completion_count;i++)if(completion_queue[i]==index){for(int j=i+1;j<completion_count;j++)completion_queue[j-1]=completion_queue[j];completion_count--;break;}}
 static void snooze_entry(int index){entries[index].snooze=time(NULL)+600;store_entry(index);store_revision();}
-static void details(Entry *e){static char text[650],dt[32],end[32],a[32],b[32];date_text(e->when,dt,sizeof(dt));date_text(end_time(e),end,sizeof(end));lead_text(e->lead[0],a,sizeof(a));lead_text(e->lead[1],b,sizeof(b));snprintf(text,sizeof(text),T("KLASSE %s\n%s\n%s\n\n%d Minuten\nGeplantes Ende:\n%s\n\nErinnerung 1: %s\nErinnerung 2: %s\n\n%s\n\nThema: %s"),classes[e->cls],T(kinds[e->kind]),dt,duration_minutes(e),end,a,b,alarm_ok?T(LK_Systemalarm_aktiv_53c692bd):T(LK_Alarmfehler_Erneut_aktivieren_0148dc48),e->topic==NO_TOPIC?T(LK_Keine_Zuordnung_af83cfb5):T(topic_label(e->cls,e->topic)));show_notice(T(LK_Termindetails_e5ad8bb2),6,text);}
+static void details(Entry *e){static char text[650],dt[32],end[32],a[32],b[32];date_text(e->when,dt,sizeof(dt));date_text(end_time(e),end,sizeof(end));lead_text(e->lead[0],a,sizeof(a));lead_text(e->lead[1],b,sizeof(b));snprintf(text,sizeof(text),T(LK_KLASSE_s_s_s_d_Minuten_Geplantes_Ende_s_Erinn_e197364d),classes[e->cls],T(kinds[e->kind]),dt,duration_minutes(e),end,a,b,alarm_ok?T(LK_Systemalarm_aktiv_53c692bd):T(LK_Alarmfehler_Erneut_aktivieren_0148dc48),e->topic==NO_TOPIC?T(LK_Keine_Zuordnung_af83cfb5):T(topic_label(e->cls,e->topic)));show_notice(T(LK_Termindetails_e5ad8bb2),6,text);}
 static void choose_class(int cls){
  bool first_setup=cfg.cls<0;
  cfg.cls=cls;cfg.profile=profiles[cls];load_rules();store_config();store_revision();
@@ -570,12 +571,12 @@ static void select_row(MenuLayer *m,MenuIndex *idx,void *ctx){(void)m;(void)ctx;
  case 0:begin_edit(-1);break;
  case 1:show_page(LIST);break;case 2:show_page(PENDING);break;case 3:show_page(PROGRESS);break;case 4:show_page(TOPICS);break;case 5:show_page(SETTINGS);break;case 6:show_page(EXPLANATIONS);break;}break;
  case SETTINGS:switch(r){case 0:show_page(CLASSES);break;case 1:show_page(PROFILES);break;
- case 2:if(!alarm_ok){process_events(false);show_notice(T(LK_Alarmstatus_b0ff7d4e),3,alarm_ok?T(LK_Alle_Alarme_sind_wieder_aktiv_f9e49aca):T("Alarme weiter blockiert. Bitte Uhr neu starten und hier erneut versuchen. Termine bleiben gespeichert."));}else{test_at=time(NULL)+60;persist_write_int(28,test_at);schedule_next();show_info(T(LK_Alarmtest_c4d250b1),3,alarm_ok?T("ALARMTEST\n\nApp jetzt schließen. In einer Minute öffnet sich die App mit Vibration. Deine Termine bleiben erhalten."):T(LK_Testalarm_konnte_nicht_aktiviert_werden_cd071da0));}break;
+ case 2:if(!alarm_ok){process_events(false);show_notice(T(LK_Alarmstatus_b0ff7d4e),3,alarm_ok?T(LK_Alle_Alarme_sind_wieder_aktiv_f9e49aca):T(LK_Alarme_weiter_blockiert_Bitte_Uhr_neu_starten_12f96284));}else{test_at=time(NULL)+60;persist_write_int(28,test_at);schedule_next();show_info(T(LK_Alarmtest_c4d250b1),3,alarm_ok?T(LK_ALARMTEST_App_jetzt_schliessen_In_einer_Minut_49c068d4):T(LK_Testalarm_konnte_nicht_aktiviert_werden_cd071da0));}break;
 }break;
  case EXPLANATIONS:switch(r){
- case 2:show_info(T(LK_Handy_Eingabe_ded1a7d1),2,T("HANDY-EINGABE\n\nIn der Pebble-App beim Fahrschul Planer die Einstellungen öffnen. Dort Termine anlegen, bearbeiten und löschen.\n\nZur Übertragung die Uhr-App öffnen und Bluetooth verbinden.\n\nDie Uhr bleibt vollständig ohne diese Zusatzfunktion bedienbar."));break;
- case 1:show_info(T(LK_Bedingungen_Kurzel_dd2d41c3),1,T("FAHRSCHUL PLANER 3.8.47\n\n24 Termine, 2 Erinnerungen und 10-Min.-Schlummern.\nNach dem geplanten Ende fragt die Uhr nach Stunden. Gebucht wird nur nach Bestätigung.\n\nLA Landstraße / AU Autobahn\nNA Nacht / UE Übung\nGA Grundausbildung\nGS Grundstoff / ZS Zusatzstoff\n\nPraxis ab 45 Min., +5-Min.-Schritte.\n45 Restminuten ergeben 1 Einheit.\nTheorie je 90 Min.\nTheorie-Häkchen zählen als eine 90-Minuten-Einheit. Entfernen zieht diese Einheit ab. Zugeordnete Theorie-Termine zählen dasselbe Thema nicht doppelt.\nGS/ZS manuell bearbeitet nur zusätzliche Einheiten. Häkchen bleiben geschützt und können nur in der Themenliste entfernt werden.\n\nOben/Unten scrollen. Mitte wählt, Zurück schließt. OK unter Pflichtstunden halten: Zusätze bearbeiten oder löschen. Neue Termine: 01:00 und 00:30 vorher. Erinnerung 2 lässt sich direkt im Termin auf Aus stellen.\n\nVersion 3.8.47\n(Idee by Traumlewis | Code by Codex)"));break;
- case 0:show_info(T(LK_Rechtliche_Vorgaben_88580760),0,T("PFLICHTSTUNDEN\n\nFahrschAusbO: Par. 4, Anlagen 1, 2.2, 2.8, 4 und 5. Stand 06.11.2026.\n\nProfil passend zum Vorbesitz wählen. 0 = keine feste Mindestzahl, nicht keine Ausbildung.\n\nThemen sind eine Lernhilfe; Reihenfolge mit Fahrschule abstimmen. Zusatzstoff außer B wird als nummerierte Liste geführt.\n\nDetails in QUELLEN.md."));break;}break;
+ case 2:show_info(T(LK_Handy_Eingabe_ded1a7d1),2,T(LK_HANDY_EINGABE_In_der_Pebble_App_beim_Fahrschu_57446ecc));break;
+ case 1:show_info(T(LK_Bedingungen_Kurzel_dd2d41c3),1,T(LK_FAHRSCHUL_PLANER_version_24_Termine_2_Erinner_213b759a));break;
+ case 0:show_info(T(LK_Rechtliche_Vorgaben_88580760),0,T(LK_PFLICHTSTUNDEN_FahrschAusbO_Par_4_Anlagen_1_2_49727e01));break;}break;
  case LIST:case PENDING:if(page==LIST&&!r){begin_edit(-1);break;}r-=page==LIST?1:0;if(r>=0&&r<list_count){selected=list_map[r];show_page(ACTIONS);}break;
  case CLASSES:choose_class(r);break;
  case PROFILES:cfg.profile=r;store_config();store_revision();if(navigation_depth&&navigation[0].page==HOME&&navigation_depth>1)return_to(SETTINGS);else return_to(HOME);break;
@@ -586,9 +587,9 @@ static void select_row(MenuLayer *m,MenuIndex *idx,void *ctx){(void)m;(void)ctx;
  case PROGRESS_RESET:if(r){bool theory=progress_counter==4||progress_counter==5;bool ok=theory?set_progress_count(cfg.cls,progress_counter,topic_units(cfg.cls,progress_counter)):set_extra_minutes(cfg.cls,progress_counter,0);if(!ok){show_notice(T(LK_Fortschritt_8dc68203),5,T(LK_Fortschritt_nicht_gespeichert_Bitte_App_neu_s_2095b54e));break;}}if(r)return_to(PROGRESS);else return_page();if(r)show_status(T(LK_Zusatze_geloscht_86ee3f20),T(LK_Pflichtstunden_85cf0708));break;
  case TOPICS:if(toggle_topic(cfg.cls,r))refresh();else show_notice(T(LK_Theorie_Themen_e8712ee4),1,T(LK_Thema_nicht_gespeichert_Bitte_App_neu_starten_adb2776d));break;
  case TOPIC_PICK:draft.topic=!r?NO_TOPIC:draft.kind==5?r-1:r+11;return_page();break;
- case ACTIONS:if(!e){return_to(HOME);break;}switch(r){case 0:begin_edit(selected);break;case 1:if(end_time(e)>time(NULL))show_notice(T(LK_Stunden_buchen_5d717818),1,T("Der Unterricht ist laut Planung noch nicht beendet. Danach kannst du die Stunden bestätigen. Vorhandene Stunden sind unter Pflichtstunden korrigierbar."));else show_page(COMPLETE_CONFIRM);break;case 2:details(e);break;case 3:snooze_entry(selected);clear_alerts();schedule_next();return_to(HOME);if(alarm_ok)show_status(T(LK_In_10_Minuten_77b8836e),T(LK_Erneute_Erinnerung_577b9f7b));else show_notice(T(LK_Alarmstatus_b0ff7d4e),3,T(LK_Schlummern_gespeichert_aber_Alarm_blockiert_B_ef01bf8a));break;case 4:show_page(DELETE_CONFIRM);break;}break;
+ case ACTIONS:if(!e){return_to(HOME);break;}switch(r){case 0:begin_edit(selected);break;case 1:if(end_time(e)>time(NULL))show_notice(T(LK_Stunden_buchen_5d717818),1,T(LK_Der_Unterricht_ist_laut_Planung_noch_nicht_be_2bc4ce78));else show_page(COMPLETE_CONFIRM);break;case 2:details(e);break;case 3:snooze_entry(selected);clear_alerts();schedule_next();return_to(HOME);if(alarm_ok)show_status(T(LK_In_10_Minuten_77b8836e),T(LK_Erneute_Erinnerung_577b9f7b));else show_notice(T(LK_Alarmstatus_b0ff7d4e),3,T(LK_Schlummern_gespeichert_aber_Alarm_blockiert_B_ef01bf8a));break;case 4:show_page(DELETE_CONFIRM);break;}break;
  case DELETE_CONFIRM:if(r&&e){Entry old=*e;e->active=0;if(!store_entry(selected)){*e=old;show_notice(T(LK_Loschfehler_2e07ae38),4,T(LK_Loschen_nicht_gespeichert_Bitte_neu_starten_8c2263fa));break;}store_revision();state_changed();}else return_page();break;
- case COMPLETE_CONFIRM:if(!e){return_to(HOME);break;}if(r==0){if(book_entry(selected)){clear_completion(selected);state_changed();if(completion_count)surface_alerts();else show_status(T(LK_Stunden_gebucht_8ffcdc18),T(LK_Fortschritt_aktualisiert_7ce53448));}else show_notice(T(LK_Buchungsfehler_9e2083de),4,T("Buchung nicht gespeichert oder Unterricht noch nicht beendet. Bitte prüfen und App bei Speicherfehler neu starten."));}else{if(r==1)e->review=time(NULL)+1800;e->flags|=ASKED;store_entry(selected);store_revision();clear_completion(selected);schedule_next();if(completion_count)surface_alerts();else return_to(HOME);}break;
+ case COMPLETE_CONFIRM:if(!e){return_to(HOME);break;}if(r==0){if(book_entry(selected)){clear_completion(selected);state_changed();if(completion_count)surface_alerts();else show_status(T(LK_Stunden_gebucht_8ffcdc18),T(LK_Fortschritt_aktualisiert_7ce53448));}else show_notice(T(LK_Buchungsfehler_9e2083de),4,T(LK_Buchung_nicht_gespeichert_oder_Unterricht_noc_1cafb1c1));}else{if(r==1)e->review=time(NULL)+1800;e->flags|=ASKED;store_entry(selected);store_revision();clear_completion(selected);schedule_next();if(completion_count)surface_alerts();else return_to(HOME);}break;
  case ALERT:if(r<alert_count){selected=alert_queue[r];show_page(ACTIONS);}else if(r==alert_count){for(int i=0;i<alert_count;i++)if(entries[alert_queue[i]].active)snooze_entry(alert_queue[i]);clear_alerts();schedule_next();return_to(HOME);if(alarm_ok)show_status(T(LK_In_10_Minuten_77b8836e),T(LK_Erneute_Erinnerung_577b9f7b));else show_notice(T(LK_Alarmstatus_b0ff7d4e),3,T(LK_Alarmfehler_Bitte_unter_Einstellungen_erneut__aa2b7c63));}else{clear_alerts();if(completion_count)surface_alerts();else return_to(HOME);}break;
  }
 }
@@ -640,7 +641,7 @@ static void init(void){
 #endif
  wakeup_service_subscribe(wake_handler);tick_timer_service_subscribe(MINUTE_UNIT,minute_tick);phone_init();process_events(true);
  if(!language_pack_ready()&&!alert_count){language_setup_notice=true;show_notice("Sprache / Language",1,"Bitte Sprache in den Handy-Einstellungen laden.\n\nLoad a language in the phone settings.\n\nTermine und Alarme bleiben gespeichert.");}
- if(storage_error)show_notice(T(LK_Speicherfehler_71eed920),4,T("SPEICHERFEHLER\n\nBitte Uhr-App neu starten. Gespeicherte Daten werden beim Start erneut geladen. Bis dahin keine weiteren Änderungen vornehmen."));
+ if(storage_error)show_notice(T(LK_Speicherfehler_71eed920),4,T(LK_SPEICHERFEHLER_Bitte_Uhr_App_neu_starten_Gesp_c59b9fe9));
 }
 static void deinit(void){layer_destroy(menu_header_layer);layer_destroy(info_header);layer_destroy(footer_layer);dismiss_status();layer_destroy(status_layer);window_destroy(status_window);cancel_progress_touch();
 #if 0 // Legacy watches use physical buttons only.

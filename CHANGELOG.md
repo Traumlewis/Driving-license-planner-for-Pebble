@@ -1,5 +1,15 @@
 # Changelog
 
+## 3.8.48 — Development: generic watch language receiver
+
+- Download DE/EN/ES watch menus and long explanations from GitHub; enable Spanish's Apply to watch button.
+- Resolve compatible languages dynamically by schema and shared codec, without a compiled language table. Add compatible future translations as data only.
+- Retain one active packet, verify complete replacements before flash commit, support offline restart and preserve application data.
+- Replace recursive decoding and large local buffers with bounded iteration/resource caching to respect older firmware stack limits.
+- Measure all six SDK targets and runtime transfer memory; validate an additional language created after the binary was built.
+- Combined six-platform DEV PBW and source/data update only; no GitHub Release.
+
+
 ## 3.8.47 — Development: App settings language path
 
 - Move the live settings catalogue and translations to `Packs/App/Languages` and remove their old Germany copies.

@@ -25,7 +25,8 @@ exports.create=function(baseURL,storage,options){
  options=options||{};var fetch=options.request||request,data=null,catalogueRaw=null,active=null,indexBusy=false,selection=0,selectBusy=false,error=null;
  try{catalogueRaw=get(storage,CATALOGUE);if(catalogueRaw)data=catalogue(catalogueRaw);}catch(e){catalogueRaw=null;}
  try{var saved=JSON.parse(get(storage,PACKET)||'null');if(saved){var original=catalogue(saved.catalogue),d=descriptor(original,saved.locale);active={packet:packet(saved.raw,d),descriptor:d,record:saved};if(!data){data=original;catalogueRaw=saved.catalogue;}}}catch(e){/* Invalid stored packets never become active. */}
- function state(){return {catalogue:data?data.settings.languages:[],active:active?{packet:active.packet,locale:active.descriptor.locale,name:active.descriptor.name,watchLanguage:active.descriptor.watchLanguage}:null,loading:indexBusy||selectBusy,error:error};}
+ function effective(d){var copy={};Object.keys(d).forEach(function(k){copy[k]=d[k];});if(options.watch){copy.watchLanguage=null;var variants=data&&data.watchPacks,variant=variants&&variants[options.watch.tag];if(variant&&variant.schemaId===options.watch.schemaId&&variant.codecId===options.watch.codecId&&variant.format===options.watch.format&&Array.isArray(variant.languages)){var matches=variant.languages.filter(function(p){return p.locale===d.locale&&Number.isInteger(p.language)&&p.language>=0&&p.language<=63;});if(matches.length===1)copy.watchLanguage=matches[0].language;}}return copy;}
+ function state(){return {catalogue:data?data.settings.languages.map(effective):[],active:active?{packet:active.packet,locale:active.descriptor.locale,name:active.descriptor.name,watchLanguage:effective(active.descriptor).watchLanguage}:null,loading:indexBusy||selectBusy,error:error};}
  function select(locale,callback){
   var d;try{d=descriptor(data,locale);}catch(e){callback('UNKNOWN_LANGUAGE');return;}
   var job=++selection;selectBusy=false;
@@ -41,7 +42,7 @@ exports.create=function(baseURL,storage,options){
   if(indexBusy){callback(null,state());return;}indexBusy=true;error=null;
   fetch(baseURL+'index.json',function(err,raw){indexBusy=false;var next;if(!err)try{next=catalogue(raw);}catch(e){err=e.message;}
    if(err){error=err;callback(err,state());return;}data=next;catalogueRaw=raw;put(storage,CATALOGUE,raw);
-   var locale=active?active.descriptor.locale:preferred;try{descriptor(data,locale);}catch(e){locale=active?null:(data.settings.languages.some(function(d){return d.locale==='en';})?'en':data.settings.languages[0].locale);}
+   var locale=active?active.descriptor.locale:preferred;if(typeof locale==='number'){var matches=data.settings.languages.map(effective).filter(function(d){return d.watchLanguage===locale;});locale=matches.length?matches[0].locale:'en';}try{descriptor(data,locale);}catch(e){locale=active?null:(data.settings.languages.some(function(d){return d.locale==='en';})?'en':data.settings.languages[0].locale);}
    if(locale&&!selectBusy)select(locale,callback);else callback(null,state());
   });
  }

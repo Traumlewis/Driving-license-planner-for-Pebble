@@ -21,3 +21,5 @@ Packs/
 [App languages](App/Languages/README.md) are loaded dynamically by phone settings. Compatible phone-only translations can be added without a PBW build. Native [watch menu packets](Germany/Languages/README.md) remain bound to their matching app version and Germany's training rules. Additional countries and watch-language support are separate work.
 
 The old German directory and old settings copies under Germany are removed. Use 3.8.47 or newer for the App settings catalogue. Source updates do not publish a GitHub Release.
+
+From 3.8.48, new generic watch translations also live in App/Languages/watch/<schema>-<codec>/. Germany/Languages retains archived version-bound LP3 packets for older builds. The generic receiver includes Spanish and supports additional compatible data-only languages; see [3.8.48](../docs/DEV-3.8.48.md).

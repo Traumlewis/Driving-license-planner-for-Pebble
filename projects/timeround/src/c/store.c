@@ -7,7 +7,7 @@ uint8_t profiles[16];
 bool storage_error;
 uint8_t language;
 PracticeProgress practice[16];
-bool store_language(uint8_t value) {if(value>1)return false;if(persist_write_int(26,value)<0){storage_error=true;return false;}language=value;return true;}
+bool store_language(uint8_t value) {if(value>63)return false;if(persist_write_int(26,value)<0){storage_error=true;return false;}language=value;return true;}
 static uint32_t sequence;
 static bool put(int key,const void *p,size_t n) {bool ok=persist_write_data(key,p,n)==(int)n;if(!ok)storage_error=true;return ok;}
 static bool get_record(int key,void *p,size_t n) {return persist_get_size(key)==(int)n&&persist_read_data(key,p,n)==(int)n;}
@@ -84,7 +84,7 @@ bool book_entry(int i) {
  return recover_booking();
 }
 bool store_load(void) {
- language=persist_read_int(26)==1?1:0;
+ int32_t stored_language=persist_read_int(26);language=stored_language>=0&&stored_language<=63?(uint8_t)stored_language:0;
  get_record(CONFIG_KEY,&cfg,sizeof(cfg));if(cfg.cls<0||cfg.cls>=16){cfg.cls=-1;cfg.profile=0;}
  for(int c=0;c<16;c++){get_record(100+c,counts[c],sizeof(counts[c]));get_record(150+c,&topics[c],sizeof(topics[c]));get_record(170+c,&practice[c],sizeof(practice[c]));}
  get_record(PROFILES_KEY,profiles,sizeof(profiles));get_record(SEQUENCE_KEY,&sequence,sizeof(sequence));get_record(REVISION_KEY,&revision,sizeof(revision));get_record(REQUEST_KEY,&last_request,sizeof(last_request));

@@ -1,0 +1,1778 @@
+[
+  {
+    "de": "%02d:%02d vorher",
+    "en": "%02d:%02d before",
+    "maxBytes": 95,
+    "signature": 47469
+  },
+  {
+    "de": "%d Min. | Klasse %s",
+    "en": "%d min | Class %s",
+    "maxBytes": 95,
+    "signature": 23528
+  },
+  {
+    "de": "%d Minuten",
+    "en": "%d minutes",
+    "maxBytes": 95,
+    "signature": 47500
+  },
+  {
+    "de": "%d Minuten | Klasse %s",
+    "en": "%d minutes | Class %s",
+    "maxBytes": 95,
+    "signature": 23528
+  },
+  {
+    "de": "%d Minuten | läuft",
+    "en": "%d minutes | ongoing",
+    "maxBytes": 95,
+    "signature": 47500
+  },
+  {
+    "de": "%d Termin(e)",
+    "en": "%d appointment(s)",
+    "maxBytes": 95,
+    "signature": 47500
+  },
+  {
+    "de": "%d Termine | %d offen",
+    "en": "%d planned | %d unconfirmed",
+    "maxBytes": 95,
+    "signature": 19901
+  },
+  {
+    "de": "%d von 24 Plätzen belegt",
+    "en": "%d of 24 slots used",
+    "maxBytes": 95,
+    "signature": 47500
+  },
+  {
+    "de": "%d.%m. · %H:%M",
+    "en": "%d/%m · %H:%M",
+    "maxBytes": 95,
+    "signature": 41777
+  },
+  {
+    "de": "%s | Klasse %s",
+    "en": "%s | Class %s",
+    "maxBytes": 95,
+    "signature": 64693
+  },
+  {
+    "de": "%s, %02d.%02d.",
+    "en": "%s, %02d/%02d",
+    "maxBytes": 95,
+    "signature": 45697
+  },
+  {
+    "de": "%s: %d Min.",
+    "en": "%s: %d min",
+    "maxBytes": 95,
+    "signature": 55424
+  },
+  {
+    "de": "%u / %u + %u Minuten",
+    "en": "%u / %u + %u minutes",
+    "maxBytes": 95,
+    "signature": 58923
+  },
+  {
+    "de": "%u / %u | 90 Minuten",
+    "en": "%u / %u | 90 minutes",
+    "maxBytes": 95,
+    "signature": 21297
+  },
+  {
+    "de": "%u Einheiten + %u Minuten",
+    "en": "%u units + %u minutes",
+    "maxBytes": 95,
+    "signature": 21297
+  },
+  {
+    "de": "%u per Häkchen geschützt",
+    "en": "%u protected by checkmarks",
+    "maxBytes": 95,
+    "signature": 54351
+  },
+  {
+    "de": "+ %u Minuten",
+    "en": "+ %u minutes",
+    "maxBytes": 95,
+    "signature": 54351
+  },
+  {
+    "de": "+ Neuer Termin",
+    "en": "+ New appointment",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "45 Min. = 1 Einheit",
+    "en": "45 min = 1 unit",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "45-Minuten-Einheiten",
+    "en": "45-minute units",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "90 Min. = 1 Einheit",
+    "en": "90 min = 1 unit",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "90-Minuten-Einheiten",
+    "en": "90-minute units",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "A1 auf A2 ab 2 J.",
+    "en": "A1 to A2 after 2 years",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "A2 auf A ab 2 J.",
+    "en": "A2 to A after 2 years",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "ALARMTEST\n\nApp jetzt schließen. In einer Minute öffnet sich die App mit Vibration. Deine Termine bleiben erhalten.",
+    "en": "REMINDER TEST\n\nClose the app now. It will open with vibration in one minute. Your lessons remain saved.",
+    "maxBytes": 2047,
+    "signature": 40389
+  },
+  {
+    "de": "ALARMTEST\n\nAutomatisch gestartet.\n\nSo erinnert dich die Uhr auch bei geschlossener App.",
+    "en": "REMINDER TEST\n\nStarted automatically.\n\nThe watch can remind you while this app is closed.",
+    "maxBytes": 2047,
+    "signature": 40389
+  },
+  {
+    "de": "Abbrechen",
+    "en": "Cancel",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Aktuell ausgewählt",
+    "en": "Currently selected",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Alarm erneut aktivieren",
+    "en": "Retry alarms",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Alarm fehlt! Erneut versuchen",
+    "en": "Alarm missing! Retry",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Alarm testen",
+    "en": "Test reminder",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Alarme weiter blockiert. Bitte Uhr neu starten und hier erneut versuchen. Termine bleiben gespeichert.",
+    "en": "Alarms are still blocked. Restart the watch and retry. Appointments remain saved.",
+    "maxBytes": 2047,
+    "signature": 40389
+  },
+  {
+    "de": "Alarmfehler! Bitte unter Einstellungen erneut aktivieren.",
+    "en": "Alarm error! Please retry in Settings.",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Alarmfehler! Erneut aktivieren",
+    "en": "Alarm error! Retry",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Alarmstatus",
+    "en": "Alarm status",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Alarmtest",
+    "en": "Reminder test",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Alle 24 Terminplätze belegt",
+    "en": "All 24 appointment slots are full",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Alle 24 Terminplätze sind belegt. Bitte abgeschlossene Termine buchen oder entfernen.",
+    "en": "All 24 slots are full. Confirm or remove completed lessons.",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Alle Alarme sind wieder aktiv.",
+    "en": "All reminders are active again.",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Alle Termine (%d)",
+    "en": "All appointments (%d)",
+    "maxBytes": 95,
+    "signature": 47500
+  },
+  {
+    "de": "Alle Terminplätze sind belegt.",
+    "en": "All appointment slots are full.",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Alle gespeicherten Termine prüfen",
+    "en": "Check saved appointments",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Alle in 10 Min. erinnern",
+    "en": "Snooze all for 10 min",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Alles erledigt!",
+    "en": "All done!",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Andere Verkehrsteilnehmer",
+    "en": "Other road users",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Ansehen, bearbeiten, hinzufügen",
+    "en": "View, edit, add",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "App schließen: Test in 1 Min.",
+    "en": "Close app: test in 1 min",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Auf der Uhr eingeben",
+    "en": "Enter on the watch",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Aufstieg vor 2 Jahren",
+    "en": "Upgrade within 2 years",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Aus",
+    "en": "Off",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Aus (App-Einstellung)",
+    "en": "Off (app setting)",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Ausbildungsprofil",
+    "en": "Training profile",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Autobahn",
+    "en": "Motorway",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Autobahn [AU]",
+    "en": "Motorway [AU]",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "B auf BE",
+    "en": "B to BE",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "B auf C",
+    "en": "B to C",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "B auf C1",
+    "en": "B to C1",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "B bis 2 Jahre",
+    "en": "B for up to 2 years",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "B über 2 Jahre",
+    "en": "B for over 2 years",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "B: Pkw und Anhänger",
+    "en": "B: Cars and trailers",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "B: Technik und Beladung",
+    "en": "B: Vehicle and loading",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Bedienung & Kürzel",
+    "en": "Help & abbreviations",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Bedingungen & Kürzel",
+    "en": "Guide & abbreviations",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Besondere Situationen",
+    "en": "Special situations",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Bitte zwei unterschiedliche Erinnerungszeiten wählen oder Erinnerung 2 ausschalten.",
+    "en": "Choose different reminder times, or turn off reminder 2.",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Bleibt unter Stunden bestätigen",
+    "en": "Keep in unconfirmed lessons",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Bleibt unter Stunden buchen",
+    "en": "Keep in Record lessons",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Buchung nicht gespeichert oder Unterricht noch nicht beendet. Bitte prüfen und App bei Speicherfehler neu starten.",
+    "en": "Lesson not recorded, or not finished yet. Check it and restart the app if there is a storage error.",
+    "maxBytes": 2047,
+    "signature": 40389
+  },
+  {
+    "de": "Buchungsfehler",
+    "en": "Booking failed",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "C auf CE",
+    "en": "C to CE",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "C bis 2 Jahre",
+    "en": "C for up to 2 years",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "C über 2 Jahre",
+    "en": "C for over 2 years",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "C+CE gemeinsam",
+    "en": "C+CE combined",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "C1 auf C",
+    "en": "C1 to C",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "C1 auf C1E",
+    "en": "C1 to C1E",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "C1 bis 2 Jahre",
+    "en": "C1 for up to 2 years",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "C1 über 2 Jahre",
+    "en": "C1 for over 2 years",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "C1+C1E gemeinsam",
+    "en": "C1+C1E combined",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "D auf DE",
+    "en": "D to DE",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "D1 auf D",
+    "en": "D1 to D",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "D1 auf D1E",
+    "en": "D1 to D1E",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Daten geändert. Bitte neu laden.",
+    "en": "Data changed. Reopen settings to refresh.",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Datum",
+    "en": "Date",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Datum prüfen",
+    "en": "Check date",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Dauer: %d Minuten",
+    "en": "Duration: %d minutes",
+    "maxBytes": 95,
+    "signature": 47500
+  },
+  {
+    "de": "Dein Fortschritt",
+    "en": "Your progress",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Dein Termin",
+    "en": "Your appointment",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Dein Vorbesitz",
+    "en": "Previous licence",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Dein nächster Termin fehlt",
+    "en": "Plan your next lesson",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Deine Klasse",
+    "en": "Licence class",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Deine Termine",
+    "en": "Your appointments",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Der Termin muss in der Zukunft liegen.",
+    "en": "Please choose a future appointment.",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Der Termin wurde inzwischen gelöscht. Bitte neu anlegen.",
+    "en": "This appointment has been deleted. Please create a new one.",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Der Unterricht ist laut Planung noch nicht beendet. Danach kannst du die Stunden bestätigen. Vorhandene Stunden sind unter Pflichtstunden korrigierbar.",
+    "en": "This lesson has not ended yet. Confirm it afterwards. Existing counts can be corrected under Required lessons.",
+    "maxBytes": 2047,
+    "signature": 40389
+  },
+  {
+    "de": "Details & Erinnerungen",
+    "en": "Details & reminders",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Di",
+    "en": "Tue",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Direkt / Ersterwerb",
+    "en": "Direct / first licence",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Direkt / Erweiterung",
+    "en": "Direct / additional class",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Do",
+    "en": "Thu",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Einheiten",
+    "en": "Units",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Einheiten bearbeiten",
+    "en": "Edit units",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Einheiten: %d",
+    "en": "Units: %d",
+    "maxBytes": 95,
+    "signature": 47500
+  },
+  {
+    "de": "Einstellung nicht gespeichert",
+    "en": "Setting not saved",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Einstellungen",
+    "en": "Settings",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Einstellungen in der Pebble-App",
+    "en": "Settings in the Pebble app",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Erinnerung %d",
+    "en": "Reminder %d",
+    "maxBytes": 95,
+    "signature": 47500
+  },
+  {
+    "de": "Erinnerung 1",
+    "en": "Reminder 1",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Erinnerung 2",
+    "en": "Reminder 2",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Erinnerung schließen",
+    "en": "Dismiss reminder",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Erinnerungen in 10 Minuten wiederholen.",
+    "en": "Reminders will repeat in 10 minutes.",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Erinnerungen prüfen",
+    "en": "Check reminders",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Erklärungen",
+    "en": "Help",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Erledigt / Stunden buchen",
+    "en": "Confirm / record lesson",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Erneute Erinnerung",
+    "en": "Snooze reminder",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Ersterwerb",
+    "en": "First licence",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "FAHRSCHUL PLANER {version}\n\n24 Termine, 2 Erinnerungen und 10-Min.-Schlummern.\nNach dem geplanten Ende fragt die Uhr nach Stunden. Gebucht wird nur nach Bestätigung.\n\nLA Landstraße / AU Autobahn\nNA Nacht / UE Übung\nGA Grundausbildung\nGS Grundstoff / ZS Zusatzstoff\n\nPraxis ab 45 Min., +5-Min.-Schritte.\n45 Restminuten ergeben 1 Einheit.\nTheorie je 90 Min.\nTheorie-Häkchen zählen als eine 90-Minuten-Einheit. Entfernen zieht diese Einheit ab. Zugeordnete Theorie-Termine zählen dasselbe Thema nicht doppelt.\nGS/ZS manuell bearbeitet nur zusätzliche Einheiten. Häkchen bleiben geschützt und können nur in der Themenliste entfernt werden.\n\nOben/Unten scrollen. Mitte wählt, Zurück schließt. OK unter Pflichtstunden halten: Zusätze bearbeiten oder löschen. Neue Termine: 01:00 und 00:30 vorher. Erinnerung 2 lässt sich direkt im Termin auf Aus stellen.\n\nVersion {version}\n(Idee by Traumlewis | Code by Codex)",
+    "en": "DRIVING PLANNER {version}\n\n24 appointments, two reminders and 10-minute snooze.\n\nConfirm lessons after their planned end to record them.\n\nPractice: 45 minutes plus 5-minute steps. Extra minutes accumulate by class and lesson type; 45 extra minutes become one unit. Theory: 90-minute units.\n\nTheory checkmarks count as one 90-minute unit. Removing one subtracts it. Assigned lessons do not count an already checked topic twice. Manual GS/ZS edits change additional units only. Checkmarks are protected and can only be removed in the topic list.\n\nUp/Down: scroll. Select: choose. Hold Select under Required lessons to edit or delete extras. New appointments default to 60 and 30 minutes before the lesson. Reminder 2 can be turned off directly in the appointment. Back: close.\n\nVersion {version}\n(Idee by Traumlewis | Code by Codex)",
+    "maxBytes": 2047,
+    "signature": 40389
+  },
+  {
+    "de": "Fahrmanöver und Beobachtung",
+    "en": "Manoeuvres and observation",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "FahrschAusbO / Stand 06.11.26",
+    "en": "German law / 06 Nov 2026",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Fahrschul Planer",
+    "en": "Driving Planner",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Fahrschul Planer {version}",
+    "en": "Driving Planner {version}",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Fortschritt",
+    "en": "Progress",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Fortschritt aktualisiert",
+    "en": "Progress updated",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Fortschritt nicht gespeichert. Bitte App neu starten.",
+    "en": "Progress not saved. Please restart the app.",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Fr",
+    "en": "Fri",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Ganze 45-Minuten-Einheiten",
+    "en": "Whole 45-minute units",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Ganze Einheiten bleiben",
+    "en": "Whole units are kept",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Grundausbildung",
+    "en": "Basic training",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Grundausbildung [GA]",
+    "en": "Basic training [GA]",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Grundstoff",
+    "en": "Core syllabus",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Grundstoff [GS]",
+    "en": "Core syllabus [GS]",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Grundstoff: manuell",
+    "en": "Core: manual units",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "HANDY-EINGABE\n\nIn der Pebble-App beim Fahrschul Planer die Einstellungen öffnen. Dort Termine anlegen, bearbeiten und löschen.\n\nZur Übertragung die Uhr-App öffnen und Bluetooth verbinden.\n\nDie Uhr bleibt vollständig ohne diese Zusatzfunktion bedienbar.",
+    "en": "PHONE INPUT\n\nOpen Driving Planner settings in the Pebble app. Appointments refresh automatically. You can add, edit and delete lessons there.\n\nConnect Bluetooth and open the watch app for transfer. All features remain available on the watch.",
+    "maxBytes": 2047,
+    "signature": 40389
+  },
+  {
+    "de": "HANDY-EINGABE\n\nTermin auf der Uhr gespeichert.\n\nAlle Termine bleiben auch ohne Handy verfügbar.",
+    "en": "PHONE INPUT\n\nAppointment saved on the watch.\n\nYour appointments remain available without your phone.",
+    "maxBytes": 2047,
+    "signature": 40389
+  },
+  {
+    "de": "HANDY-EINGABE\n\nTermin gelöscht.",
+    "en": "PHONE INPUT\n\nAppointment deleted.",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Halten und Parken",
+    "en": "Stopping and parking",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Handy-Eingabe",
+    "en": "Phone input",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Handy-Eingabe (optional)",
+    "en": "Phone input (optional)",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Hinweis",
+    "en": "Information",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Häkchen bleiben geschützt",
+    "en": "Checkmarks stay protected",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Häkchen zählen\nals Einheit",
+    "en": "Checkmarks count\nas one unit",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Häkchen zählen als Einheit",
+    "en": "Checkmarks count as a unit",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "In %d Minuten",
+    "en": "In %d minutes",
+    "maxBytes": 95,
+    "signature": 47500
+  },
+  {
+    "de": "In %d Std. %d Min.",
+    "en": "In %d h %d min",
+    "maxBytes": 95,
+    "signature": 19901
+  },
+  {
+    "de": "In %d T. %d Std.",
+    "en": "In %d d %d h",
+    "maxBytes": 95,
+    "signature": 19901
+  },
+  {
+    "de": "In 10 Minuten",
+    "en": "In 10 minutes",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "In 10 Minuten erinnern",
+    "en": "Remind in 10 minutes",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "In 10 Minuten wirst du erneut erinnert.",
+    "en": "You will be reminded in 10 minutes.",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "In 30 Minuten fragen",
+    "en": "Ask again in 30 minutes",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "In 5-Minuten-Schritten",
+    "en": "In 5-minute steps",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Ja, Stunden buchen",
+    "en": "Yes, record lesson",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Ja, Termin löschen",
+    "en": "Yes, delete appointment",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Ja, Zusätze löschen",
+    "en": "Yes, delete extras",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Jahr",
+    "en": "Year",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "KLASSE %s",
+    "en": "CLASS %s",
+    "maxBytes": 95,
+    "signature": 53545
+  },
+  {
+    "de": "KLASSE %s\n%s\n%s\n\n%d Minuten\nGeplantes Ende:\n%s\n\nErinnerung 1: %s\nErinnerung 2: %s\n\n%s\n\nThema: %s",
+    "en": "CLASS %s\n%s\n%s\n\n%d minutes\nPlanned end:\n%s\n\nReminder 1: %s\nReminder 2: %s\n\n%s\n\nTopic: %s",
+    "maxBytes": 2047,
+    "signature": 53460
+  },
+  {
+    "de": "Kein festes Minimum",
+    "en": "No fixed minimum",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Keine Zuordnung",
+    "en": "No topic",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Klasse %s",
+    "en": "Class %s",
+    "maxBytes": 95,
+    "signature": 53545
+  },
+  {
+    "de": "Klasse %s | %d Themen",
+    "en": "Class %s | %d topics",
+    "maxBytes": 95,
+    "signature": 55424
+  },
+  {
+    "de": "Klasse %s | Abschlussfrage aktiv",
+    "en": "Class %s | Completion prompt on",
+    "maxBytes": 95,
+    "signature": 53545
+  },
+  {
+    "de": "Klassenspezifischer Stoff",
+    "en": "Class-specific syllabus",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Landstraße",
+    "en": "Country roads",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Landstraße [LA]",
+    "en": "Country roads [LA]",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Lebenslanges Lernen",
+    "en": "Lifelong learning",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Lektionen einzeln abhaken",
+    "en": "Check off individual topics",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Löschen nicht gespeichert",
+    "en": "Deletion not saved",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Löschen nicht gespeichert. Bitte neu starten.",
+    "en": "Deletion not saved. Please restart.",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Löschfehler",
+    "en": "Deletion failed",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Manuell bearbeiten",
+    "en": "Edit manual units",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Manuell löschen",
+    "en": "Delete manual units",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Manuelle Einheiten bearbeiten",
+    "en": "Edit manual units",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Manuelle Einheiten löschen",
+    "en": "Delete manual units",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Mi",
+    "en": "Wed",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Minuten",
+    "en": "Minutes",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Minuten bearbeiten",
+    "en": "Edit extra minutes",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Minuten löschen",
+    "en": "Delete extra minutes",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Mit Fahrerlaubnis",
+    "en": "Existing licence",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Mo",
+    "en": "Mon",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Monat",
+    "en": "Month",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Nach dem Unterricht buchen",
+    "en": "Record completed lessons",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Nachtfahrt",
+    "en": "Night driving",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Nachtfahrt [NA]",
+    "en": "Night driving [NA]",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Noch kein Termin",
+    "en": "No appointment",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Noch nicht abgeschlossen",
+    "en": "Not completed yet",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "OK halten: Zusätze",
+    "en": "Hold OK: extras",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Oben +     Unten -\nMitte: übernehmen\nZurück: verwerfen",
+    "en": "Up +     Down -\nSelect: apply\nBack: cancel",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Oben + | Unten -",
+    "en": "Up + | Down -",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Oben/Unten: ändern\nMitte: nächstes Feld\nZurück: verwerfen",
+    "en": "Up/Down: change\nSelect: next field\nBack: cancel",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Oben/Unten: ändern\nMitte: übernehmen\nZurück: verwerfen",
+    "en": "Up/Down: change\nSelect: apply\nBack: cancel",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Offen: ",
+    "en": "Unconfirmed: ",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Optional / keine Zuordnung",
+    "en": "Optional / no topic",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "PFLICHTSTUNDEN\n\nFahrschAusbO: Par. 4, Anlagen 1, 2.2, 2.8, 4 und 5. Stand 06.11.2026.\n\nProfil passend zum Vorbesitz wählen. 0 = keine feste Mindestzahl, nicht keine Ausbildung.\n\nThemen sind eine Lernhilfe; Reihenfolge mit Fahrschule abstimmen. Zusatzstoff außer B wird als nummerierte Liste geführt.\n\nDetails in QUELLEN.md.",
+    "en": "REQUIRED LESSONS\n\nGerman FahrschAusbO: section 4, annexes 1, 2.2, 2.8, 4 and 5. Checked 6 Nov 2026.\n\nChoose the profile matching your previous licence. Zero means no fixed minimum.\n\nTopics are a study aid; follow your driving school syllabus. Extra class topics outside B use a numbered list.\n\nSources: QUELLEN.md.",
+    "maxBytes": 2047,
+    "signature": 40389
+  },
+  {
+    "de": "Persönliche Voraussetzungen",
+    "en": "Personal readiness",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Pflichtstunden",
+    "en": "Required lessons",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Plane deine Fahrstunde",
+    "en": "Plan your next lesson",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Praxis | Autobahn",
+    "en": "Practice | Motorway",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Praxis | Grundausbildung",
+    "en": "Practice | Basic training",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Praxis | Landstraße",
+    "en": "Practice | Country roads",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Praxis | Nachtfahrt",
+    "en": "Practice | Night driving",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Praxis | Übungsfahrt",
+    "en": "Practice | General driving",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Praxis-Einheiten",
+    "en": "Practice units",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Praxisdauer (Minuten)",
+    "en": "Practice (minutes)",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Rechtliche Grundlagen",
+    "en": "Legal basics",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Rechtliche Vorgaben",
+    "en": "Legal requirements",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Risikofaktor Mensch",
+    "en": "Human risk factors",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "SPEICHERFEHLER\n\nBitte Uhr-App neu starten. Gespeicherte Daten werden beim Start erneut geladen. Bis dahin keine weiteren Änderungen vornehmen.",
+    "en": "STORAGE ERROR\n\nRestart the watch app to reload saved data. Please make no further changes until then.",
+    "maxBytes": 2047,
+    "signature": 40389
+  },
+  {
+    "de": "Sa",
+    "en": "Sat",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Schließt nach 2 Sekunden",
+    "en": "Closes after 2 seconds",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Schlummern gespeichert, aber Alarm blockiert! Bitte Alarm erneut aktivieren.",
+    "en": "Snooze saved, but alarm is blocked! Please retry alarms.",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "So",
+    "en": "Sun",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Speicherfehler",
+    "en": "Storage error",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Speicherfehler! Neu starten",
+    "en": "Storage error! Restart",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Speicherfehler. Bitte Uhr-App neu starten.",
+    "en": "Storage error. Restart the watch app.",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Speicherfehler: Stand auf Uhr prüfen",
+    "en": "Storage error: check the watch",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Speicherfehler: Termin nicht gespeichert. Bitte Uhr-App neu starten.",
+    "en": "Storage error: appointment not saved. Restart the watch app.",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Sprache gespeichert",
+    "en": "Language saved",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Sprache gespeichert.",
+    "en": "Language saved.",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Sprache nicht gespeichert",
+    "en": "Language not saved",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Sprachpaket fehlt. Bitte Handy verbinden.",
+    "en": "Language pack missing. Connect your phone.",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Später manuell buchen",
+    "en": "Confirm manually later",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Start mit + Neuer Termin",
+    "en": "Start with + New appointment",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Straßenverkehrssystem",
+    "en": "Road system",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Stunden",
+    "en": "Hours",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Stunden bestätigen",
+    "en": "Confirm lessons",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Stunden bestätigen (%d)",
+    "en": "Confirm lessons (%d)",
+    "maxBytes": 95,
+    "signature": 47500
+  },
+  {
+    "de": "Stunden buchen",
+    "en": "Record lessons",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Stunden buchen (%d)",
+    "en": "Record lessons (%d)",
+    "maxBytes": 95,
+    "signature": 47500
+  },
+  {
+    "de": "Stunden gebucht",
+    "en": "Lesson recorded",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Stunden offen",
+    "en": "Unconfirmed lessons",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Systemalarm aktiv",
+    "en": "System alarm active",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "TERMIN GESPEICHERT\n\nAlarm konnte nicht aktiviert werden! Unter Einstellungen den Alarm erneut aktivieren.",
+    "en": "APPOINTMENT SAVED\n\nThe alarm could not be activated. Please retry alarms in Settings.",
+    "maxBytes": 2047,
+    "signature": 40389
+  },
+  {
+    "de": "Tag",
+    "en": "Day",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Tempo, Abstand, Umwelt",
+    "en": "Speed, distance, environment",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Termin bearbeiten",
+    "en": "Edit appointment",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Termin fehlt",
+    "en": "Missing appointment",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Termin gelöscht",
+    "en": "Appointment deleted",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Termin gespeichert",
+    "en": "Appointment saved",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Termin löschen",
+    "en": "Delete appointment",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Termin löschen?",
+    "en": "Delete appointment?",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Termin nicht gespeichert",
+    "en": "Appointment not saved",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Termin nicht mehr vorhanden",
+    "en": "Appointment no longer exists",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Termin oder Erinnerungen ungültig",
+    "en": "Invalid appointment or reminders",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Termin planen",
+    "en": "Plan appointment",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Termin speichern",
+    "en": "Save appointment",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Termin-Erinnerung",
+    "en": "Lesson reminder",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Termin-ID fehlt",
+    "en": "Missing appointment ID",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Termindaten ungültig oder Speicherfehler.",
+    "en": "Invalid appointment or storage error.",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Termindetails",
+    "en": "Appointment details",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Termine aller Klassen bleiben",
+    "en": "Keep all class appointments",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Termine und Fortschritt behalten",
+    "en": "Keep appointments and progress",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Terminliste voll",
+    "en": "Appointments full",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Terminplanung",
+    "en": "Lesson planning",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Testalarm konnte nicht aktiviert werden.",
+    "en": "The test alarm could not be scheduled.",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Thema nicht gespeichert. Bitte App neu starten.",
+    "en": "Topic not saved. Please restart the app.",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Thema wählen",
+    "en": "Select topic",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Themen sind nur für Theorie-Termine verfügbar.",
+    "en": "Topics are available for theory lessons only.",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Theorie | Grundstoff",
+    "en": "Theory | Core syllabus",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Theorie | Zusatzstoff",
+    "en": "Theory | Class syllabus",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Theorie-Einheiten",
+    "en": "Theory units",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Theorie-Thema",
+    "en": "Theory topic",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Theorie-Themen",
+    "en": "Theory topics",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Theorie: 90-Minuten-Einheiten",
+    "en": "Theory: 90-minute units",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Uhrzeit",
+    "en": "Time",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Unbekannte Aktion",
+    "en": "Unknown action",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Ungültige Anfrage",
+    "en": "Invalid request",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Ungültige Einstellung",
+    "en": "Invalid setting",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Ungültige Sprache",
+    "en": "Invalid language",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Ungültige Termindaten",
+    "en": "Invalid appointment data",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Ungültiges Datum oder Uhrzeit. Bitte prüfen; auch die Zeitumstellung kann eine Uhrzeit ungültig machen.",
+    "en": "Invalid date or time. Please check; daylight saving changes may make a time invalid.",
+    "maxBytes": 2047,
+    "signature": 40389
+  },
+  {
+    "de": "Unterricht erledigt?",
+    "en": "Lesson completed?",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Unterricht läuft",
+    "en": "Lesson in progress",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Unterrichtsart",
+    "en": "Lesson type",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Vorbesitz D",
+    "en": "Existing D",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Vorbesitz D1",
+    "en": "Existing D1",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Vorbesitz D1 / D",
+    "en": "Existing D1 / D",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Vorfahrt und Regelungen",
+    "en": "Right of way and rules",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Vorwarnung übersprungen",
+    "en": "Past reminder skipped",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Vorwarnzeit",
+    "en": "Reminder lead time",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Weiter",
+    "en": "Next",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Wischen: ändern / zurück",
+    "en": "Swipe: change / back",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Zeichen und Bahnübergänge",
+    "en": "Signs and level crossings",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Zurück",
+    "en": "Back",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Zusatzminuten",
+    "en": "Extra minutes",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Zusatzminuten bearbeiten",
+    "en": "Edit extra minutes",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Zusatzminuten löschen",
+    "en": "Delete extra minutes",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Zusatzstoff",
+    "en": "Class syllabus",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Zusatzstoff %d",
+    "en": "Class syllabus %d",
+    "maxBytes": 95,
+    "signature": 47500
+  },
+  {
+    "de": "Zusatzstoff [ZS]",
+    "en": "Class syllabus [ZS]",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Zusatzstoff: manuell",
+    "en": "Extra: manual units",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Zusätze gelöscht",
+    "en": "Extras deleted",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Zusätze löschen?",
+    "en": "Delete extras?",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Zusätze verwalten",
+    "en": "Manage extras",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Zusätzliche Erinnerung",
+    "en": "Additional reminder",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Zähler ansehen und korrigieren",
+    "en": "View and correct counts",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Übungsfahrt",
+    "en": "General driving",
+    "maxBytes": 95,
+    "signature": 40389
+  },
+  {
+    "de": "Übungsfahrten",
+    "en": "General driving",
+    "maxBytes": 95,
+    "signature": 40389
+  }
+]

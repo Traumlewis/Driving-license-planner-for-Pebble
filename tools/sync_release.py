@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Keep watch explanations, translation sources and package metadata on one release version."""
 from pathlib import Path
-import ast,io,json,re,subprocess,sys,tokenize
+import ast,io,json,re,subprocess,sys,tokenize,os
 from generate_language_pack import restore_project
 from export_language_packs import export as export_language_packs
 from export_settings_languages import export as export_settings_languages
@@ -51,10 +51,12 @@ def sync():
                 except (ValueError,SyntaxError):pass
             tokens.append(token)
         generator.write_text(tokenize.untokenize(tokens))
-        subprocess.run([sys.executable,'tools/make_i18n.py'],cwd=folder,check=True)
-        subprocess.run([sys.executable,'tools/embed_config.py'],cwd=folder,check=True)
+        subprocess.run([sys.executable,'tools/make_i18n.py'],cwd=folder,check=True,env={**os.environ,'FAHRSCHUL_SYNC_BATCH':'1'})
+
         (folder/'README.md').write_text(f'# Fahrschul Planer {version}\n\nDeveloper: {developer}\n\nPlatforms: {", ".join(platforms)}.\n\nSee the repository README and docs/ for release, build and testing instructions.\n')
         (folder/'TESTPROTOKOLL.md').unlink(missing_ok=True)
+    subprocess.run([sys.executable,str(ROOT/'tools/generate_language_pack.py')],check=True)
+    for project in TARGETS:subprocess.run([sys.executable,'tools/embed_config.py'],cwd=ROOT/'projects'/project,check=True)
     (ROOT/'VERSION').write_text(version+'\n')
     export_language_packs()
     return version

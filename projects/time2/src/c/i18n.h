@@ -14,3 +14,7 @@ unsigned language_pack_staged(void);
 unsigned language_pack_stored(void);
 int language_pack_receive(uint32_t identity,unsigned part,unsigned total,const char *hex);
 #define T(text) translate(text)
+
+uint32_t language_pack_schema(void);
+uint32_t language_pack_codec(void);
+const char *language_pack_name(void);

@@ -1,20 +1,50 @@
 {
-  "strings": 283,
+  "strings": 296,
   "languages": [
     {
+      "format": "LP4/shared-bpe-v1",
+      "schemaId": 935079838,
+      "codecId": 4204946138,
+      "locale": "de",
+      "name": "Deutsch",
       "language": 0,
-      "id": 1374836852,
-      "crc": 775789440,
-      "size": 2360,
-      "chunks": 19
+      "id": 2108833273,
+      "crc": 1182286825,
+      "size": 2512,
+      "chunks": 20
     },
     {
+      "format": "LP4/shared-bpe-v1",
+      "schemaId": 935079838,
+      "codecId": 4204946138,
+      "locale": "en",
+      "name": "English",
       "language": 1,
-      "id": 3046088733,
-      "crc": 3786147838,
-      "size": 2315,
-      "chunks": 19
+      "id": 2943873964,
+      "crc": 1898161174,
+      "size": 2303,
+      "chunks": 18
+    },
+    {
+      "format": "LP4/shared-bpe-v1",
+      "schemaId": 935079838,
+      "codecId": 4204946138,
+      "locale": "es",
+      "name": "Espa\u00f1ol",
+      "language": 2,
+      "id": 391850661,
+      "crc": 4246600689,
+      "size": 2520,
+      "chunks": 20
     }
   ],
-  "maxTextBytes": 96
+  "maxTextBytes": 2048,
+  "compatibility": {
+    "format": "LP4/shared-bpe-v1",
+    "schemaId": 935079838,
+    "codecId": 4204946138,
+    "tag": "37bc2f9e-faa262da",
+    "maxBytes": 2560
+  },
+  "codecBytes": 18852
 }
