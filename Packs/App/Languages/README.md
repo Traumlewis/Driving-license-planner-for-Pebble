@@ -27,3 +27,7 @@ French settings: `fr/settings.json`; all 296 watch translations: `fr/watch-sourc
 ## Italian, Portuguese, Dutch and Polish (3.8.51+)
 
 Phone settings and full 296-string watch sources are available for Italiano (`it`), Português (`pt`, European Portuguese), Nederlands (`nl`) and Polski (`pl`). Watch support requires the 3.8.51 DEV PBW and frozen v3 codec (`37bc2f9e-0148b906`). Its catalogue contains all eight languages below the unchanged 2,560-byte payload limit. Older variants stay available and keep the new languages phone-only. No language text was removed. See [sizes, compatibility and tests](../../../docs/DEV-3.8.51.md).
+
+## Danish/Swedish feasibility drafts
+
+Complete Danish and Swedish watch translations were tested with the frozen 3.8.51 codec. They need 4,920 and 4,965 bytes respectively, exceeding the 2,560-byte limit. The `da/watch-draft.json` and `sv/watch-draft.json` files are source drafts, excluded from build/export discovery and all language catalogues. Existing eight-language support is unchanged. See [measured results](../../../docs/LANGUAGES-DA-SV-TEST.md).

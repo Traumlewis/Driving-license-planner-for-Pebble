@@ -1,0 +1,37 @@
+{
+  "build": "3.8.51",
+  "compatibility": {
+    "format": "LP4/shared-bpe-v1",
+    "schemaId": 935079838,
+    "codecId": 21543174,
+    "tag": "37bc2f9e-0148b906",
+    "maxBytes": 2560
+  },
+  "result": "neither-complete-language-fits",
+  "languages": [
+    {
+      "locale": "da",
+      "name": "Dansk",
+      "translatedWatchStrings": 296,
+      "payloadBytes": 4920,
+      "limit": 2560,
+      "overLimitBytes": 2360,
+      "selectable": false,
+      "source": "Packs/App/Languages/da/watch-draft.json",
+      "sourceSha256": "3eb8147ef92e648ee98d9c565a25f45170bf0431eb2644a7232103c7f29dee78"
+    },
+    {
+      "locale": "sv",
+      "name": "Svenska",
+      "translatedWatchStrings": 296,
+      "payloadBytes": 4965,
+      "limit": 2560,
+      "overLimitBytes": 2405,
+      "selectable": false,
+      "source": "Packs/App/Languages/sv/watch-draft.json",
+      "sourceSha256": "88e2ea33a7d39d7dbfb80e62199f027a537b07d82e4a631e8b259561561be665"
+    }
+  ],
+  "frozenCodecAndSchemaUnchanged": true,
+  "liveCatalogueUnchanged": true
+}
