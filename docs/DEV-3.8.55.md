@@ -12,7 +12,7 @@ The resource has 13,871 merge entries, 15,278 prefix-tree nodes and seven roots.
 
 The 24-byte packet header, body length directory, 128-byte chunks, 2,560-byte cap, 16-byte persistence metadata and compact application-data format are unchanged. Header bytes 0–2 are `LP5`; byte 3 selects book 0–6. The resource adds a bounded root directory before text limits/signatures. Native validation rejects unsupported books before staging. Schema stays 935079838; codec becomes **2258323240**, compatibility **37bc2f9e-869b4728**. All seven codebooks are exercised by actual language fixtures. Late test ID 42 also changes a translated text after the build.
 
-All v1–v6 dictionaries, previous schema and published older variants stay immutable. Older builds continue to download their own compatible LP3/LP4 variant; the six new phone languages show as phone-only there. A one-time new PBW is necessary for this format/font migration. Further texts must still fit the frozen schema, codebooks, size and glyph coverage.
+The current v7 dictionary and schema stay immutable. Historical v1–v6 training files remain developer references. After this build’s verification, the owner explicitly retired older hosted LP3/LP4 variants; the live catalogue now contains only the current LP5 variant. See [current-only support policy](language-pack-support.md). A one-time new PBW is necessary for this format/font migration. Further texts must still fit the frozen schema, codebooks, size and glyph coverage.
 
 Reproduce the v7 book into a new file:
 
@@ -71,6 +71,6 @@ The Diorite emulator’s normal PyPKJS installation transport repeatedly failed 
 
 Native tests cover the six supported emulator targets, language swaps, offline restart, UI screenshots and memory sampling. Production phone integration downloads the actual GitHub catalogue/settings/packets before transferring them to the native watch app. Pre-upgrade appointments, checkboxes, counters, remainders, selected class/profile and language are compared after testing. These are emulator checks, not physical-watch certification.
 
-Backup: /workspace/backups/3.8.54-before-eu-final-six contains the previous source/PBW, native snapshots and flash copies. Returning to 3.8.54 requires choosing one of its eighteen supported languages, installing the backed-up PBW over the existing app and fetching its matching LP4 packet. Do not uninstall. Pre-3.8.50 builds still require the legacy-storage helper; compact app records themselves are unchanged here.
+Backup: /workspace/backups/3.8.54-before-eu-final-six contains the previous source/PBW, native snapshots and flash copies. The recorded 3.8.54 rollback/bootstrap checks were performed before retirement of older download variants. Reproducing an older build now requires its archived files; its previous live language-download paths are no longer supported. Do not uninstall. Pre-3.8.50 builds still require the legacy-storage helper; compact app records themselves are unchanged here.
 
 Native version is 3.8.55; DEV appears only in test filenames. Developer Traumlewis; credits (Idee by Traumlewis | Code by Codex). Continue at 3.8.56.

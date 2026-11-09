@@ -73,7 +73,7 @@ Idee by Traumlewis | Code by Codex
 
 ## Package catalogue
 
-[Packs/App/Languages](Packs/App/Languages/README.md) contains the live settings catalogue, phone translations and generic watch packets. From 3.8.48, compatible watch translations can be added without rebuilding; DE/EN/ES/FR/IT/PT/NL/PL/DA/SV/FI/CS/HU/RO/SK/HR/SL/ET/LV/LT/MT/GA/EL/BG are included in the current codec catalogue. Country and interface language are separate. A small emergency fallback and shared decoder remain bundled. [Packs/Germany/Languages](Packs/Germany/Languages/README.md) retains historical version-bound DE/EN packets for older builds; the old German directory has been removed.
+[Packs/App/Languages](Packs/App/Languages/README.md) contains the live settings catalogue, phone translations and generic watch packets. From 3.8.48, compatible watch translations can be added without rebuilding; DE/EN/ES/FR/IT/PT/NL/PL/DA/SV/FI/CS/HU/RO/SK/HR/SL/ET/LV/LT/MT/GA/EL/BG are included in the current codec catalogue. Country and interface language are separate. A small emergency fallback and shared decoder remain bundled. The live catalogue publishes only the current compatibility variant. Earlier LP3/LP4 download variants were retired at the owner’s request; see [support policy](docs/language-pack-support.md).
 
 ## GitHub Releases
 
