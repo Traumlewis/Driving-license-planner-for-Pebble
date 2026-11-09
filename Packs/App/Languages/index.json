@@ -31,6 +31,34 @@
         "file": "fr/settings.json",
         "sha256": "8f74ebb74e9150d1ca6698d6a4f4a3b6e189a781aaab0f758ed90f82a7cdd358",
         "watchLanguage": null
+      },
+      {
+        "locale": "it",
+        "name": "Italiano",
+        "file": "it/settings.json",
+        "sha256": "ef89ee6a05eeaaefb350e5ba0865900248852154b72d3adccba922fe9adec7dc",
+        "watchLanguage": null
+      },
+      {
+        "locale": "pt",
+        "name": "Português",
+        "file": "pt/settings.json",
+        "sha256": "e4ca3f77f72808e3f895b1d1f5b08be7864cfcdc8d89afbd1b87373cbf97431c",
+        "watchLanguage": null
+      },
+      {
+        "locale": "nl",
+        "name": "Nederlands",
+        "file": "nl/settings.json",
+        "sha256": "1031c4f6b28513e84a8f9e2a99a3f757cc73205f5861dc0c218bb4bfe642225c",
+        "watchLanguage": null
+      },
+      {
+        "locale": "pl",
+        "name": "Polski",
+        "file": "pl/settings.json",
+        "sha256": "212f3a5eac3fdf2e38562e62190830f5c0e60a39fefb707be6c87c59320709e6",
+        "watchLanguage": null
       }
     ]
   },

@@ -23,3 +23,7 @@ DE/EN/ES also have watch-source.json translations and packed LP4 data under watc
 ## French (3.8.49+)
 
 French settings: `fr/settings.json`; all 296 watch translations: `fr/watch-source.json`. French is watch language 3. The expanded frozen v2 codec uses compatibility tag `37bc2f9e-f48e0f24`; French requires the 3.8.49 DEV PBW. Its payload is 2,407 bytes, within the unchanged 2,560-byte limit. The previous codec variant remains published for 3.8.48. Translations still download from GitHub; do not train a codec during normal language registration. See [French testing and memory](../../../docs/DEV-3.8.49.md).
+
+## Italian, Portuguese, Dutch and Polish
+
+Phone settings now also include Italiano (`it`), Português (`pt`, European Portuguese), Nederlands (`nl`) and Polski (`pl`), downloaded without a PBW rebuild. Complete 296-string `watch-draft.json` translations are provided, but **watch support is not enabled**: all four exceed the existing frozen LP4 codec's 2,560-byte packet limit. These sources are not installable watch packets. See [sizes, compatibility and tests](../../../docs/LANGUAGES-IT-PT-NL-PL.md). The existing 3.8.50 DEV PBW and DE/EN/ES/FR watch languages remain unchanged.

@@ -82,3 +82,5 @@ The Publish GitHub Release workflow validates the checked-in PBW, packages sourc
 Development 3.8.49 adds complete French settings and watch downloads. The shared codec resource was extended to make French fit the unchanged packet limit; French on the watch requires this DEV build. DE/EN/ES/FR menus and explanations download from GitHub. Further translations can be registered without rebuilding if they fit the frozen codec and packet limits. See [packet registration and memory results](docs/DEV-3.8.49.md).
 
 Development 3.8.50 integrates compact appointment/progress storage and resumable startup migration. Existing LP4 language packets remain compatible. The DEV build and the separate legacy-restore helper are documented in [storage migration, testing and memory](docs/DEV-3.8.50.md). Use the helper before returning to an older app build.
+
+Italian, Portuguese, Dutch and Polish phone settings are now available as remote data for the existing build. Full watch translation sources are prepared, but their packets exceed the current receiver limit and are not advertised for watch transfer. See [language availability and size checks](docs/LANGUAGES-IT-PT-NL-PL.md).
