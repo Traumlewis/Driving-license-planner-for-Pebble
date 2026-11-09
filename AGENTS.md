@@ -7,3 +7,5 @@
 - Preserve user appointments, theory checkboxes, counters and extra minutes during updates. Normal release developer is Traumlewis; credits remain (Idee by Traumlewis | Code by Codex).
 
 - Language packs: generate with tools/sync_release.py; see docs/DEV-3.8.43.md. Short translated strings use rolling buffers: copy text retained across draw callbacks. Only the selected DE/EN menu packet is persisted. A small loading/emergency fallback and longer explanations remain bundled. Native menu literals use generated LK_ IDs; restore canonical text with generate_language_pack.restore_project before editing it, then synchronize.
+
+- Repository packet layout: Packs/German/Languages/<app-version>/. German denotes Germany’s training rules, while de/en denote interface languages. Export with tools/export_language_packs.py after synchronization. Remote GitHub loading is not enabled merely by exporting files.

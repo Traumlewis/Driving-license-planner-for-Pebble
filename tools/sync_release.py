@@ -3,6 +3,7 @@
 from pathlib import Path
 import ast,io,json,re,subprocess,sys,tokenize
 from generate_language_pack import restore_project
+from export_language_packs import export as export_language_packs
 ROOT=Path(__file__).resolve().parents[1]
 TARGETS={'time2':['emery'],'core2duo':['flint'],'round2':['gabbro'],'time-pebble2':['basalt','diorite'],'timeround':['chalk']}
 CREDIT='(Idee by Traumlewis | Code by Codex)'
@@ -53,5 +54,6 @@ def sync():
         (folder/'README.md').write_text(f'# Fahrschul Planer {version}\n\nDeveloper: {developer}\n\nPlatforms: {", ".join(platforms)}.\n\nSee the repository README and docs/ for release, build and testing instructions.\n')
         (folder/'TESTPROTOKOLL.md').unlink(missing_ok=True)
     (ROOT/'VERSION').write_text(version+'\n')
+    export_language_packs()
     return version
 if __name__=='__main__':print('Release sources synchronized:',sync())

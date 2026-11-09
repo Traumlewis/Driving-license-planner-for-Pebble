@@ -71,6 +71,10 @@ The build script cleans/builds each project, verifies common JS/configuration an
 
 Idee by Traumlewis | Code by Codex
 
+## Package catalogue
+
+[Packs/German/Languages](Packs/German/Languages/README.md) holds version-bound German/English menu packets for Germany’s training rules. Country and interface language are separate. The app currently uses its bundled phone catalogue; these exported files prepare future remote downloads.
+
 ## GitHub Releases
 
 The Publish GitHub Release workflow validates the checked-in PBW, packages source/store ZIPs and checksum files, uploads them to a draft, and publishes the completed release. It can only be started manually from Actions, after the owner explicitly requests a release. Source pushes never create or publish releases. Test PBWs contain (DEV) in their filenames; existing published releases are kept unchanged.
