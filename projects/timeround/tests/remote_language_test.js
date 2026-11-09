@@ -1,7 +1,7 @@
 'use strict';
 const assert=require('assert'),fs=require('fs'),path=require('path'),crypto=require('crypto');
 const create=require('../src/pkjs/remote-language').create,metadata=require('../src/pkjs/lang-pack'),sha=require('../src/pkjs/sha256');
-const folder=path.resolve(__dirname,'../../../Packs/German/Languages',metadata.appVersion),manifest=fs.readFileSync(path.join(folder,'manifest.json'),'utf8');
+const folder=path.resolve(__dirname,'../../../Packs/Germany/Languages',metadata.appVersion),manifest=fs.readFileSync(path.join(folder,'manifest.json'),'utf8');
 const packets=metadata.packs.map(p=>fs.readFileSync(path.join(folder,p.file),'utf8'));
 function storage(){let state={};return {state,getItem:k=>state[k]||null,setItem:(k,v)=>state[k]=v,removeItem:k=>delete state[k]};}
 function setup(store=storage(),modify=(raw)=>raw){const requests=[];let clock=1;const api=create(metadata,store,{now:()=>clock,request:(url,cb)=>{requests.push(url);const name=url.split('/').pop();let raw=name==='manifest.json'?manifest:packets[name==='de.json'?0:1];raw=modify(raw,name);if(raw instanceof Error)cb(raw.message);else cb(null,raw);}});return {api,store,requests,later:()=>clock+=31000};}

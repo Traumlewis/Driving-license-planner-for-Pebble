@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.8.45 — Development: Germany packet paths
+
+- Rename the canonical country directory to `Packs/Germany/Languages`; update generation, downloads and manifest validation.
+- Retain immutable old-path 3.8.44 files for compatibility with the distributed test PBW.
+- Document that the phone-settings language list and page translations are bundled; selected watch menu packets are downloaded.
+- Build all six targets and verify real GitHub downloads plus native phone/watch integration. Source update and test PBW only; no GitHub Release.
+
+
 ## 3.8.44 — Development: remote menu-language packets
 
 - Download the selected DE/EN menu packet from versioned `Packs/German/Languages` files on GitHub; remove full packets from the bundled phone source.

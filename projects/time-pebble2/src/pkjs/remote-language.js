@@ -39,7 +39,7 @@ exports.create=function(metadata,storage,options){
    if(flight!==job)return;if(error){finish(error);return;}
    try{
     if(typeof raw!=='string'||raw.length>20000)throw Error('INVALID_MANIFEST');var m=JSON.parse(raw);
-    if(m.schemaVersion!==1||m.trainingCountry!=='DE'||m.rulesetDirectory!=='German'||m.appVersion!==metadata.appVersion||m.format!=='LP3/swap128'||m.scope!=='menu'||!Array.isArray(m.languages))throw Error('INCOMPATIBLE_MANIFEST');
+    if(m.schemaVersion!==1||m.trainingCountry!=='DE'||m.rulesetDirectory!=='Germany'||m.appVersion!==metadata.appVersion||m.format!=='LP3/swap128'||m.scope!=='menu'||!Array.isArray(m.languages))throw Error('INCOMPATIBLE_MANIFEST');
     var matches=m.languages.filter(function(x){return x.language===language;});if(matches.length!==1)throw Error('INVALID_MANIFEST');var entry=matches[0];
     if(entry.locale!==p.locale||entry.file!==p.file||entry.packId!==p.id||entry.crc32!==p.crc||entry.payloadBytes!==p.size||entry.sha256!==p.sha256)throw Error('INCOMPATIBLE_MANIFEST');
    }catch(e){finish(e.message||'INVALID_MANIFEST');return;}

@@ -10,7 +10,7 @@ class XHR {
 }
 global.XMLHttpRequest=XHR;
 const create=require(project+'/remote-language').create,state={},storage={getItem:k=>state[k]||null,setItem:(k,v)=>state[k]=v,removeItem:k=>delete state[k]};
-const client=create(metadata,storage),out=path.resolve('/tmp/real-github-language-3.8.44');fs.mkdirSync(out,{recursive:true});
+const client=create(metadata,storage),out=path.resolve('/tmp/real-github-language-'+metadata.appVersion);fs.mkdirSync(out,{recursive:true});
 function ensure(api,language){return new Promise((resolve,reject)=>api.ensure(language,(error,packet)=>error?reject(Error(error)):resolve(packet)));}
 (async()=>{
  for(const language of [0,1]){const packet=await ensure(client,language),record=JSON.parse(state['fahrschul.v2.languagePacket']);assert.strictEqual(record.language,language);assert.strictEqual(Object.keys(state).length,1);assert.strictEqual(packet.id,metadata.packs[language].id);fs.writeFileSync(path.join(out,language?'en.json':'de.json'),record.raw);}

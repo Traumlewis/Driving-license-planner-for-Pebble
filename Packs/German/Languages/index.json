@@ -1,8 +1,0 @@
-{
-  "schemaVersion": 1,
-  "trainingCountry": "DE",
-  "versions": {
-    "3.8.43": "3.8.43/manifest.json",
-    "3.8.44": "3.8.44/manifest.json"
-  }
-}

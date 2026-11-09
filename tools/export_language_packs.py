@@ -14,7 +14,7 @@ def export():
         data=json.loads((folder/'tools/language-packets.json').read_text())
         if catalogue is None:catalogue=data
         elif data!=catalogue:raise ValueError('Device projects contain different language packets')
-    base=ROOT/'Packs/German/Languages';target=base/version;target.mkdir(parents=True,exist_ok=True)
+    base=ROOT/'Packs/Germany/Languages';target=base/version;target.mkdir(parents=True,exist_ok=True)
     languages=[];seen=set()
     for packet in catalogue['packs']:
         code,label=LOCALES[packet['language']]
@@ -26,7 +26,7 @@ def export():
         content=(json.dumps(packet,ensure_ascii=False,indent=2)+'\n').encode()
         filename=code+'.json';(target/filename).write_bytes(content)
         languages.append(dict(locale=code,name=label,file=filename,language=packet['language'],packId=packet['id'],payloadBytes=len(payload),crc32=packet['crc'],sha256=hashlib.sha256(content).hexdigest()))
-    manifest=dict(schemaVersion=1,trainingCountry='DE',rulesetDirectory='German',appVersion=version,format='LP3/swap128',scope='menu',languages=languages)
+    manifest=dict(schemaVersion=1,trainingCountry='DE',rulesetDirectory='Germany',appVersion=version,format='LP3/swap128',scope='menu',languages=languages)
     (target/'manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')
     versions={}
     for path in sorted(base.glob('*/manifest.json')):
