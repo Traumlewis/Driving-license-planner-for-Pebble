@@ -88,7 +88,8 @@
     "settingsLoading": "Loading language settings…",
     "settingsError": "Could not load the language pack. The previous language stays active. Reopen settings to retry.",
     "settingsReady": "Phone settings language saved · available offline",
-    "settingsFallback": "English offline fallback. For the first language pack, connect to the Internet and reopen settings."
+    "settingsFallback": "English offline fallback. For the first language pack, connect to the Internet and reopen settings.",
+    "settingsSave": "Save language"
   },
   "kinds": [
     "Practice | General driving",

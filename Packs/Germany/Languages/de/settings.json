@@ -88,7 +88,8 @@
     "settingsLoading": "Spracheinstellungen werden geladen…",
     "settingsError": "Sprachpaket konnte nicht geladen werden. Bisherige Sprache bleibt aktiv. Zum Wiederholen Einstellungen erneut öffnen.",
     "settingsReady": "Sprache der Handy-Einstellungen gespeichert · offline verfügbar",
-    "settingsFallback": "Offline-Notfallansicht auf Englisch. Für das erste Sprachpaket Internet verbinden und Einstellungen erneut öffnen."
+    "settingsFallback": "Offline-Notfallansicht auf Englisch. Für das erste Sprachpaket Internet verbinden und Einstellungen erneut öffnen.",
+    "settingsSave": "Sprache speichern"
   },
   "kinds": [
     "Praxis | Übungsfahrt",

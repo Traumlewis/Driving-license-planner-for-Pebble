@@ -14,14 +14,14 @@
         "locale": "de",
         "name": "Deutsch",
         "file": "de/settings.json",
-        "sha256": "66779c513b79a84e04e832dad4c3ae9e7ef6685c9963baabcba4b956e6936c53",
+        "sha256": "6fa43857379911280ce209b729865b944b6ff2d0ad33dd5bd17f3fca38b6d064",
         "watchLanguage": 0
       },
       {
         "locale": "en",
         "name": "English",
         "file": "en/settings.json",
-        "sha256": "2fc03ae1fcc73b6159d369d0d16c53563f28e3361f7534585e9328ad8ad92727",
+        "sha256": "b30deb6793527f221462581720cba23b04ca88a04872d4041d88b0fd4a04677f",
         "watchLanguage": 1
       }
     ]
