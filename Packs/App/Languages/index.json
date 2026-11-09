@@ -101,6 +101,34 @@
         "file": "ro/settings.json",
         "sha256": "63b7b971ddb9a2c4c10fe6233804f1723ebd93df9c3648c4e911a12d15120524",
         "watchLanguage": null
+      },
+      {
+        "locale": "sk",
+        "name": "Slovenčina",
+        "file": "sk/settings.json",
+        "sha256": "5a3dcae7907faa0354a513c31bfea7d14f6a6e42064b6bd8f343d2be8dc0e6ac",
+        "watchLanguage": null
+      },
+      {
+        "locale": "hr",
+        "name": "Hrvatski",
+        "file": "hr/settings.json",
+        "sha256": "8f52e11395e8f602a437c416ca958bc7e446f9f446229c270a899ea63b708c0b",
+        "watchLanguage": null
+      },
+      {
+        "locale": "sl",
+        "name": "Slovenščina",
+        "file": "sl/settings.json",
+        "sha256": "4f5922cec72dc6a6629a8dfa653872f002d83eebbc819cb6bff9d5f33d9fca88",
+        "watchLanguage": null
+      },
+      {
+        "locale": "et",
+        "name": "Eesti",
+        "file": "et/settings.json",
+        "sha256": "7d64a739702ee28bd4f4748eb607b6001052fcda08f359d93b7161860b981094",
+        "watchLanguage": null
       }
     ]
   },
@@ -537,6 +565,195 @@
           "size": 2558,
           "file": "watch/37bc2f9e-afe05be9/ro.json",
           "sha256": "479e4cc66a2475e030b2ce777845bd5ba5627ad020f8b271c4356437717aef9d"
+        }
+      ]
+    },
+    "37bc2f9e-e4846e13": {
+      "format": "LP4/shared-bpe-v1",
+      "schemaId": 935079838,
+      "codecId": 3833884179,
+      "tag": "37bc2f9e-e4846e13",
+      "maxBytes": 2560,
+      "languages": [
+        {
+          "locale": "de",
+          "name": "Deutsch",
+          "language": 0,
+          "id": 4006069823,
+          "crc": 3800977898,
+          "size": 2540,
+          "file": "watch/37bc2f9e-e4846e13/de.json",
+          "sha256": "ae5008fdedbc3081ee7c18b428bf4f7e2c064610a3172700f8a609e1b10be8b8"
+        },
+        {
+          "locale": "en",
+          "name": "English",
+          "language": 1,
+          "id": 3494454383,
+          "crc": 453883615,
+          "size": 2517,
+          "file": "watch/37bc2f9e-e4846e13/en.json",
+          "sha256": "0eb57f1166836a8412c3d23ab7b40f327608632a14fcdec46408a3c6efe0bc60"
+        },
+        {
+          "locale": "es",
+          "name": "Español",
+          "language": 2,
+          "id": 3189029815,
+          "crc": 2800044025,
+          "size": 2538,
+          "file": "watch/37bc2f9e-e4846e13/es.json",
+          "sha256": "c781404e25250a73eeebe674efaf811f4c7a69980be837303aa421e749670f2a"
+        },
+        {
+          "locale": "fr",
+          "name": "Français",
+          "language": 3,
+          "id": 3473063916,
+          "crc": 3196243539,
+          "size": 2542,
+          "file": "watch/37bc2f9e-e4846e13/fr.json",
+          "sha256": "b619c79f1aebf2071a699794dbc4cf911bc37a1e890f58c838a9e7af5cb64754"
+        },
+        {
+          "locale": "it",
+          "name": "Italiano",
+          "language": 4,
+          "id": 79410205,
+          "crc": 3540829191,
+          "size": 2500,
+          "file": "watch/37bc2f9e-e4846e13/it.json",
+          "sha256": "26ee855ee270e8080dcabe64c5741fbd3fbfd6b335cdbb6fdc09cf2a802d0adc"
+        },
+        {
+          "locale": "pt",
+          "name": "Português",
+          "language": 5,
+          "id": 3406667550,
+          "crc": 3242975327,
+          "size": 2419,
+          "file": "watch/37bc2f9e-e4846e13/pt.json",
+          "sha256": "076585f4c97739381d155bf52bb45f3934a49a6e6385c93fdc530d10b0ed3462"
+        },
+        {
+          "locale": "nl",
+          "name": "Nederlands",
+          "language": 6,
+          "id": 3501408419,
+          "crc": 2416422829,
+          "size": 2551,
+          "file": "watch/37bc2f9e-e4846e13/nl.json",
+          "sha256": "cd26efa63b952273a4c36eb2b516e405cfddafab13c8715debbfc33af60d2e35"
+        },
+        {
+          "locale": "pl",
+          "name": "Polski",
+          "language": 7,
+          "id": 3031015579,
+          "crc": 1252258859,
+          "size": 2551,
+          "file": "watch/37bc2f9e-e4846e13/pl.json",
+          "sha256": "2fc71f55d38bd612cbe35f2300546f5f6e171329920409b91c7382f5b01ed11c"
+        },
+        {
+          "locale": "da",
+          "name": "Dansk",
+          "language": 8,
+          "id": 1867297400,
+          "crc": 875763424,
+          "size": 2437,
+          "file": "watch/37bc2f9e-e4846e13/da.json",
+          "sha256": "c855fc3c2fd9077c9dd8d67650b28354d3bbeede691d7aa8c6d1364c89c55292"
+        },
+        {
+          "locale": "sv",
+          "name": "Svenska",
+          "language": 9,
+          "id": 3218011859,
+          "crc": 3001231041,
+          "size": 2470,
+          "file": "watch/37bc2f9e-e4846e13/sv.json",
+          "sha256": "1728231e79d88db95443e3140b0a6ce51c45fbbb22f7d723aed0076cf54b2b48"
+        },
+        {
+          "locale": "fi",
+          "name": "Suomi",
+          "language": 10,
+          "id": 1413713167,
+          "crc": 3521823538,
+          "size": 2545,
+          "file": "watch/37bc2f9e-e4846e13/fi.json",
+          "sha256": "98809d9ca8cd6a98cc637e59f9853833d9298b29a39ee15cc1bbb600578114a3"
+        },
+        {
+          "locale": "cs",
+          "name": "Čeština",
+          "language": 11,
+          "id": 3734518454,
+          "crc": 918365422,
+          "size": 2450,
+          "file": "watch/37bc2f9e-e4846e13/cs.json",
+          "sha256": "e5129c9a7e2f4d170da5435616fa073c7c4c251d1fb83922897721b51b0db866"
+        },
+        {
+          "locale": "hu",
+          "name": "Magyar",
+          "language": 12,
+          "id": 590756442,
+          "crc": 1780761662,
+          "size": 2552,
+          "file": "watch/37bc2f9e-e4846e13/hu.json",
+          "sha256": "cf912dd00763dc6d66a7686e5eb35306dceed2a0f48e805bf4485437c1a70ad0"
+        },
+        {
+          "locale": "ro",
+          "name": "Română",
+          "language": 13,
+          "id": 4185451901,
+          "crc": 2552018532,
+          "size": 2519,
+          "file": "watch/37bc2f9e-e4846e13/ro.json",
+          "sha256": "55683b52796fe3b24f2c1a0c4a23d32f7064b4313150224c5cd42ae9c3072a85"
+        },
+        {
+          "locale": "sk",
+          "name": "Slovenčina",
+          "language": 14,
+          "id": 1237352226,
+          "crc": 1401056441,
+          "size": 2492,
+          "file": "watch/37bc2f9e-e4846e13/sk.json",
+          "sha256": "3919353b996219aff9247ee5654ab6f520c04970f77b75d6a3e2454db5747750"
+        },
+        {
+          "locale": "hr",
+          "name": "Hrvatski",
+          "language": 15,
+          "id": 1422104031,
+          "crc": 3674643809,
+          "size": 2536,
+          "file": "watch/37bc2f9e-e4846e13/hr.json",
+          "sha256": "719cc3d3e20466510c209c1166d949bc3113ac65655d52439b3da4909117b2a8"
+        },
+        {
+          "locale": "sl",
+          "name": "Slovenščina",
+          "language": 16,
+          "id": 1153303115,
+          "crc": 3438702424,
+          "size": 2548,
+          "file": "watch/37bc2f9e-e4846e13/sl.json",
+          "sha256": "6d59556e9a7fbb171aeada28b7bcdff0aacd600978a517714656882cfea4899c"
+        },
+        {
+          "locale": "et",
+          "name": "Eesti",
+          "language": 17,
+          "id": 231178764,
+          "crc": 1577092724,
+          "size": 2542,
+          "file": "watch/37bc2f9e-e4846e13/et.json",
+          "sha256": "b5eeaf0f462ef57a107a350df4b2fc3aeb32fb18740f6b1c437a210b2f0c3f0b"
         }
       ]
     }
