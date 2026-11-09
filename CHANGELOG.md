@@ -1,3 +1,10 @@
+# 3.8.49 (development)
+
+- Complete French phone settings and 296 watch texts, including explanations, downloaded from GitHub.
+- Extend the shared codec resource while retaining the 2,560-byte watch-packet limit and one selected packet. French needs the new DEV PBW; the previous build retains its original compatible packet catalogue.
+- Preserve appointments, counters, theory checks, class/profile, extra minutes and reminder settings. Source/data update only; no GitHub Release.
+- French packet: 2,407 payload bytes / 2,423 persisted bytes. Shared resource grows by 4,896 bytes; native RAM usage is unchanged or slightly lower.
+
 # Changelog
 
 ## 3.8.48 — Development: generic watch language receiver

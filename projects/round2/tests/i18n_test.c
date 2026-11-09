@@ -32,10 +32,10 @@ int main(void){
  }
  verify(0);assert(used==old_used);install(1);verify(1);assert(!language_pack_staged());language_pack_init();verify(1);
  before=writes;install(1);assert(before==writes);
- install(0);verify(0);install(1);verify(1);install(2);verify(2);language_pack_init();verify(2);install(3);verify(3);language_pack_init();verify(3);
+ install(0);verify(0);install(1);verify(1);for(unsigned i=2;i<sizeof(fixture_ids)/sizeof(fixture_ids[0]);i++){install(i);verify(i);language_pack_init();verify(i);}
  /* Power/storage failure during the flash commit requires repair but never changes app keys. */
  fail_after=2;int result=0;for(unsigned p=0;p<parts(0);p++)result=language_pack_receive(fixture_ids[0],p,parts(0),fixture_chunks[0][p]);assert(result==-3);assert(!language_pack_ready()&&!language_pack_staged());
  language_pack_init();assert(!language_pack_ready());fail_after=-1;install(0);verify(0);
  records[0][0]^=1;language_pack_init();assert(!language_pack_ready());install(1);verify(1);
- printf("PASS language swap: one generic DE/EN/ES pack, %u/%u bytes, interrupted/corrupt transfer preserves old language, commit recovery and 4KB quota with 1500 app bytes\n",fixture_sizes[0]+16,fixture_sizes[1]+16);
+ printf("PASS language swap: one generic DE/EN/ES/FR pack, %u/%u bytes, interrupted/corrupt transfer preserves old language, commit recovery and 4KB quota with 1500 app bytes\n",fixture_sizes[0]+16,fixture_sizes[1]+16);
 }

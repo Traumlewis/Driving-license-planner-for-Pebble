@@ -4,47 +4,59 @@
     {
       "format": "LP4/shared-bpe-v1",
       "schemaId": 935079838,
-      "codecId": 4204946138,
+      "codecId": 4102950692,
       "locale": "de",
       "name": "Deutsch",
       "language": 0,
-      "id": 2108833273,
-      "crc": 1182286825,
-      "size": 2512,
+      "id": 2022343360,
+      "crc": 649742419,
+      "size": 2538,
       "chunks": 20
     },
     {
       "format": "LP4/shared-bpe-v1",
       "schemaId": 935079838,
-      "codecId": 4204946138,
+      "codecId": 4102950692,
       "locale": "en",
       "name": "English",
       "language": 1,
-      "id": 2943873964,
-      "crc": 1898161174,
-      "size": 2303,
+      "id": 637614622,
+      "crc": 244900872,
+      "size": 2280,
       "chunks": 18
     },
     {
       "format": "LP4/shared-bpe-v1",
       "schemaId": 935079838,
-      "codecId": 4204946138,
+      "codecId": 4102950692,
       "locale": "es",
       "name": "Espa\u00f1ol",
       "language": 2,
-      "id": 391850661,
-      "crc": 4246600689,
-      "size": 2520,
+      "id": 3953091602,
+      "crc": 281538628,
+      "size": 2551,
       "chunks": 20
+    },
+    {
+      "format": "LP4/shared-bpe-v1",
+      "schemaId": 935079838,
+      "codecId": 4102950692,
+      "locale": "fr",
+      "name": "Fran\u00e7ais",
+      "language": 3,
+      "id": 1861070256,
+      "crc": 2664731240,
+      "size": 2407,
+      "chunks": 19
     }
   ],
   "maxTextBytes": 2048,
   "compatibility": {
     "format": "LP4/shared-bpe-v1",
     "schemaId": 935079838,
-    "codecId": 4204946138,
-    "tag": "37bc2f9e-faa262da",
+    "codecId": 4102950692,
+    "tag": "37bc2f9e-f48e0f24",
     "maxBytes": 2560
   },
-  "codecBytes": 18852
+  "codecBytes": 23748
 }

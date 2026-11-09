@@ -28,14 +28,14 @@ async function language(value){let response;events.configmessage({data:{type:'co
   function settingsRPC(data){return new Promise(resolve=>events.configmessage({data,respond:resolve}));}
   await settingsRPC({type:'settingsRefresh'});await waitFor(()=>context.freshState().settingsLanguage.active);
   const nativeLanguage=context.snapshot.language;
-  for(const locale of ['en','es','de',original===2?'es':original===1?'en':'de']){const reply=await settingsRPC({type:'settingsSelect',locale});assert(!reply.error,reply.error);assert.strictEqual(reply.state.settingsLanguage.active.locale,locale);assert.strictEqual(context.snapshot.language,nativeLanguage);assert(!state['fahrschul.v2.pending']);}
-  assert.strictEqual(JSON.parse(state['fahrschul.v2.settingsPacket']).locale,original===2?'es':original===1?'en':'de');
+  for(const locale of ['en','es','fr','de',fixtures.find(p=>p.language===original).locale]){const reply=await settingsRPC({type:'settingsSelect',locale});assert(!reply.error,reply.error);assert.strictEqual(reply.state.settingsLanguage.active.locale,locale);assert.strictEqual(context.snapshot.language,nativeLanguage);assert(!state['fahrschul.v2.pending']);}
+  assert.strictEqual(JSON.parse(state['fahrschul.v2.settingsPacket']).locale,fixtures.find(p=>p.language===original).locale);
  }
- await language(2);await language(original===0?1:0);await language(original);
+ await language(3);await language(2);await language(original===0?1:0);await language(original);
  assert.strictEqual(JSON.parse(state['fahrschul.v2.languagePacket']).descriptor.language,original);const count=urls.length;
  offline=true;send({action:'restart'});await waitFor(()=>restarted===1);events.ready();await waitFor(()=>context.snapshot.languagePack.ready&&!state['fahrschul.v2.pending']);await language(original);assert.strictEqual(urls.length,count,'selected language contacted GitHub while offline');
  stopping=true;child.stdin.write(JSON.stringify({action:'finish'})+'\n');await waitFor(()=>finished);assert(finished.appDataPreserved);
  const out=root+'/docs/verification/dev/'+metadata.appVersion+'/'+platform;fs.mkdirSync(out,{recursive:true});fs.writeFileSync(out+'/remote-native.json',JSON.stringify({platform,version:metadata.appVersion,urls,offlineNativeRestart:true,singlePhoneCache:!!state['fahrschul.v2.languagePacket'],appDataPreserved:finished.appDataPreserved},null,2)+'\n');
- if(process.argv.includes('--settings'))console.log('PASS '+platform+': production settings bridge downloaded live GitHub catalogue and DE/EN/ES settings packets without changing native watch data');
- console.log('PASS '+platform+': real GitHub → production phone client → native watch transfer, DE/EN/ES replacement, one cache, offline native restart and original data preserved');
+ if(process.argv.includes('--settings'))console.log('PASS '+platform+': production settings bridge downloaded live GitHub catalogue and DE/EN/ES/FR settings packets without changing native watch data');
+ console.log('PASS '+platform+': real GitHub → production phone client → native watch transfer, DE/EN/ES/FR replacement, one cache, offline native restart and original data preserved');
 })().catch(e=>{console.error(e);console.error('Integration state',JSON.stringify({urls,pending:state['fahrschul.v2.pending'],packet:context.snapshot&&context.snapshot.languagePack,download:context.languageStore.info(),settings:context.settingsStore.state().error,hello:!!hello,bridgeError}));process.exitCode=1;if(!stopping){stopping=true;child.stdin.write(JSON.stringify({action:'finish'})+'\n');}}).finally(()=>{for(const id of timerIds)clearTimeout(id);for(const c of httpChildren)c.kill();});

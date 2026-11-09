@@ -32,7 +32,7 @@ function sendPackPart(){
  var transfer=packTransfer;if(!transfer)return;var sentPart=transfer.part;var languagePack=transfer.pack;waiting=true;
  var data={};data[KEYS.op]=4;data[KEYS.rid]=transfer.rid;data[KEYS.id]=languagePack.id;data[KEYS.part]=transfer.part;data[KEYS.total]=languagePack.chunks.length;data[KEYS.payload]=languagePack.chunks[transfer.part];
  function retry(){if(packTransfer!==transfer||transfer.part!==sentPart)return;waiting=false;packTransfer=null;if(retries++<2)retryTimer=setTimeout(transmit,1500);else{localStorage.setItem(STORE+'lastError','Language pack transfer paused. Reconnect the watch.');publish();}}
- try{Pebble.sendAppMessage(data,function(){if(packTransfer===transfer&&transfer.part===sentPart)retryTimer=setTimeout(retry,7000);},retry);}catch(e){retry();}
+ try{Pebble.sendAppMessage(data,function(){if(packTransfer===transfer&&transfer.part===sentPart)retryTimer=setTimeout(retry,sentPart===languagePack.chunks.length-1?30000:7000);},retry);}catch(e){retry();}
 }
 function transmit(){
  var p=pending();if(!p||waiting)return;

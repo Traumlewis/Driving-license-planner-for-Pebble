@@ -13,7 +13,7 @@ def signature(text):
 
 @lru_cache(maxsize=1)
 def codec():
-    source=json.loads((ROOT/'tools/watch-codec-v1.json').read_text());dictionary=source['dictionary'];codes={int(k):v for k,v in source['codes'].items()};tree=[]
+    source=json.loads((ROOT/'tools/watch-codec-v2.json').read_text());dictionary=source['dictionary'];codes={int(k):v for k,v in source['codes'].items()};tree=[]
     trie={}
     for token,bits in codes.items():
         current=trie

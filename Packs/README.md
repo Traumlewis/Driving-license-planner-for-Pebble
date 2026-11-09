@@ -23,3 +23,5 @@ Packs/
 The old German directory and old settings copies under Germany are removed. Use 3.8.47 or newer for the App settings catalogue. Source updates do not publish a GitHub Release.
 
 From 3.8.48, new generic watch translations also live in App/Languages/watch/<schema>-<codec>/. Germany/Languages retains archived version-bound LP3 packets for older builds. The generic receiver includes Spanish and supports additional compatible data-only languages; see [3.8.48](../docs/DEV-3.8.48.md).
+
+Development 3.8.49 adds French settings and watch translations under App/Languages/fr. New watch compatibility variant: 37bc2f9e-f48e0f24. The previous 3.8.48 variant remains published for existing installations. French on the watch requires the new DEV PBW; translations continue to download from GitHub.

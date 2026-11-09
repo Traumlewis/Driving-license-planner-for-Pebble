@@ -16,7 +16,7 @@ def home():
 def raw_request(data):
  global awaiting_rid
  awaiting_rid=data.get(2,0);done.clear();message={k:CString(v) if isinstance(v,str) else Uint32(v) if v>=0 else Int32(v) for k,v in data.items()}
- for attempt in range(6):
+ for attempt in range(20):
   service.send_message(app,message)
   if done.wait(2):return dict(received)
  raise AssertionError('No native reply during lab cleanup')

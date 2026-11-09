@@ -29,18 +29,18 @@ try:
   page.locator('#language').select_option('en');page.wait_for_function("document.querySelector('h1').textContent==='Driving Planner'")
   assert page.locator('#date').input_value()=='2030-04-01' and page.locator('#time').input_value()=='12:30' and page.locator('#units').input_value()=='65' and page.locator('#lead2').input_value()=='0'
   # Add a test-only language after the page/JS bytes are already fixed.
-  fr=json.loads(files['en/settings.json']);fr['locale']='fr';fr['strings']['appName']='Planificateur';fr['strings']['phoneOnly']='téléphone uniquement';files['fr/settings.json']=json.dumps(fr,ensure_ascii=False)
-  index=json.loads(files['index.json']);index['settings']['languages'].append(dict(locale='fr',name='Français',file='fr/settings.json',sha256=hashlib.sha256(files['fr/settings.json'].encode()).hexdigest(),watchLanguage=None));files['index.json']=json.dumps(index)
+  fr=json.loads(files['en/settings.json']);fr['locale']='fr-XX';fr['strings']['appName']='Planificateur';fr['strings']['phoneOnly']='téléphone uniquement';files['fr-XX/settings.json']=json.dumps(fr,ensure_ascii=False)
+  index=json.loads(files['index.json']);index['settings']['languages'].append(dict(locale='fr-XX',name='Français',file='fr-XX/settings.json',sha256=hashlib.sha256(files['fr-XX/settings.json'].encode()).hexdigest(),watchLanguage=None));files['index.json']=json.dumps(index)
   page.reload();page.wait_for_function("n=>document.querySelectorAll('#language option').length===n",arg=initial_count+1)
-  page.locator('#language').select_option('fr');page.wait_for_function("document.querySelector('h1').textContent==='Planificateur'")
+  page.locator('#language').select_option('fr-XX');page.wait_for_function("document.querySelector('h1').textContent==='Planificateur'")
   assert page.locator('#applyLanguage').inner_text()=='Save language' and 'watch language stays unchanged' in page.locator('#settingsLanguageStatus').inner_text()
-  assert 'téléphone uniquement' in page.locator('#language option[value=fr]').inner_text()
-  cache=page.evaluate("localStorage.getItem('fahrschul.v2.settingsPacket')");assert json.loads(cache)['locale']=='fr'
+  assert 'téléphone uniquement' in page.locator('#language option[value=fr-XX]').inner_text()
+  cache=page.evaluate("localStorage.getItem('fahrschul.v2.settingsPacket')");assert json.loads(cache)['locale']=='fr-XX'
   offline=True;page.reload();page.wait_for_function("document.querySelector('h1').textContent==='Planificateur'")
-  assert page.locator('#language').input_value()=='fr'
+  assert page.locator('#language').input_value()=='fr-XX'
   page.wait_for_function("!document.querySelector('#language').disabled")
   page.locator('#language').select_option('de');page.wait_for_function("!document.querySelector('#language').disabled")
-  assert page.locator('h1').inner_text()=='Planificateur' and page.locator('#language').input_value()=='fr' and page.evaluate("localStorage.getItem('fahrschul.v2.settingsPacket')")==cache
+  assert page.locator('h1').inner_text()=='Planificateur' and page.locator('#language').input_value()=='fr-XX' and page.evaluate("localStorage.getItem('fahrschul.v2.settingsPacket')")==cache
   offline=False;page.reload();page.wait_for_function("!document.querySelector('#language').disabled")
   page.locator('#language').select_option('de');page.wait_for_function("document.querySelector('h1').textContent==='Fahrschul Planer'")
   assert json.loads(page.evaluate("localStorage.getItem('fahrschul.v2.settingsPacket')"))['locale']=='de'
