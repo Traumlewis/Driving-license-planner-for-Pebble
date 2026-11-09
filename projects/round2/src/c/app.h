@@ -8,3 +8,5 @@ void show_status(const char *title,const char *detail);
 void phone_init(void);
 void phone_push(uint32_t request,int status,const char *error);
 void phone_deinit(void);
+
+void app_trim_class_icons(void);

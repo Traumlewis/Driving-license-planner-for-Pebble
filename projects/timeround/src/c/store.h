@@ -31,3 +31,8 @@ bool toggle_topic(int cls,int topic);
 bool set_progress_count(int cls,int counter,unsigned value);
 unsigned topic_units(int cls,int counter);
 uint32_t allocate_id(void);
+
+unsigned store_bytes_used(void);
+unsigned store_compact_records(void);
+unsigned store_quota_bytes(void);
+bool store_uses_compact(void);

@@ -22,8 +22,11 @@ int main(void){
  assert(language_pack_receive(fixture_ids[0]+1,0,parts(0),fixture_chunks[0][0])==-1);
  assert(language_pack_receive(fixture_ids[0],0,parts(0),"zz")==-1);assert(language_pack_receive(fixture_ids[0],1,parts(0),fixture_chunks[0][1])==-1);
  install(0);verify(0);language_pack_init();verify(0);
+ const char *held[8],*expected[8];unsigned held_count=0;for(unsigned i=0;i<sizeof(fixture_pairs)/sizeof(fixture_pairs[0])&&held_count<8;i++)if(strlen(fixture_pairs[i][1])<96){held[held_count]=T(fixture_pairs[i][0]);expected[held_count++]=fixture_pairs[i][1];}assert(held_count==8);for(unsigned i=0;i<8;i++)assert(!strcmp(held[i],expected[i]));
  int old_used=used,before=writes;
  assert(language_pack_receive(fixture_ids[1],0,parts(1),fixture_chunks[1][0])==0);assert(language_pack_staged()==fixture_sizes[1]);assert(language_pack_language()==0&&used==old_used&&writes==before);verify(0);
+ assert(language_pack_receive(fixture_ids[1],0,parts(1),fixture_chunks[1][0])==0);assert(language_pack_receive(fixture_ids[1],2,parts(1),fixture_chunks[1][2])==-1);assert(language_pack_received()==1);verify(0);
+ char changed[257];snprintf(changed,sizeof(changed),"%s",fixture_chunks[1][0]);changed[255]=changed[255]=='0'?'1':'0';assert(language_pack_receive(fixture_ids[1],0,parts(1),changed)==-1);assert(!language_pack_staged());verify(0);assert(language_pack_receive(fixture_ids[1],0,parts(1),fixture_chunks[1][0])==0);
  language_pack_init();assert(!language_pack_staged());verify(0);assert(used==old_used);
  /* Invalid fully received data leaves the previous language intact. */
  for(unsigned p=0;p<parts(1);p++){

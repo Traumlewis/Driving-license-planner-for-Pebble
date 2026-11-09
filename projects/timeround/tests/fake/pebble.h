@@ -15,3 +15,5 @@ typedef int ResHandle;
 #define RESOURCE_ID_LANGUAGE_CODEC 1
 ResHandle resource_get_handle(int id);
 size_t resource_load_byte_range(ResHandle h,size_t offset,uint8_t *buffer,size_t size);
+
+#define persist_get_max_size(...) (4096)

@@ -1,3 +1,11 @@
+# 3.8.50 (development)
+
+- Store empty appointment slots sparsely and encode appointments, class profiles and progress records compactly. Preserve IDs, transfer tokens, reminders, theory checks, counts and additional minutes.
+- Read raw and compact records together, resume startup migration, and avoid rewriting unchanged values. Retain the existing booking journal and reject malformed compact records without overwriting them.
+- Include a separate DEV legacy-restore helper for returning to older app versions.
+- Bound short translation and icon caches; reduce Time 2 snapshot allocation after proving maximum-width messages fit. LP4 language packets and all six platforms remain supported.
+- Source update only; no GitHub Release.
+
 # 3.8.49 (development)
 
 - Complete French phone settings and 296 watch texts, including explanations, downloaded from GitHub.

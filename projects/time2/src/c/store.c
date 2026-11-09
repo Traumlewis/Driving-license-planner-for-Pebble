@@ -1,4 +1,5 @@
 #include "store.h"
+#include "compact_storage.h"
 Config cfg={-1,0};
 Entry entries[MAX_ENTRIES];
 uint16_t counts[16][6];
@@ -7,10 +8,10 @@ uint8_t profiles[16];
 bool storage_error;
 uint8_t language;
 PracticeProgress practice[16];
-bool store_language(uint8_t value) {if(value>63)return false;if(persist_write_int(26,value)<0){storage_error=true;return false;}language=value;return true;}
+bool store_language(uint8_t value) {if(storage_error||value>63)return false;if(persist_write_int(26,value)<0){storage_error=true;return false;}language=value;return true;}
 static uint32_t sequence;
-static bool put(int key,const void *p,size_t n) {bool ok=persist_write_data(key,p,n)==(int)n;if(!ok)storage_error=true;return ok;}
-static bool get_record(int key,void *p,size_t n) {return persist_get_size(key)==(int)n&&persist_read_data(key,p,n)==(int)n;}
+static bool put(int key,const void *p,size_t n) {if(storage_error)return false;bool ok=compact_write_data(key,p,n)==(int)n;if(!ok)storage_error=true;return ok;}
+static bool get_record(int key,void *p,size_t n) {if(compact_get_size(key)!=(int)n)return false;if(compact_read_data(key,p,n)!=(int)n){storage_error=true;return false;}return true;}
 bool store_revision(void) {revision++;return put(REVISION_KEY,&revision,sizeof(revision));}
 bool store_request(uint32_t request) {last_request=request;return put(REQUEST_KEY,&last_request,sizeof(last_request));}
 bool store_entry(int i) {return put(200+i,&entries[i],sizeof(Entry));}
@@ -18,7 +19,8 @@ bool store_config(void) {profiles[cfg.cls]=cfg.profile;return put(CONFIG_KEY,&cf
 bool store_progress(int c) {return put(100+c,counts[c],sizeof(counts[c]))&&put(150+c,&topics[c],sizeof(topics[c]))&&put(170+c,&practice[c],sizeof(practice[c]));}
 uint32_t allocate_id(void) {sequence++;if(!put(SEQUENCE_KEY,&sequence,sizeof(sequence)))return 0;return sequence;}
 static bool recover_booking(void) {
- Booking b={0};if(!get_record(BOOKING_KEY,&b,sizeof(b))){if(!get_record(BOOKING_KEY,&b,16))return true; if(b.cls<16){b.remainder=practice[b.cls].remainder[b.counter<4?b.counter:4];b.exercise_units=practice[b.cls].exercise_units;}}
+ int n=persist_get_size(BOOKING_KEY);if(n<0)return true;if(n!=(int)sizeof(Booking)&&n!=16){storage_error=true;return false;}
+ Booking b={0};if(!get_record(BOOKING_KEY,&b,sizeof(b))){if(!get_record(BOOKING_KEY,&b,16))return !storage_error; if(b.cls<16){b.remainder=practice[b.cls].remainder[b.counter<4?b.counter:4];b.exercise_units=practice[b.cls].exercise_units;}}
  if(b.cls>=16||b.counter>6){storage_error=true;return false;}
  if(b.counter<6)counts[b.cls][b.counter]=b.counter_value;
  topics[b.cls]=b.topic_mask;
@@ -88,8 +90,10 @@ bool store_load(void) {
  get_record(CONFIG_KEY,&cfg,sizeof(cfg));if(cfg.cls<0||cfg.cls>=16){cfg.cls=-1;cfg.profile=0;}
  for(int c=0;c<16;c++){get_record(100+c,counts[c],sizeof(counts[c]));get_record(150+c,&topics[c],sizeof(topics[c]));get_record(170+c,&practice[c],sizeof(practice[c]));}
  get_record(PROFILES_KEY,profiles,sizeof(profiles));get_record(SEQUENCE_KEY,&sequence,sizeof(sequence));get_record(REVISION_KEY,&revision,sizeof(revision));get_record(REQUEST_KEY,&last_request,sizeof(last_request));
+ if(storage_error)return false;
  if(persist_read_int(VERSION_KEY)==MODEL_VERSION){
   for(int i=0;i<MAX_ENTRIES;i++){get_record(200+i,&entries[i],sizeof(Entry));if(entries[i].active&&!entry_valid(&entries[i])){storage_error=true;entries[i].active=0;}}
+  if(storage_error)return false;
  }else{
   typedef struct {int32_t when;uint16_t lead,units;uint8_t kind,active,notified,pad;} Old;
   Old old={0};get_record(2,&old,sizeof(old));
@@ -101,7 +105,7 @@ bool store_load(void) {
   if(persist_write_int(VERSION_KEY,MODEL_VERSION)<0){storage_error=true;return false;}
   wakeup_cancel_all();persist_delete(WAKE_KEY);
  }
- if(!recover_booking())return false;
+ if(storage_error||!recover_booking())return false;
  // Retire the 3.5 global mute by copying Off into existing appointments, once.
  if(persist_get_size(29)==4&&persist_read_int(29)==0){
   bool changed=false;for(int i=0;i<MAX_ENTRIES;i++)if(entries[i].active&&entries[i].lead[1]){entries[i].lead[1]=0;if(!store_entry(i))return false;changed=true;}
@@ -124,5 +128,6 @@ bool store_load(void) {
   unsigned checked=topic_units(c,k);
   if(checked>counts[c][k]&&!set_progress_count(c,k,checked))return false;
  }
- return true;
+ if(!compact_migrate_existing()){storage_error=true;return false;}
+ return !storage_error;
 }

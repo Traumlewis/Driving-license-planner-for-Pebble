@@ -63,6 +63,7 @@ static Window *date_window;
 static struct tm date_value;
 static int date_mode,date_field;
 static GBitmap *class_icons[16];
+void app_trim_class_icons(void){for(int i=0;i<16;i++)if(i!=cfg.cls&&class_icons[i]){gbitmap_destroy(class_icons[i]);class_icons[i]=NULL;}}
 static Rule rules[10];
 static int rule_count,selected=-1,list_map[MAX_ENTRIES],list_count;
 static uint32_t edit_id;
@@ -239,6 +240,7 @@ static MenuView capture_view(void){
 static void set_page(Page p){page=p;refresh();menu_layer_set_selected_index(menu,MenuIndex(0,0),MenuRowAlignTop,false);scroll_layer_set_content_offset(menu_layer_get_scroll_layer(menu),GPointZero,false);}
 static void reset_navigation(Page p){navigation_depth=0;set_page(p);}
 static void show_page(Page p){
+ if(p!=CLASSES)app_trim_class_icons();
  if(p==page){refresh();return;}
  if(navigation_depth==NAVIGATION_LIMIT){memmove(navigation,navigation+1,sizeof(navigation[0])*(NAVIGATION_LIMIT-1));navigation_depth--;}
  navigation[navigation_depth++]=capture_view();set_page(p);
@@ -272,6 +274,7 @@ static void surface_alerts(void) {
  if(completion_count){buzz();if(window_stack_contains_window(msg_window))window_stack_remove(msg_window,false);if(window_stack_contains_window(num_window))window_stack_remove(num_window,false);if(window_stack_contains_window(date_window))window_stack_remove(date_window,false);show_event_page(COMPLETE_CONFIRM);selected=completion_queue[0];}
 }
 static void schedule_next(void) {
+ if(storage_error){alarm_ok=false;return;}
  int32_t next=queue_next(entries),now=time(NULL);
  if(test_at&&(!next||test_at<next))next=test_at;
  if(!next){if(wake_id>=0)wakeup_cancel(wake_id);wake_id=-1;persist_delete(WAKE_KEY);alarm_ok=!storage_error;return;}
@@ -286,7 +289,7 @@ static void schedule_next(void) {
  else persist_delete(WAKE_KEY);
 }
 static void process_events(bool show) {
- if(processing)return;
+ if(processing||storage_error)return;
  processing=true;
  int32_t now=time(NULL);bool changed=false,new_event=false;
  for(int i=0;i<MAX_ENTRIES;i++){
@@ -653,7 +656,7 @@ static void start_progress_touch(int y){if(page!=PROGRESS)return;int content=y-l
 static void menu_hold(ClickRecognizerRef r,void *c){(void)r;(void)c;if(page==PROGRESS){progress_counter=menu_layer_get_selected_index(menu).row;if(progress_can_hold(progress_counter))show_page(PROGRESS_ACTIONS);}else menu_select(NULL,NULL);}
 static void menu_clicks(void *ctx){(void)ctx;window_single_click_subscribe(BUTTON_ID_BACK,back);window_single_repeating_click_subscribe(BUTTON_ID_UP,150,menu_up);window_single_repeating_click_subscribe(BUTTON_ID_DOWN,150,menu_down);window_single_click_subscribe(BUTTON_ID_SELECT,menu_select);window_long_click_subscribe(BUTTON_ID_SELECT,650,menu_hold,NULL);}
 static void minute_tick(struct tm *t,TimeUnits u){(void)t;(void)u;process_events(true);}
-static void init(void){
+static __attribute__((noinline)) void init(void){
  store_load();language_pack_init();if(cfg.cls>=0){load_rules();profiles[cfg.cls]=cfg.profile;}
  if(persist_exists(WAKE_KEY))wake_id=persist_read_int(WAKE_KEY);
  if(persist_exists(28))test_at=persist_read_int(28);
@@ -675,7 +678,7 @@ static void init(void){
  if(!language_pack_ready()&&!alert_count){language_setup_notice=true;show_notice("Sprache / Language",1,"Bitte Sprache in den Handy-Einstellungen laden.\n\nLoad a language in the phone settings.\n\nTermine und Alarme bleiben gespeichert.");}
  if(storage_error)show_notice(T(LK_Speicherfehler_71eed920),4,T(LK_SPEICHERFEHLER_Bitte_Uhr_App_neu_starten_Gesp_c59b9fe9));
 }
-static void deinit(void){layer_destroy(menu_header_layer);layer_destroy(info_header);layer_destroy(footer_layer);dismiss_status();layer_destroy(status_layer);window_destroy(status_window);cancel_progress_touch();
+static __attribute__((noinline)) void deinit(void){layer_destroy(menu_header_layer);layer_destroy(info_header);layer_destroy(footer_layer);dismiss_status();layer_destroy(status_layer);window_destroy(status_window);cancel_progress_touch();
 #if !defined(PBL_PLATFORM_FLINT)
  touch_service_unsubscribe();app_touch_navigation_enable(false);
 #endif

@@ -35,7 +35,7 @@ One PBW contains all six platforms. Touch controls are available on Time 2 and R
 
 Open `release/Fahrschul-Planer-v3.8.4.pbw` with the Pebble app and install over an existing copy. Keep the existing installation to retain data; do not uninstall first. The application UUID and storage format remain unchanged.
 
-Release 3.8.4 restores progress bars for counters without a fixed legal minimum: empty at zero units and full from one whole unit. Circular-display scrolling fixes from 3.8.3 remain included. The public package uses version 3.8.4 and developer Traumlewis. Current development source uses 3.8.49; see [remote language downloads and testing](docs/DEV-3.8.49.md). The selected watch language, including menus and explanations, is downloaded from GitHub and retained as the sole phone/watch packet; initial installation and uncached language changes require Internet access.
+Release 3.8.4 restores progress bars for counters without a fixed legal minimum: empty at zero units and full from one whole unit. Circular-display scrolling fixes from 3.8.3 remain included. The public package uses version 3.8.4 and developer Traumlewis. Current development source uses 3.8.50; see [remote language downloads and testing](docs/DEV-3.8.49.md). The selected watch language, including menus and explanations, is downloaded from GitHub and retained as the sole phone/watch packet; initial installation and uncached language changes require Internet access.
 
 ## Build
 
@@ -80,3 +80,5 @@ Idee by Traumlewis | Code by Codex
 The Publish GitHub Release workflow validates the checked-in PBW, packages source/store ZIPs and checksum files, uploads them to a draft, and publishes the completed release. It can only be started manually from Actions, after the owner explicitly requests a release. Source pushes never create or publish releases. Test PBWs contain (DEV) in their filenames; existing published releases are kept unchanged.
 
 Development 3.8.49 adds complete French settings and watch downloads. The shared codec resource was extended to make French fit the unchanged packet limit; French on the watch requires this DEV build. DE/EN/ES/FR menus and explanations download from GitHub. Further translations can be registered without rebuilding if they fit the frozen codec and packet limits. See [packet registration and memory results](docs/DEV-3.8.49.md).
+
+Development 3.8.50 integrates compact appointment/progress storage and resumable startup migration. Existing LP4 language packets remain compatible. The DEV build and the separate legacy-restore helper are documented in [storage migration, testing and memory](docs/DEV-3.8.50.md). Use the helper before returning to an older app build.

@@ -12,10 +12,11 @@ static Packet active,incoming_header;
 static bool pack_ready;
 static uint8_t *incoming;
 static uint32_t received_parts;
+static uint16_t validation_cursor,validation_bit,validation_id;
 static uint16_t text_offsets[TEXT_COUNT+1];
 static int cached_page=-1;
 static uint8_t pack_page[PACK_CHUNK_SIZE];
-static char translated[16][96],long_text[2048];
+static char translated[8][96],long_text[2048];
 static unsigned translated_slot;
 static uint8_t codec_pages[8][64];
 static uint16_t codec_page_keys[8];
@@ -25,7 +26,7 @@ static uint16_t read16(const uint8_t *p){return (uint16_t)p[0]|(uint16_t)p[1]<<8
 static uint32_t read32(const uint8_t *p){return (uint32_t)p[0]|(uint32_t)p[1]<<8|(uint32_t)p[2]<<16|(uint32_t)p[3]<<24;}
 static unsigned pack_parts(unsigned size){return (size+127)/128;}
 static uint32_t crc_update(uint32_t crc,const uint8_t *p,unsigned n){for(unsigned i=0;i<n;i++){crc^=p[i];for(int b=0;b<8;b++)crc=crc>>1^((crc&1)?0xedb88320u:0);}return crc;}
-static void clear_incoming(void){free(incoming);incoming=NULL;memset(&incoming_header,0,sizeof(incoming_header));received_parts=0;}
+static void clear_incoming(void){free(incoming);incoming=NULL;memset(&incoming_header,0,sizeof(incoming_header));received_parts=0;validation_cursor=validation_bit=validation_id=0;}
 static int stored_byte(unsigned offset){unsigned page=offset/128;if(cached_page!=(int)page){int size=persist_get_size(PACK_DATA_KEY+page);if(size<=0||size>128||persist_read_data(PACK_DATA_KEY+page,pack_page,size)!=size)return -1;cached_page=page;}return pack_page[offset%128];}
 static int source_byte(const uint8_t *source,unsigned offset,unsigned size){if(offset>=size)return -1;return source?source[offset]:stored_byte(offset);}
 static bool header(const uint8_t *data,Packet *p){
@@ -62,24 +63,47 @@ static bool decode_text(const Packet *p,unsigned start,unsigned end,unsigned id,
  while(bit<end){int node=0;for(unsigned depth=0;node>=0&&depth<32;depth++){uint16_t a,b;if((unsigned)node>=CODEC_TREES||!codec_pair(CODEC_TOKENS+node,&a,&b)||bit>=end)return false;int value=source_byte(source,p->data_start+bit/8,p->size);if(value<0)return false;int next=(value>>(7-bit%8))&1;bit++;node=(int16_t)(next?b:a);}if(node>=0||!expand_token((unsigned)(-node-1),out,&length,limit))return false;}
  out[length]=0;bool ok;if(!valid_utf8(out)||format_signature(out,&ok)!=expected||!ok)return false;return true;
 }
-static bool read_layout(const uint8_t *source,Packet *p,uint16_t *offsets,bool check_text){
- unsigned cursor=24;for(unsigned i=0;i<p->name_len;i++){int b=source_byte(source,cursor++,p->size);if(b<=0)return false;p->name[i]=(char)b;}p->name[p->name_len]=0;if(!valid_utf8(p->name))return false;
- unsigned bits=0;if(offsets)offsets[0]=0;for(unsigned id=0;id<TEXT_COUNT;id++){unsigned n=0,shift=0;int b;do{b=source_byte(source,cursor++,p->size);if(b<0||shift>14)return false;n|=(unsigned)(b&127)<<shift;shift+=7;}while(b&128);if(!n||bits+n>MAX_PACK_BYTES*8)return false;bits+=n;if(offsets)offsets[id+1]=(uint16_t)bits;}
- p->data_start=cursor;if(cursor+(bits+7)/8!=p->size)return false;
- if(check_text){cursor=24+p->name_len;unsigned start=0;for(unsigned id=1;id<=TEXT_COUNT;id++){unsigned n=0,shift=0;int b;do{b=source_byte(source,cursor++,p->size);if(b<0||shift>14)return false;n|=(unsigned)(b&127)<<shift;shift+=7;}while(b&128);if(!decode_text(p,start,start+n,id,source,long_text,sizeof(long_text)))return false;start+=n;}}
+static int read_layout(const uint8_t *source,Packet *p,uint16_t *offsets,unsigned available){
+ unsigned cursor=24;
+ for(unsigned i=0;i<p->name_len;i++){if(cursor>=available)return 0;int b=source_byte(source,cursor++,p->size);if(b<=0)return -1;p->name[i]=(char)b;}
+ p->name[p->name_len]=0;if(!valid_utf8(p->name))return -1;
+ unsigned bits=0;if(offsets)offsets[0]=0;
+ for(unsigned id=0;id<TEXT_COUNT;id++){
+  unsigned n=0,shift=0;int b;
+  do{if(cursor>=available)return 0;if(shift>14)return -1;b=source_byte(source,cursor++,p->size);if(b<0)return -1;n|=(unsigned)(b&127)<<shift;shift+=7;}while(b&128);
+  if(!n||bits+n>MAX_PACK_BYTES*8)return -1;
+  bits+=n;if(offsets)offsets[id+1]=(uint16_t)bits;
+ }
+ if(cursor+(bits+7)/8!=p->size)return -1;
+ p->data_start=cursor;return 1;
+}
+/* Ordered chunks bound validation work per callback; the old packet remains active. */
+static bool validate_progress(unsigned available){
+ Packet *p=&incoming_header;
+ if(!p->data_start){
+  int layout=read_layout(incoming,p,NULL,available);if(layout<0)return false;if(!layout)return true;
+  validation_cursor=24+p->name_len;validation_id=1;validation_bit=0;
+ }
+ while(validation_id<=TEXT_COUNT){
+  unsigned cursor=validation_cursor,n=0,shift=0;int b;
+  do{if(cursor>=p->data_start||shift>14)return false;b=incoming[cursor++];n|=(unsigned)(b&127)<<shift;shift+=7;}while(b&128);
+  if(p->data_start+(validation_bit+n+7)/8>available)break;
+  if(!decode_text(p,validation_bit,validation_bit+n,validation_id,incoming,long_text,sizeof(long_text)))return false;
+  validation_cursor=cursor;validation_bit+=n;validation_id++;
+ }
  return true;
 }
-static bool verify_packet(const uint8_t *source,Packet *p,uint16_t *offsets,bool check_text){
+static bool verify_packet(const uint8_t *source,Packet *p,uint16_t *offsets){
  uint8_t bytes[24];for(unsigned i=0;i<24;i++){int b=source_byte(source,i,p->size);if(b<0)return false;bytes[i]=(uint8_t)b;}
  uint32_t body=0xffffffffu,identity=crc_update(0xffffffffu,bytes,12);identity=crc_update(identity,bytes+16,8);
  for(unsigned i=24;i<p->size;i++){int b=source_byte(source,i,p->size);if(b<0)return false;uint8_t byte=(uint8_t)b;body=crc_update(body,&byte,1);identity=crc_update(identity,&byte,1);}
- return (body^0xffffffffu)==p->body_crc&&(identity^0xffffffffu)==p->id&&read_layout(source,p,offsets,check_text);
+ return (body^0xffffffffu)==p->body_crc&&(identity^0xffffffffu)==p->id&&read_layout(source,p,offsets,p->size)==1;
 }
 __attribute__((noinline)) void language_pack_init(void){
  clear_incoming();pack_ready=false;cached_page=-1;memset(codec_page_keys,0,sizeof(codec_page_keys));PackMeta meta;
  if(persist_get_size(PACK_META_KEY)!=(int)sizeof(meta)||persist_read_data(PACK_META_KEY,&meta,sizeof(meta))!=(int)sizeof(meta)||persist_read_data(PACK_DATA_KEY,pack_page,sizeof(pack_page))!=128||!header(pack_page,&active)||meta.id!=active.id||meta.size!=active.size||meta.language!=active.language)return;
  uint32_t crc=0xffffffffu;for(unsigned i=0;i<pack_parts(active.size);i++){unsigned n=active.size-i*128;if(n>128)n=128;if(persist_get_size(PACK_DATA_KEY+i)!=(int)n||persist_read_data(PACK_DATA_KEY+i,pack_page,n)!=(int)n)return;crc=crc_update(crc,pack_page,n);}
- if((crc^0xffffffffu)!=meta.crc||!verify_packet(NULL,&active,text_offsets,false))return;
+ if((crc^0xffffffffu)!=meta.crc||!verify_packet(NULL,&active,text_offsets))return;
  language=active.language;pack_ready=true;
 }
 bool language_pack_ready(void){return pack_ready;}
@@ -99,14 +123,21 @@ __attribute__((noinline)) int language_pack_receive(uint32_t identity,unsigned p
  if(pack_ready&&active.id==identity)return 0;
  if(!incoming||incoming_header.id!=identity){if(part||n!=128)return -1;Packet p;if(!header(bytes,&p)||p.id!=identity||pack_parts(p.size)!=total)return -1;clear_incoming();incoming=malloc(p.size);if(!incoming)return -3;incoming_header=p;}
  if(total!=pack_parts(incoming_header.size)||n!=(part+1==total?incoming_header.size-part*128:128))return -1;
- memcpy(incoming+part*128,bytes,n);received_parts|=1u<<part;if(received_parts!=(1u<<total)-1)return 0;
- Packet next=incoming_header;if(!verify_packet(incoming,&next,NULL,true)){clear_incoming();return -1;}
+ unsigned contiguous=0;while(contiguous<total&&(received_parts&(1u<<contiguous)))contiguous++;
+ if(!(received_parts&(1u<<part))&&part!=contiguous)return -1;
+ if((received_parts&(1u<<part))&&memcmp(incoming+part*128,bytes,n)){clear_incoming();return -1;}
+ memcpy(incoming+part*128,bytes,n);received_parts|=1u<<part;
+ while(contiguous<total&&(received_parts&(1u<<contiguous)))contiguous++;
+ unsigned available=contiguous==total?incoming_header.size:contiguous*128;
+ if(!validate_progress(available)){clear_incoming();return -1;}
+ if(received_parts!=(1u<<total)-1)return 0;
+ Packet next=incoming_header;if(validation_id!=TEXT_COUNT+1||!verify_packet(incoming,&next,NULL)){clear_incoming();return -1;}
  uint32_t crc=crc_update(0xffffffffu,incoming,next.size)^0xffffffffu;
  if(persist_get_size(PACK_META_KEY)>=0&&persist_delete(PACK_META_KEY)<0){clear_incoming();return -3;}pack_ready=false;cached_page=-1;
  for(unsigned i=0;i<total;i++){unsigned count=next.size-i*128;if(count>128)count=128;if(persist_write_data(PACK_DATA_KEY+i,incoming+i*128,count)!=(int)count){clear_incoming();return -3;}}
  for(unsigned i=total;i<MAX_PACK_PARTS;i++)if(persist_get_size(PACK_DATA_KEY+i)>=0&&persist_delete(PACK_DATA_KEY+i)<0){clear_incoming();return -3;}
  PackMeta meta={next.id,crc,next.size,next.language};if(persist_write_data(PACK_META_KEY,&meta,sizeof(meta))!=(int)sizeof(meta)){clear_incoming();return -3;}
- if(!read_layout(incoming,&next,text_offsets,false)){clear_incoming();return -1;}active=next;language=active.language;pack_ready=true;clear_incoming();return 0;
+ if(read_layout(incoming,&next,text_offsets,next.size)!=1){clear_incoming();return -1;}active=next;language=active.language;pack_ready=true;clear_incoming();return 0;
 }
 static void insert_version(char *text,unsigned capacity){char *at;while((at=strstr(text,"{version}"))){size_t n=strlen(APP_VERSION),tail=strlen(at+9);if((size_t)(at-text)+n+tail>=capacity)return;memmove(at+n,at+9,tail+1);memcpy(at,APP_VERSION,n);}}
 const char *translate(const char *text){
@@ -114,6 +145,6 @@ const char *translate(const char *text){
  unsigned id=0;for(unsigned i=1;i<5;i++){int n=hex_value(text[i]);if(n<0)return text;id=id*16+n;}if(!id||id>TEXT_COUNT)return text;
  if(!pack_ready)return emergency_text(id);
  uint16_t limit,format;if(!text_parameters(id,&limit,&format))return emergency_text(id);
- char *out=limit<96?translated[translated_slot++%16]:long_text;unsigned capacity=limit<96?96:sizeof(long_text);
+ char *out=limit<96?translated[translated_slot++%8]:long_text;unsigned capacity=limit<96?96:sizeof(long_text);
  if(!decode_text(&active,text_offsets[id-1],text_offsets[id],id,NULL,out,capacity)){pack_ready=false;return emergency_text(id);}insert_version(out,capacity);return out;
 }

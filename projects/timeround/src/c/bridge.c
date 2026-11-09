@@ -13,7 +13,7 @@ static char pending_error[120];
 static int response_status,part;
 static bool sending,again;
 #define add(...) do {if(length<sizeof(snapshot)-1){int written=snprintf(snapshot+length,sizeof(snapshot)-length,__VA_ARGS__);if(written>0)length+=(size_t)written<sizeof(snapshot)-length?(size_t)written:sizeof(snapshot)-length-1;}} while(0)
-static void build_snapshot(void) {
+static __attribute__((noinline)) void build_snapshot(void) {
  length=0;add("{\"version\":2,\"language\":%u,\"revision\":%lu,\"cls\":%d,\"profile\":%d,\"alarmOk\":%s,\"storageOk\":%s,\"counts\":[",language,(unsigned long)revision,cfg.cls,cfg.profile,alarm_ok?"true":"false",storage_error?"false":"true");
  for(int c=0;c<16;c++)add("%s[%u,%u,%u,%u,%u,%u]",c?",":"",counts[c][0],counts[c][1],counts[c][2],counts[c][3],counts[c][4],counts[c][5]);
  add("],\"remainders\":[");for(int c=0;c<16;c++)add("%s[%u,%u,%u,%u,%u]",c?",":"",practice[c].remainder[0],practice[c].remainder[1],practice[c].remainder[2],practice[c].remainder[3],practice[c].remainder[4]);
@@ -23,12 +23,13 @@ static void build_snapshot(void) {
  for(int i=0;i<MAX_ENTRIES;i++)if(entries[i].active){Entry *e=&entries[i];add("%s[%lu,%d,%u,%u,%u,%u,%u,%u,%u]",first?"":",",(unsigned long)e->id,(int)e->when,e->cls,e->kind,e->units,e->lead[0],e->lead[1],e->topic,e->extra_minutes);first=false;}
  uint32_t saved_id=0;for(int i=0;i<MAX_ENTRIES;i++)if(request_id&&entries[i].active&&entries[i].token==request_id){saved_id=entries[i].id;break;}
  add("],\"savedId\":%lu,\"error\":\"%s\",",(unsigned long)saved_id,error_text);
+ if(!request_id)add("\"storage\":{\"appBytes\":%u,\"compactRecords\":%u,\"quotaBytes\":%u,\"compact\":%s},",store_bytes_used(),store_compact_records(),store_quota_bytes(),store_uses_compact()?"true":"false");
  add("\"languagePack\":{\"id\":%lu,\"language\":%d,\"bytes\":%u,\"ready\":%s,\"received\":%u,\"storedBytes\":%u,\"stagedBytes\":%u,\"heapFree\":%u,\"schemaId\":%lu,\"codecId\":%lu}}",(unsigned long)language_pack_id(),language_pack_language(),language_pack_size(),language_pack_ready()?"true":"false",language_pack_received(),language_pack_stored(),language_pack_staged(),(unsigned)heap_bytes_free(),(unsigned long)language_pack_schema(),(unsigned long)language_pack_codec());
 }
 static void send_part(void) {
  DictionaryIterator *d;if(app_message_outbox_begin(&d)!=APP_MSG_OK){sending=false;return;}
- static char chunk[651];size_t n=chunk_ends[part]-offset;memcpy(chunk,snapshot+offset,n);chunk[n]=0;
- dict_write_uint32(d,RID,request_id);dict_write_int32(d,STATUS,response_status);dict_write_uint8(d,PART,part);dict_write_uint8(d,TOTAL,chunk_count);dict_write_cstring(d,PAYLOAD,chunk);
+ size_t n=chunk_ends[part]-offset;char saved=snapshot[offset+n];snapshot[offset+n]=0;
+ dict_write_uint32(d,RID,request_id);dict_write_int32(d,STATUS,response_status);dict_write_uint8(d,PART,part);dict_write_uint8(d,TOTAL,chunk_count);dict_write_cstring(d,PAYLOAD,snapshot+offset);snapshot[offset+n]=saved;
  if(app_message_outbox_send()!=APP_MSG_OK){sending=false;return;}offset+=n;part++;
 }
 void phone_push(uint32_t request,int status,const char *error) {
@@ -55,6 +56,7 @@ static void inbox(DictionaryIterator *d,void *ctx) {
  if(op==4){
   int32_t identity=0,p=0,total=0;Tuple *payload=dict_find(d,PAYLOAD);
   if(!integer(d,ID,&identity)||!integer(d,PART,&p)||!integer(d,TOTAL,&total)||!payload||payload->type!=TUPLE_CSTRING||!payload->length||payload->length>257||((const char *)payload->value)[payload->length-1]){phone_push(rid,-1,LK_Ungultige_Anfrage_872f7ae5);return;}
+  if(p==0)app_trim_class_icons();
   int status=language_pack_receive((uint32_t)identity,(unsigned)p,(unsigned)total,(const char *)payload->value);
   phone_push(rid,status,status?LK_Sprachpaket_fehlt_Bitte_Handy_verbinden_65009125:NULL);return;
  }

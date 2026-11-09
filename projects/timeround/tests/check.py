@@ -2,7 +2,7 @@ from pathlib import Path
 import subprocess,tempfile
 root=Path(__file__).resolve().parents[1]
 with tempfile.TemporaryDirectory() as tmp:
-    for name,extra in [('model_test',[]),('store_test',[str(root/'src/c/store.c')]),('i18n_test',[str(root/'src/c/i18n.c')])]:
+    for name,extra in [('model_test',[]),('store_test',[str(root/'src/c/store.c'),str(root/'src/c/compact_storage.c')]),('i18n_test',[str(root/'src/c/i18n.c')])]:
         target=Path(tmp)/name
         subprocess.run(['gcc','-std=c11','-Wall','-Wextra','-Werror','-I',str(root/'tests/fake'),'-I',str(root/'src/c'),str(root/'tests'/f'{name}.c'),*extra,'-o',str(target)],check=True)
         subprocess.run([str(target)],check=True)
@@ -26,3 +26,9 @@ with tempfile.TemporaryDirectory() as tmp:
     subprocess.run(['gcc','-std=c11','-Wall','-Wextra','-Werror',str(source),'-o',str(target)],check=True)
     subprocess.run([str(target)],check=True)
 print('PASS wakeup race: delayed old callback preserves the next scheduled alarm')
+
+# Exercise the production codec and automatic startup migration, not a source adapter.
+with tempfile.TemporaryDirectory() as tmp:
+    target=Path(tmp)/'compact_storage_test'
+    subprocess.run(['gcc','-std=c11','-Wall','-Wextra','-Werror','-I',str(root/'tests/fake'),'-I',str(root/'src/c'),str(root.parents[1]/'tests/compact_storage_test.c'),str(root/'src/c/store.c'),str(root/'src/c/compact_storage.c'),'-o',str(target)],check=True)
+    subprocess.run([str(target)],check=True)

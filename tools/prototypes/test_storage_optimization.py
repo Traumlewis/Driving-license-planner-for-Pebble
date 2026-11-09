@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run the unchanged application store logic against a desktop compact-record adapter."""
+"""Compare the frozen 3.8.49 application store with the historical desktop compact adapter."""
 from pathlib import Path
 import argparse
 import hashlib
@@ -12,7 +12,7 @@ PROJECTS=('time2','core2duo','time-pebble2','round2','timeround')
 
 def run_project(project, temporary, compact, sanitize=False):
     folder=ROOT/'projects'/project
-    original=(folder/'src/c/store.c').read_text()
+    original=(ROOT/'tools/prototypes/legacy_store_3849.c').read_text()
     if compact:
         original=original.replace('#include "store.h"','#include "store.h"\n#include "compact_storage.h"\n#define persist_write_data compact_write_data\n#define persist_read_data compact_read_data\n#define persist_get_size compact_get_size',1)
     store=temporary/'store.c';store.write_text(original)

@@ -8,7 +8,7 @@ int persist_read_data(int key,void *p,size_t n){if(sizes[key]!=(int)n)return -1;
 int persist_get_size(int key){return sizes[key]?sizes[key]:-1;}
 int persist_write_int(int key,int32_t v){return persist_write_data(key,&v,sizeof(v));}
 int32_t persist_read_int(int key){int32_t v=0;persist_read_data(key,&v,sizeof(v));return v;}
-int persist_delete(int key){if(!sizes[key])return -1;sizes[key]=0;return 0;}
+int persist_delete(int key){if(key==fail_key)return -1;if(!sizes[key])return -1;sizes[key]=0;return 0;}
 void wakeup_cancel_all(void){}
 static void reboot(void){memset(entries,0,sizeof(entries));memset(counts,0,sizeof(counts));memset(topics,0,sizeof(topics));memset(profiles,0,sizeof(profiles));memset(practice,0,sizeof(practice));language=0;cfg=(Config){-1,0};storage_error=false;assert(store_load());}
 static Entry past(int kind){return(Entry){.id=allocate_id(),.when=time(NULL)-20000,.cls=4,.kind=kind,.units=2,.lead={60,30},.topic=NO_TOPIC,.active=1};}
@@ -54,7 +54,7 @@ int main(void){
  assert(set_progress_count(3,4,1));assert(toggle_topic(3,13));assert(counts[3][5]==5);
  assert(set_progress_count(3,5,2));assert(!set_progress_count(3,5,1));assert(topics[3]==(2u|(3u<<12)));
  assert(toggle_topic(3,12));assert(counts[3][5]==1&&counts[3][4]==1);reboot();assert(topics[3]==(2u|(1u<<13)));
- assert(set_progress_count(3,4,5));fail_key=153;assert(!set_progress_count(3,4,1));fail_key=-1;reboot();assert(counts[3][4]==1&&(topics[3]&2));reboot();assert(counts[3][4]==1);
+ assert(set_progress_count(3,4,5));fail_key=103;assert(!set_progress_count(3,4,1));fail_key=-1;reboot();assert(counts[3][4]==1&&(topics[3]&2));reboot();assert(counts[3][4]==1);
  // Repair a contradictory 3.3 manual edit by protecting its checkmarks, never by removing them.
  topics[3]=7u|(1u<<12);counts[3][4]=1;counts[3][5]=0;assert(store_progress(3));reboot();assert(counts[3][4]==3&&counts[3][5]==1&&topics[3]==(7u|(1u<<12)));
  uint8_t rest=practice[4].remainder[0];assert(set_progress_count(4,0,8));assert(practice[4].remainder[0]==rest);
