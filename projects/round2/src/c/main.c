@@ -4,6 +4,8 @@
 #include "rules.h"
 #include "topics.h"
 #include "i18n.h"
+#include "script_fonts.h"
+#define fonts_get_system_font script_font
 
 // Round 2 uses the full circular canvas with position-dependent menu margins.
 #if defined(PBL_PLATFORM_GABBRO)

@@ -4,6 +4,8 @@
 #include "rules.h"
 #include "topics.h"
 #include "i18n.h"
+#include "script_fonts.h"
+#define fonts_get_system_font script_font
 
 // Rectangular legacy screens: 144 x 168 pixels, buttons only.
 #define UI_WIDTH 144

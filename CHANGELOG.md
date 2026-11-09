@@ -44,6 +44,13 @@
 
 # Changelog
 
+## 3.8.55 (development)
+
+- Add Latvian, Lithuanian, Maltese, Irish, Greek and Bulgarian phone/watch translations, completing all 24 official EU languages. Germany remains the training jurisdiction.
+- Bundle resource-backed Greek/Cyrillic fonts with bounded lazy descriptors. Keep existing Latin-language design and fonts.
+- Explicitly migrate to frozen codec v7 while preserving all older downloadable variants. Keep only the selected LP5 watch packet with seven shared codebooks; retain the 2,560-byte size cap and compact application data.
+- Verify six native targets, transfer/offline recovery, selected-pack storage, glyph coverage and pre-upgrade data preservation. Source/data and DEV PBW only; no GitHub Release.
+
 ## 3.8.48 — Development: generic watch language receiver
 
 - Download DE/EN/ES watch menus and long explanations from GitHub; enable Spanish's Apply to watch button.

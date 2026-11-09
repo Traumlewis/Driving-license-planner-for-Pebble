@@ -3,12 +3,13 @@
 #include <pebble.h>
 #include <string.h>
 #include <stdlib.h>
-#define APP_VERSION "3.8.54"
+#define APP_VERSION "3.8.55"
 #define TEXT_COUNT 296
 #define WATCH_SCHEMA_ID 935079838u
-#define WATCH_CODEC_ID 3833884179u
-#define CODEC_TOKENS 9915
-#define CODEC_TREES 10170
+#define WATCH_CODEC_ID 2258323240u
+#define CODEC_TOKENS 13871
+#define CODEC_TREES 15278
+#define CODEC_BOOKS 7
 static const char *emergency_text(unsigned id){switch(id){
 case 1:return "%02d:%02d vorher";
 case 2:return "%d Min. | Klasse %s";
@@ -48,7 +49,7 @@ case 258:return "Theorie | Zusatzstoff";
 case 265:return "Ungültige Anfrage";
 case 282:return "Zurück";
 default:return "...";}}
-/* LP4: one self-describing language packet; shared byte codec and bounded decoding. */
+/* LP5: one self-describing language packet; shared byte codec and bounded decoding. */
 #define PACK_CHUNK_SIZE 128
 #define PACK_META_KEY 9000
 #define PACK_DATA_KEY 9100
@@ -57,7 +58,7 @@ default:return "...";}}
 #define PACK_HEADER_BYTES 24
 /* A failed flash commit may require repair, but never writes application-data keys. */
 typedef struct {uint32_t id,crc,size,language;} PackMeta;
-typedef struct {uint32_t id,body_crc;uint16_t size,data_start;uint8_t language,name_len;char name[24];} Packet;
+typedef struct {uint32_t id,body_crc;uint16_t size,data_start;uint8_t language,name_len,book;char name[24];} Packet;
 static Packet active,incoming_header;
 static bool pack_ready;
 static uint8_t *incoming;
@@ -80,13 +81,13 @@ static void clear_incoming(void){free(incoming);incoming=NULL;memset(&incoming_h
 static int stored_byte(unsigned offset){unsigned page=offset/128;if(cached_page!=(int)page){int size=persist_get_size(PACK_DATA_KEY+page);if(size<=0||size>128||persist_read_data(PACK_DATA_KEY+page,pack_page,size)!=size)return -1;cached_page=page;}return pack_page[offset%128];}
 static int source_byte(const uint8_t *source,unsigned offset,unsigned size){if(offset>=size)return -1;return source?source[offset]:stored_byte(offset);}
 static bool header(const uint8_t *data,Packet *p){
- static const uint8_t magic[4]={76,80,52,1};
- if(memcmp(data,magic,4)||read32(data+4)!=WATCH_SCHEMA_ID||read32(data+8)!=WATCH_CODEC_ID)return false;
- memset(p,0,sizeof(*p));p->id=read32(data+12);p->size=read16(data+16);p->language=data[18];p->name_len=data[19];p->body_crc=read32(data+20);
+ static const uint8_t magic[3]={76,80,53};
+ if(memcmp(data,magic,3)||data[3]>=CODEC_BOOKS||read32(data+4)!=WATCH_SCHEMA_ID||read32(data+8)!=WATCH_CODEC_ID)return false;
+ memset(p,0,sizeof(*p));p->id=read32(data+12);p->size=read16(data+16);p->language=data[18];p->name_len=data[19];p->book=data[3];p->body_crc=read32(data+20);
  return p->id&&p->size>24+TEXT_COUNT&&p->size<=MAX_PACK_BYTES&&p->language<=63&&p->name_len>0&&p->name_len<24;
 }
 static bool codec_pair(unsigned index,uint16_t *a,uint16_t *b){
- unsigned count=CODEC_TOKENS+CODEC_TREES+TEXT_COUNT;if(index>=count)return false;
+ unsigned count=CODEC_TOKENS+CODEC_TREES+CODEC_BOOKS+TEXT_COUNT;if(index>=count)return false;
  unsigned page=index/16,slot=8;uint32_t oldest=0xffffffffu;
  for(unsigned i=0;i<8;i++)if(codec_page_keys[i]==page+1){slot=i;break;}
  if(slot==8){for(unsigned i=0;i<8;i++){if(!codec_page_keys[i]){slot=i;break;}if(codec_page_ages[i]<oldest){oldest=codec_page_ages[i];slot=i;}}
@@ -96,7 +97,7 @@ static bool codec_pair(unsigned index,uint16_t *a,uint16_t *b){
  }
  codec_page_ages[slot]=++codec_age;unsigned at=(index%16)*4;*a=read16(codec_pages[slot]+at);*b=read16(codec_pages[slot]+at+2);return true;
 }
-static bool text_parameters(unsigned id,uint16_t *limit,uint16_t *format){return id&&id<=TEXT_COUNT&&codec_pair(CODEC_TOKENS+CODEC_TREES+id-1,limit,format);}
+static bool text_parameters(unsigned id,uint16_t *limit,uint16_t *format){return id&&id<=TEXT_COUNT&&codec_pair(CODEC_TOKENS+CODEC_TREES+CODEC_BOOKS+id-1,limit,format);}
 static bool expand_token(unsigned token,char *out,unsigned *length,unsigned limit){
  uint16_t pending[32];unsigned count=0;pending[count++]=(uint16_t)token;
  while(count){token=pending[--count];if(token<256){if(!token||*length>=limit)return false;out[(*length)++]=(char)token;continue;}
@@ -110,7 +111,8 @@ static bool decode_text(const Packet *p,unsigned start,unsigned end,unsigned id,
  if(!id||id>TEXT_COUNT)return false;
  uint16_t allowed,expected;if(!text_parameters(id,&allowed,&expected))return false;
  unsigned bit=start,length=0,limit=allowed;if(limit>=capacity)limit=capacity-1;
- while(bit<end){int node=0;for(unsigned depth=0;node>=0&&depth<32;depth++){uint16_t a,b;if((unsigned)node>=CODEC_TREES||!codec_pair(CODEC_TOKENS+node,&a,&b)||bit>=end)return false;int value=source_byte(source,p->data_start+bit/8,p->size);if(value<0)return false;int next=(value>>(7-bit%8))&1;bit++;node=(int16_t)(next?b:a);}if(node>=0||!expand_token((unsigned)(-node-1),out,&length,limit))return false;}
+ uint16_t root,unused;if(!codec_pair(CODEC_TOKENS+CODEC_TREES+p->book,&root,&unused)||root>=CODEC_TREES)return false;
+ while(bit<end){int node=root;for(unsigned depth=0;node>=0&&depth<32;depth++){uint16_t a,b;if((unsigned)node>=CODEC_TREES||!codec_pair(CODEC_TOKENS+node,&a,&b)||bit>=end)return false;int value=source_byte(source,p->data_start+bit/8,p->size);if(value<0)return false;int next=(value>>(7-bit%8))&1;bit++;node=(int16_t)(next?b:a);}if(node>=0||!expand_token((unsigned)(-node-1),out,&length,limit))return false;}
  out[length]=0;bool ok;if(!valid_utf8(out)||format_signature(out,&ok)!=expected||!ok)return false;return true;
 }
 static int read_layout(const uint8_t *source,Packet *p,uint16_t *offsets,unsigned available){

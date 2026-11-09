@@ -1,1 +1,69 @@
-{"name":"eu-glyph-probe","version":"1.0.1","author":"Local font test","private":true,"pebble":{"displayName":"EU Glyph Probe","uuid":"75cf6ad1-71f5-449c-9b0e-e1a055126adf","sdkVersion":"3","targetPlatforms":["emery","flint","gabbro","basalt","diorite","chalk"],"watchapp":{"watchface":false},"resources":{"media":[]},"messageKeys":[]}}
+{
+  "name": "eu-glyph-probe",
+  "version": "1.0.2",
+  "author": "Local font test",
+  "private": true,
+  "pebble": {
+    "displayName": "EU Glyph Probe",
+    "uuid": "75cf6ad1-71f5-449c-9b0e-e1a055126adf",
+    "sdkVersion": "3",
+    "targetPlatforms": [
+      "emery",
+      "flint",
+      "gabbro",
+      "basalt",
+      "diorite",
+      "chalk"
+    ],
+    "watchapp": {
+      "watchface": false
+    },
+    "resources": {
+      "media": [
+        {
+          "type": "font",
+          "name": "EXT_14",
+          "file": "fonts/Light.ttf",
+          "characterRegex": "[ -~Ͱ-ϿЀ-ԯ·×…–’]"
+        },
+        {
+          "type": "font",
+          "name": "EXT_14_BOLD",
+          "file": "fonts/Bold.ttf",
+          "characterRegex": "[ -~Ͱ-ϿЀ-ԯ·×…–’]"
+        },
+        {
+          "type": "font",
+          "name": "EXT_18",
+          "file": "fonts/Light.ttf",
+          "characterRegex": "[ -~Ͱ-ϿЀ-ԯ·×…–’]"
+        },
+        {
+          "type": "font",
+          "name": "EXT_18_BOLD",
+          "file": "fonts/Bold.ttf",
+          "characterRegex": "[ -~Ͱ-ϿЀ-ԯ·×…–’]"
+        },
+        {
+          "type": "font",
+          "name": "EXT_24",
+          "file": "fonts/Light.ttf",
+          "characterRegex": "[ -~Ͱ-ϿЀ-ԯ·×…–’]"
+        },
+        {
+          "type": "font",
+          "name": "EXT_24_BOLD",
+          "file": "fonts/Bold.ttf",
+          "characterRegex": "[ -~Ͱ-ϿЀ-ԯ·×…–’]"
+        },
+        {
+          "type": "font",
+          "name": "EXT_28_BOLD",
+          "file": "fonts/Bold.ttf",
+          "characterRegex": "[ -~Ͱ-ϿЀ-ԯ·×…–’]"
+        }
+      ]
+    },
+    "messageKeys": []
+  }
+}

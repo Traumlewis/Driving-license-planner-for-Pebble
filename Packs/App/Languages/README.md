@@ -39,3 +39,9 @@ Suomi (`fi`, watch ID 10), Čeština (`cs`, ID 11), Magyar (`hu`, ID 12) and Rom
 ## Slovak, Croatian, Slovenian and Estonian (3.8.54+)
 
 Slovenčina (`sk`, watch ID 14), Hrvatski (`hr`, ID 15), Slovenščina (`sl`, ID 16) and Eesti (`et`, ID 17) have complete phone settings and 296 watch texts. Watch support requires the 3.8.54 DEV PBW and frozen v6 shared dictionary. All eighteen packets stay within 2,560 bytes. Existing variants remain frozen; the selected packet is the only one stored on the watch. See [sizes, memory and verification](../../../docs/DEV-3.8.54.md).
+
+## Development 3.8.55
+
+Latviešu (`lv`, ID 18), Lietuvių (`lt`, ID 19), Malti (`mt`, ID 20), Gaeilge (`ga`, ID 21), Ελληνικά (`el`, ID 22) and Български (`bg`, ID 23) complete the 24 official EU languages. Each includes 86 settings strings, seven lesson types, twelve theory topics and 296 watch texts. Watch support requires the 3.8.55 DEV PBW with frozen v7 codec and Greek/Cyrillic font resources. Selected packets continue to stream from GitHub. Older variants stay frozen; phone translations work with older builds while new watch languages are marked phone-only.
+
+The current LP5 variant uses seven immutable resource-backed codebooks. Its encoder chooses the smallest book per packet and falls back to coded children/bytes for unseen token combinations. The decoder has no hard-coded language-ID list. LP3/LP4 variants remain available for earlier builds. Greek/Cyrillic display additionally needs the 3.8.55 script-font resources.

@@ -23,14 +23,14 @@ try:
  for pack in packs:
   install(pack)
   png.from_array(Screenshot(pebble).grab_image(),mode='RGB;8').save(str(out/(pack['locale']+'-home.png')))
-  if pack['language']==17:
+  if pack['language']>=17:
    for section in ['middle','bottom']:
     for _ in range(3):
      send_data_to_qemu(pebble.transport,QemuButton(state=EmuButtonCommand.BUTTON_MAP['down']));time.sleep(.1);send_data_to_qemu(pebble.transport,QemuButton(state=0));time.sleep(.3)
-    png.from_array(Screenshot(pebble).grab_image(),mode='RGB;8').save(str(out/('et-main-'+section+'.png')))
+    png.from_array(Screenshot(pebble).grab_image(),mode='RGB;8').save(str(out/(pack['locale']+'-main-'+section+'.png')))
    home()
  # Codec and binary are already built. Only new data is generated here.
- late=json.loads(Path('Packs/App/Languages/es/watch-source.json').read_text());late.update(locale='es-XX',name='Prueba',language=42);install(encode(late));home();assert raw_request({1:0,2:0})['state']['language']==42;late_verified=True
+ late=json.loads(Path('Packs/App/Languages/es/watch-source.json').read_text());late.update(locale='es-XX',name='Prueba',language=42);late['strings']['Hinweis']='Información de prueba';install(encode(late));home();assert raw_request({1:0,2:0})['state']['language']==42;late_verified=True
  print('PASS native language 42 added after build, offline restart, all supported languages, memory samples',json.dumps(rows),flush=True)
 finally:
  install(next(p for p in packs if p['language']==before['language']));after=raw_request({1:0,2:0})['state']

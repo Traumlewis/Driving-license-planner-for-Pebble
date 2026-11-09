@@ -1,8 +1,8 @@
-"""Language-independent LP4 packets. Codec training is frozen, never language registration."""
+"""Language-independent LP5 packets. Codec training is frozen, never language registration."""
 from pathlib import Path
 import json,re,struct,zlib,hashlib
 from functools import lru_cache
-ROOT=Path(__file__).resolve().parents[1];MAX_BYTES=2560;FORMAT='LP4/shared-bpe-v1'
+ROOT=Path(__file__).resolve().parents[1];MAX_BYTES=2560;FORMAT='LP5/shared-bpe-v1'
 def normalize(text):return re.sub(r'(?i)((?:fahrschul planer|driving planner|version)\s+)\d+\.\d+\.\d+',lambda m:m.group(1)+'{version}',text)
 def signature(text):
     tokens=re.findall(r'%(?:[-+# 0]*\d*(?:\.\d+)?)?[a-zA-Z%]',text)
@@ -13,23 +13,47 @@ def signature(text):
 
 @lru_cache(maxsize=1)
 def codec():
-    source=json.loads((ROOT/'tools/watch-codec-v6.json').read_text());dictionary=source['dictionary'];codes={int(k):v for k,v in source['codes'].items()};tree=[]
-    trie={}
-    for token,bits in codes.items():
-        current=trie
-        for bit in bits:current=current.setdefault(bit,{})
-        current['token']=token
+    source=json.loads((ROOT/'tools/watch-codec-v7.json').read_text());dictionary=source['dictionary'];books=[{int(k):v for k,v in book['codes'].items()} for book in source['books']];tree=[];roots=[]
     def node(current):
         if 'token' in current:return -current['token']-1
         i=len(tree);tree.append(None);tree[i]=(node(current[0]),node(current[1]));return i
-    node(trie)
-    raw=b''.join(struct.pack('<HH',*pair) for pair in dictionary)+b''.join(struct.pack('<hh',*pair) for pair in tree)
-    return dictionary,codes,raw,len(tree)
+    for codes in books:
+        trie={}
+        for token,bits in codes.items():
+            current=trie
+            for bit in bits:current=current.setdefault(bit,{})
+            current['token']=token
+        roots.append(node(trie))
+    if len(tree)>=32768 or not 1<=len(books)<=64:raise ValueError('Codec exceeds native bounds')
+    raw=b''.join(struct.pack('<HH',*pair) for pair in dictionary)+b''.join(struct.pack('<hh',*pair) for pair in tree)+b''.join(struct.pack('<HH',root,0) for root in roots)
+    return dictionary,books,raw,len(tree)
 
 def schema_id(schema):return zlib.crc32(json.dumps([(r['de'],r['maxBytes'],r['signature']) for r in schema],ensure_ascii=False,separators=(',',':')).encode())
 def compatibility():
     schema=json.loads((ROOT/'tools/watch-schema.json').read_text());_,_,raw,_=codec();sid=schema_id(schema);cid=zlib.crc32(raw)
-    return dict(format=FORMAT,schemaId=sid,codecId=cid,tag=f'{sid:08x}-{cid:08x}',maxBytes=MAX_BYTES)
+    return dict(format=FORMAT,schemaId=sid,codecId=cid,tag=f'{sid:08x}-{cid:08x}',maxBytes=MAX_BYTES,codebooks=len(codec()[1]))
+
+def apply_merges(sequences,dictionary):
+    # Track the strings containing each pair instead of revisiting every string
+    # for every merge. This preserves the frozen merge order and output bytes.
+    positions={}
+    for k,sequence in enumerate(sequences):
+        for pair in set(zip(sequence,sequence[1:])):positions.setdefault(pair,set()).add(k)
+    for i,pair in enumerate(dictionary):
+        pair=tuple(pair)
+        for k in tuple(positions.pop(pair,())):
+            old=sequences[k];before=set(zip(old,old[1:]));out=[];j=0
+            while j<len(old):
+                if j+1<len(old) and old[j]==pair[0] and old[j+1]==pair[1]:out.append(256+i);j+=2
+                else:out.append(old[j]);j+=1
+            after=set(zip(out,out[1:]));sequences[k]=out
+            for removed in before-after:
+                members=positions.get(removed)
+                if members is not None:
+                    members.discard(k)
+                    if not members:del positions[removed]
+            for added in after-before:positions.setdefault(added,set()).add(k)
+    return sequences
 
 def encode(source):
     schema=json.loads((ROOT/'tools/watch-schema.json').read_text());dictionary,codes,raw,trees=codec();compat=compatibility()
@@ -42,22 +66,32 @@ def encode(source):
         value=strings.get(row['de'])
         if not isinstance(value,str) or not value or '\x00' in value or len(value.encode())>row['maxBytes'] or signature(value)!=row['signature']:raise ValueError('Missing/invalid translation: '+row['en'])
         sequences.append(list(value.encode()))
-    for i,pair in enumerate(dictionary):
-        for k,s in enumerate(sequences):
-            out=[];j=0
-            while j<len(s):
-                if j+1<len(s) and tuple(s[j:j+2])==tuple(pair):out.append(256+i);j+=2
-                else:out.append(s[j]);j+=1
-            sequences[k]=out
+    sequences=apply_merges(sequences,dictionary)
+    # Each book covers all bytes. Unknown intermediate merge tokens expand to
+    # coded children, so future translations need data only, never new tables.
+    candidates=[]
+    for book,codeset in enumerate(codes):
+        @lru_cache(maxsize=None)
+        def token_bits(token):
+            if token in codeset:return tuple(codeset[token])
+            a,b=dictionary[token-256];return token_bits(a)+token_bits(b)
+        lengths=[sum(len(token_bits(t)) for t in sequence) for sequence in sequences]
+        directory=sum(1 if n<128 else 2 if n<16384 else 3 for n in lengths)
+        candidates.append((24+len(name.encode())+directory+(sum(lengths)+7)//8,book,lengths))
+    _,book,lengths=min(candidates);codeset=codes[book]
+    @lru_cache(maxsize=None)
+    def selected_bits(token):
+        if token in codeset:return tuple(codeset[token])
+        a,b=dictionary[token-256];return selected_bits(a)+selected_bits(b)
     bits=[];index=bytearray()
-    for sequence in sequences:
-        encoded=[b for t in sequence for b in codes[t]];n=len(encoded)
+    for sequence,n in zip(sequences,lengths):
+        bits.extend(b for t in sequence for b in selected_bits(t))
         while n>=128:index.append((n&127)|128);n>>=7
-        index.append(n);bits.extend(encoded)
+        index.append(n)
     payload=bytes(sum((bits[i+j] if i+j<len(bits) else 0)<<(7-j) for j in range(8)) for i in range(0,len(bits),8))
     body=name.encode()+index+payload;size=24+len(body)
     if size>MAX_BYTES:raise ValueError(f'Packet needs {size} bytes; limit {MAX_BYTES}. Shorten translations.')
-    header=struct.pack('<4sIIIHBBI',b'LP4\x01',compat['schemaId'],compat['codecId'],0,size,language,len(name.encode()),zlib.crc32(body))
+    header=struct.pack('<4sIIIHBBI',b'LP5'+bytes([book]),compat['schemaId'],compat['codecId'],0,size,language,len(name.encode()),zlib.crc32(body))
     identity=zlib.crc32(header[:12]+header[16:]+body)
     if not identity:raise ValueError('Reserved zero packet identity')
     header=header[:12]+struct.pack('<I',identity)+header[16:];packet=header+body

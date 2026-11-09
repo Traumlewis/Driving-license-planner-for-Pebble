@@ -4,6 +4,8 @@
 #include "rules.h"
 #include "topics.h"
 #include "i18n.h"
+#include "script_fonts.h"
+#define fonts_get_system_font script_font
 #define WAKE_COOKIE 321
 #define TEST_COOKIE 909
 static const char *const kinds[]={LK_Praxis_Ubungsfahrt_63e3fd80,LK_Praxis_Landstrasse_d030c0ca,LK_Praxis_Autobahn_028a72c7,LK_Praxis_Nachtfahrt_c290aa14,LK_Praxis_Grundausbildung_5a10f7a2,LK_Theorie_Grundstoff_4502013b,LK_Theorie_Zusatzstoff_8f17cabd};

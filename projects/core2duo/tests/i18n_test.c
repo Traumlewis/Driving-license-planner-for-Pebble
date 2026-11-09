@@ -21,6 +21,10 @@ int main(void){
  for(unsigned i=0;i<sizeof(fixture_pairs)/sizeof(fixture_pairs[0]);i++)if(!strcmp(fixture_pairs[i][1],"%d.%m. · %H:%M")||!strcmp(fixture_pairs[i][1],"%s | Klasse %s"))assert(!strcmp(T(fixture_pairs[i][0]),fixture_pairs[i][1]));
  assert(language_pack_receive(fixture_ids[0]+1,0,parts(0),fixture_chunks[0][0])==-1);
  assert(language_pack_receive(fixture_ids[0],0,parts(0),"zz")==-1);assert(language_pack_receive(fixture_ids[0],1,parts(0),fixture_chunks[0][1])==-1);
+ /* LP5 book selectors are bounded before any staging/flash write. */
+ char invalid_book[257];snprintf(invalid_book,sizeof(invalid_book),"%s",fixture_chunks[0][0]);invalid_book[6]='f';invalid_book[7]='f';
+ assert(language_pack_receive(fixture_ids[0],0,parts(0),invalid_book)==-1);assert(!language_pack_staged()&&!used);
+ unsigned books=0;for(unsigned i=0;i<sizeof(fixture_ids)/sizeof(fixture_ids[0]);i++){unsigned book;assert(sscanf(fixture_chunks[i][0]+6,"%2x",&book)==1&&book<7);books|=1u<<book;}assert(books==127);
  install(0);verify(0);language_pack_init();verify(0);
  const char *held[8],*expected[8];unsigned held_count=0;for(unsigned i=0;i<sizeof(fixture_pairs)/sizeof(fixture_pairs[0])&&held_count<8;i++)if(strlen(fixture_pairs[i][1])<96){held[held_count]=T(fixture_pairs[i][0]);expected[held_count++]=fixture_pairs[i][1];}assert(held_count==8);for(unsigned i=0;i<8;i++)assert(!strcmp(held[i],expected[i]));
  int old_used=used,before=writes;
@@ -40,5 +44,5 @@ int main(void){
  fail_after=2;int result=0;for(unsigned p=0;p<parts(0);p++)result=language_pack_receive(fixture_ids[0],p,parts(0),fixture_chunks[0][p]);assert(result==-3);assert(!language_pack_ready()&&!language_pack_staged());
  language_pack_init();assert(!language_pack_ready());fail_after=-1;install(0);verify(0);
  records[0][0]^=1;language_pack_init();assert(!language_pack_ready());install(1);verify(1);
- printf("PASS language swap: one generic eighteen-language pack, %u/%u bytes, interrupted/corrupt transfer preserves old language, commit recovery and 4KB quota with 1500 app bytes\n",fixture_sizes[0]+16,fixture_sizes[1]+16);
+ printf("PASS language swap: one generic twenty-four-language pack, %u/%u bytes, interrupted/corrupt transfer preserves old language, commit recovery and 4KB quota with 1500 app bytes\n",fixture_sizes[0]+16,fixture_sizes[1]+16);
 }

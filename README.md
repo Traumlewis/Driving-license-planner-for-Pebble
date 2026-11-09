@@ -15,7 +15,7 @@ Driving lessons, reminders and German licence progress on your wrist.
 - All 16 German driving-licence classes with training profiles and saved progress.
 - Practical duration in five-minute steps; accumulated extra minutes become 45-minute units.
 - Theory checklists, protected checkmark-based totals and separately editable manual units.
-- Optional phone settings, automatic synchronization on opening, eighteen downloadable interface languages and Pebble Timeline.
+- Optional phone settings, automatic synchronization on opening, twenty-four downloadable interface languages and Pebble Timeline.
 - Device-adapted layouts, licence-class icons, progress bars and remembered menu selection.
 
 ## Supported watches
@@ -35,7 +35,7 @@ One PBW contains all six platforms. Touch controls are available on Time 2 and R
 
 Open `release/Fahrschul-Planer-v3.8.4.pbw` with the Pebble app and install over an existing copy. Keep the existing installation to retain data; do not uninstall first. The application UUID and storage format remain unchanged.
 
-Release 3.8.4 restores progress bars for counters without a fixed legal minimum: empty at zero units and full from one whole unit. Circular-display scrolling fixes from 3.8.3 remain included. The public package uses version 3.8.4 and developer Traumlewis. Current development source uses 3.8.54; see [eighteen remote languages, memory and testing](docs/DEV-3.8.54.md). The selected watch language, including menus and explanations, is downloaded from GitHub and retained as the sole phone/watch packet; initial installation and uncached language changes require Internet access.
+Release 3.8.4 restores progress bars for counters without a fixed legal minimum: empty at zero units and full from one whole unit. Circular-display scrolling fixes from 3.8.3 remain included. The public package uses version 3.8.4 and developer Traumlewis. Current development source uses 3.8.55; see [twenty-four EU languages, fonts, memory and testing](docs/DEV-3.8.55.md). The selected watch language, including menus and explanations, is downloaded from GitHub and retained as the sole phone/watch packet; initial installation and uncached language changes require Internet access.
 
 ## Build
 
@@ -73,7 +73,7 @@ Idee by Traumlewis | Code by Codex
 
 ## Package catalogue
 
-[Packs/App/Languages](Packs/App/Languages/README.md) contains the live settings catalogue, phone translations and generic watch packets. From 3.8.48, compatible watch translations can be added without rebuilding; DE/EN/ES/FR/IT/PT/NL/PL/DA/SV/FI/CS/HU/RO/SK/HR/SL/ET are included in the current codec catalogue. Country and interface language are separate. A small emergency fallback and shared decoder remain bundled. [Packs/Germany/Languages](Packs/Germany/Languages/README.md) retains historical version-bound DE/EN packets for older builds; the old German directory has been removed.
+[Packs/App/Languages](Packs/App/Languages/README.md) contains the live settings catalogue, phone translations and generic watch packets. From 3.8.48, compatible watch translations can be added without rebuilding; DE/EN/ES/FR/IT/PT/NL/PL/DA/SV/FI/CS/HU/RO/SK/HR/SL/ET/LV/LT/MT/GA/EL/BG are included in the current codec catalogue. Country and interface language are separate. A small emergency fallback and shared decoder remain bundled. [Packs/Germany/Languages](Packs/Germany/Languages/README.md) retains historical version-bound DE/EN packets for older builds; the old German directory has been removed.
 
 ## GitHub Releases
 
@@ -90,3 +90,7 @@ Development 3.8.52 adds full Danish and Swedish phone/watch downloads with a fro
 Development 3.8.53 adds Finnish, Czech, Hungarian and Romanian phone/watch downloads with the frozen v5 shared dictionary. All fourteen complete packets fit the unchanged LP4 limit; system-font probes cover the required diacritics on all six platforms. See [compatibility, memory and testing](docs/DEV-3.8.53.md).
 
 Development 3.8.54 adds Slovak, Croatian, Slovenian and Estonian phone/watch downloads with frozen codec v6. All eighteen complete packets fit the unchanged LP4 limit; required system-font characters are tested on all six platforms. See [compatibility, memory and verification](docs/DEV-3.8.54.md).
+
+Development 3.8.55 adds Latvian, Lithuanian, Maltese, Irish, Greek and Bulgarian phone/watch translations. All 24 official EU languages are available with Germany’s training rules. Greek/Cyrillic use resource-backed Open Sans Condensed fonts; Latin languages retain their system fonts. See [compatibility, fonts and verification](docs/DEV-3.8.55.md).
+
+Script-font checks: `python tests/script_fonts_test.py` and `python tests/script_glyph_coverage_test.py` (the latter requires FontTools). The canonical codec trainer is an explicit migration tool; translation registration uses the frozen book and never trains it.

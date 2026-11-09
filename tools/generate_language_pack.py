@@ -36,7 +36,7 @@ def generate():
             if filename in ['rules.h','topics.h'] and '#include "language_keys.h"' not in s:s=s.replace('#pragma once','#pragma once\n#include "language_keys.h"',1)
             if filename=='main.c' and '(Idee by Traumlewis | Code by Codex)' not in s:s='/* (Idee by Traumlewis | Code by Codex) */\n'+s
             path.write_text(s)
-        lines=['/* Generated generic decoder. (Idee by Traumlewis | Code by Codex) */','#include "i18n.h"','#include <pebble.h>','#include <string.h>','#include <stdlib.h>',f'#define APP_VERSION "{version}"',f'#define TEXT_COUNT {len(schema)}',f'#define WATCH_SCHEMA_ID {compat["schemaId"]}u',f'#define WATCH_CODEC_ID {compat["codecId"]}u',f'#define CODEC_TOKENS {len(dictionary)}',f'#define CODEC_TREES {trees}', 'static const char *emergency_text(unsigned id){switch(id){']
+        lines=['/* Generated generic decoder. (Idee by Traumlewis | Code by Codex) */','#include "i18n.h"','#include <pebble.h>','#include <string.h>','#include <stdlib.h>',f'#define APP_VERSION "{version}"',f'#define TEXT_COUNT {len(schema)}',f'#define WATCH_SCHEMA_ID {compat["schemaId"]}u',f'#define WATCH_CODEC_ID {compat["codecId"]}u',f'#define CODEC_TOKENS {len(dictionary)}',f'#define CODEC_TREES {trees}',f'#define CODEC_BOOKS {len(codes)}', 'static const char *emergency_text(unsigned id){switch(id){']
         for i,row in enumerate(schema):
             de=row['de']
             if de in essential or de.startswith(('Praxis |','Theorie |')):lines.append('case %d:return '%(i+1)+json.dumps('Sprache / Language' if de=='Fahrschul Planer' else de,ensure_ascii=False)+';')
@@ -44,7 +44,7 @@ def generate():
         (folder/'tools/language-packets.json').write_text(json.dumps(dict(packs=packets),separators=(',',':'))+'\n')
         metadata=dict(appVersion=version,baseURL='https://raw.githubusercontent.com/Traumlewis/Driving-license-planner-for-Pebble/main/Packs/App/Languages/',settingsBaseURL='https://raw.githubusercontent.com/Traumlewis/Driving-license-planner-for-Pebble/main/Packs/App/Languages/',watch=compat)
         (folder/'src/pkjs/lang-pack.js').write_text('module.exports = '+json.dumps(metadata,separators=(',',':'))+';\n')
-        late=dict(sources[[s['language'] for s in sources].index(2)],locale='es-XX',name='Prueba',language=42);test_packets=packets+[encode(late)];test_sources={s['language']:s for s in sources};test_sources[42]=late
+        late=dict(sources[[s['language'] for s in sources].index(2)],locale='es-XX',name='Prueba',language=42);late['strings']=dict(late['strings'],**{'Hinweis':'Información de prueba'});test_packets=packets+[encode(late)];test_sources={s['language']:s for s in sources};test_sources[42]=late
         fixture=['static const unsigned char fixture_codec[]={'+','.join(map(str,raw+b''.join(struct.pack('<HH',r['maxBytes'],r['signature']) for r in schema)))+'};','static const unsigned fixture_ids[]={'+','.join(str(p['id'])+'u' for p in test_packets)+'};','static const unsigned fixture_sizes[]={'+','.join(str(p['size']) for p in test_packets)+'};',f'static const char *fixture_chunks[{len(test_packets)}][21]={{']
         for p in test_packets:fixture.append('{'+','.join(json.dumps(c) for c in p['chunks'])+',0},')
         fixture+=['};','static const unsigned fixture_languages[]={'+','.join(str(p['language']) for p in test_packets)+'};',f'static const char *fixture_pairs[][{len(test_packets)+1}]={{']

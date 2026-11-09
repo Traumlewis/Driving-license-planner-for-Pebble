@@ -4,6 +4,8 @@
 #include "rules.h"
 #include "topics.h"
 #include "i18n.h"
+#include "script_fonts.h"
+#define fonts_get_system_font script_font
 
 // Pebble Time Round: full 180 x 180 circular display, buttons only.
 #define UI_WIDTH 180

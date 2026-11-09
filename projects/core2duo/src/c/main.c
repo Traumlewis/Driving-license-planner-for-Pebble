@@ -4,6 +4,8 @@
 #include "rules.h"
 #include "topics.h"
 #include "i18n.h"
+#include "script_fonts.h"
+#define fonts_get_system_font script_font
 
 // Device-local safe canvas. Round corners are outside the inscribed content square.
 #if defined(PBL_PLATFORM_GABBRO)

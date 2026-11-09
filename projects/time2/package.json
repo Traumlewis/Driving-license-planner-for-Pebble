@@ -1,6 +1,6 @@
 {
   "name": "fahrschul-planer",
-  "version": "3.8.54",
+  "version": "3.8.55",
   "author": "Traumlewis",
   "private": true,
   "pebble": {
@@ -105,6 +105,48 @@
           "type": "raw",
           "name": "LANGUAGE_CODEC",
           "file": "data/language-codec.bin"
+        },
+        {
+          "type": "font",
+          "name": "SCRIPT_14",
+          "file": "fonts/OpenSans-CondLight.ttf",
+          "characterRegex": "[ -~Ͱ-ϿЀ-ԯ·×…–’]"
+        },
+        {
+          "type": "font",
+          "name": "SCRIPT_14_BOLD",
+          "file": "fonts/OpenSans-CondBold.ttf",
+          "characterRegex": "[ -~Ͱ-ϿЀ-ԯ·×…–’]"
+        },
+        {
+          "type": "font",
+          "name": "SCRIPT_18",
+          "file": "fonts/OpenSans-CondLight.ttf",
+          "characterRegex": "[ -~Ͱ-ϿЀ-ԯ·×…–’]"
+        },
+        {
+          "type": "font",
+          "name": "SCRIPT_18_BOLD",
+          "file": "fonts/OpenSans-CondBold.ttf",
+          "characterRegex": "[ -~Ͱ-ϿЀ-ԯ·×…–’]"
+        },
+        {
+          "type": "font",
+          "name": "SCRIPT_24",
+          "file": "fonts/OpenSans-CondLight.ttf",
+          "characterRegex": "[ -~Ͱ-ϿЀ-ԯ·×…–’]"
+        },
+        {
+          "type": "font",
+          "name": "SCRIPT_24_BOLD",
+          "file": "fonts/OpenSans-CondBold.ttf",
+          "characterRegex": "[ -~Ͱ-ϿЀ-ԯ·×…–’]"
+        },
+        {
+          "type": "font",
+          "name": "SCRIPT_28_BOLD",
+          "file": "fonts/OpenSans-CondBold.ttf",
+          "characterRegex": "[ -~Ͱ-ϿЀ-ԯ·×…–’]"
         }
       ]
     },
