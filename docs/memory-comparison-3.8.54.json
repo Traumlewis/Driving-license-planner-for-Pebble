@@ -1,0 +1,1419 @@
+{
+  "version": "3.8.54",
+  "baseline": "3.8.53",
+  "builds": [
+    {
+      "platform": "emery",
+      "before": {
+        "resources": 72649,
+        "ram": 60944,
+        "heap": 70128
+      },
+      "after": {
+        "resources": 88321,
+        "ram": 60952,
+        "heap": 70120
+      },
+      "heapChange": -8,
+      "resourceChange": 15672
+    },
+    {
+      "platform": "flint",
+      "before": {
+        "resources": 74648,
+        "ram": 54646,
+        "heap": 10890
+      },
+      "after": {
+        "resources": 90320,
+        "ram": 54662,
+        "heap": 10874
+      },
+      "heapChange": -16,
+      "resourceChange": 15672
+    },
+    {
+      "platform": "basalt",
+      "before": {
+        "resources": 73117,
+        "ram": 54544,
+        "heap": 10992
+      },
+      "after": {
+        "resources": 88789,
+        "ram": 54560,
+        "heap": 10976
+      },
+      "heapChange": -16,
+      "resourceChange": 15672
+    },
+    {
+      "platform": "diorite",
+      "before": {
+        "resources": 74648,
+        "ram": 54580,
+        "heap": 10956
+      },
+      "after": {
+        "resources": 90320,
+        "ram": 54596,
+        "heap": 10940
+      },
+      "heapChange": -16,
+      "resourceChange": 15672
+    },
+    {
+      "platform": "gabbro",
+      "before": {
+        "resources": 72649,
+        "ram": 61044,
+        "heap": 70028
+      },
+      "after": {
+        "resources": 88321,
+        "ram": 61060,
+        "heap": 70012
+      },
+      "heapChange": -16,
+      "resourceChange": 15672
+    },
+    {
+      "platform": "chalk",
+      "before": {
+        "resources": 73117,
+        "ram": 57828,
+        "heap": 7708
+      },
+      "after": {
+        "resources": 88789,
+        "ram": 57844,
+        "heap": 7692
+      },
+      "heapChange": -16,
+      "resourceChange": 15672
+    }
+  ],
+  "runtime": {
+    "emery": {
+      "memory": {
+        "platform": "emery",
+        "version": "3.8.54",
+        "measurements": [
+          {
+            "locale": "de",
+            "language": 0,
+            "payloadBytes": 2540,
+            "storedBytes": 2556,
+            "heapBefore": 65160,
+            "heapDuring": 62616,
+            "stagedBytes": 2540,
+            "heapAfter": 64988
+          },
+          {
+            "locale": "en",
+            "language": 1,
+            "payloadBytes": 2517,
+            "storedBytes": 2533,
+            "heapBefore": 64988,
+            "heapDuring": 62464,
+            "stagedBytes": 2517,
+            "heapAfter": 64988
+          },
+          {
+            "locale": "es",
+            "language": 2,
+            "payloadBytes": 2538,
+            "storedBytes": 2554,
+            "heapBefore": 64988,
+            "heapDuring": 62444,
+            "stagedBytes": 2538,
+            "heapAfter": 64988
+          },
+          {
+            "locale": "fr",
+            "language": 3,
+            "payloadBytes": 2542,
+            "storedBytes": 2558,
+            "heapBefore": 64988,
+            "heapDuring": 62440,
+            "stagedBytes": 2542,
+            "heapAfter": 64988
+          },
+          {
+            "locale": "it",
+            "language": 4,
+            "payloadBytes": 2500,
+            "storedBytes": 2516,
+            "heapBefore": 64988,
+            "heapDuring": 62484,
+            "stagedBytes": 2500,
+            "heapAfter": 64988
+          },
+          {
+            "locale": "pt",
+            "language": 5,
+            "payloadBytes": 2419,
+            "storedBytes": 2435,
+            "heapBefore": 64988,
+            "heapDuring": 62564,
+            "stagedBytes": 2419,
+            "heapAfter": 64988
+          },
+          {
+            "locale": "nl",
+            "language": 6,
+            "payloadBytes": 2551,
+            "storedBytes": 2567,
+            "heapBefore": 64988,
+            "heapDuring": 62432,
+            "stagedBytes": 2551,
+            "heapAfter": 64988
+          },
+          {
+            "locale": "pl",
+            "language": 7,
+            "payloadBytes": 2551,
+            "storedBytes": 2567,
+            "heapBefore": 64988,
+            "heapDuring": 62432,
+            "stagedBytes": 2551,
+            "heapAfter": 64988
+          },
+          {
+            "locale": "da",
+            "language": 8,
+            "payloadBytes": 2437,
+            "storedBytes": 2453,
+            "heapBefore": 64988,
+            "heapDuring": 62544,
+            "stagedBytes": 2437,
+            "heapAfter": 64988
+          },
+          {
+            "locale": "sv",
+            "language": 9,
+            "payloadBytes": 2470,
+            "storedBytes": 2486,
+            "heapBefore": 64988,
+            "heapDuring": 62512,
+            "stagedBytes": 2470,
+            "heapAfter": 64988
+          },
+          {
+            "locale": "fi",
+            "language": 10,
+            "payloadBytes": 2545,
+            "storedBytes": 2561,
+            "heapBefore": 64988,
+            "heapDuring": 62436,
+            "stagedBytes": 2545,
+            "heapAfter": 64988
+          },
+          {
+            "locale": "cs",
+            "language": 11,
+            "payloadBytes": 2450,
+            "storedBytes": 2466,
+            "heapBefore": 64988,
+            "heapDuring": 62532,
+            "stagedBytes": 2450,
+            "heapAfter": 64988
+          },
+          {
+            "locale": "hu",
+            "language": 12,
+            "payloadBytes": 2552,
+            "storedBytes": 2568,
+            "heapBefore": 64988,
+            "heapDuring": 62432,
+            "stagedBytes": 2552,
+            "heapAfter": 64988
+          },
+          {
+            "locale": "ro",
+            "language": 13,
+            "payloadBytes": 2519,
+            "storedBytes": 2535,
+            "heapBefore": 64988,
+            "heapDuring": 62464,
+            "stagedBytes": 2519,
+            "heapAfter": 64988
+          },
+          {
+            "locale": "sk",
+            "language": 14,
+            "payloadBytes": 2492,
+            "storedBytes": 2508,
+            "heapBefore": 64988,
+            "heapDuring": 62492,
+            "stagedBytes": 2492,
+            "heapAfter": 64988
+          },
+          {
+            "locale": "hr",
+            "language": 15,
+            "payloadBytes": 2536,
+            "storedBytes": 2552,
+            "heapBefore": 64988,
+            "heapDuring": 62448,
+            "stagedBytes": 2536,
+            "heapAfter": 64988
+          },
+          {
+            "locale": "sl",
+            "language": 16,
+            "payloadBytes": 2548,
+            "storedBytes": 2564,
+            "heapBefore": 64988,
+            "heapDuring": 62436,
+            "stagedBytes": 2548,
+            "heapAfter": 64988
+          },
+          {
+            "locale": "et",
+            "language": 17,
+            "payloadBytes": 2542,
+            "storedBytes": 2558,
+            "heapBefore": 64988,
+            "heapDuring": 62440,
+            "stagedBytes": 2542,
+            "heapAfter": 64988
+          },
+          {
+            "locale": "es-XX",
+            "language": 42,
+            "payloadBytes": 2536,
+            "storedBytes": 2552,
+            "heapBefore": 64988,
+            "heapDuring": 62448,
+            "stagedBytes": 2536,
+            "heapAfter": 64988
+          },
+          {
+            "locale": "de",
+            "language": 0,
+            "payloadBytes": 2540,
+            "storedBytes": 2556,
+            "heapBefore": 64988,
+            "heapDuring": 62444,
+            "stagedBytes": 2540,
+            "heapAfter": 64988
+          }
+        ],
+        "appDataPreserved": true,
+        "newLanguageWithoutBuild": true
+      },
+      "storage": {
+        "appBytes": 73,
+        "compactRecords": 3,
+        "quotaBytes": 1048576,
+        "compact": true
+      },
+      "finalDataComparedWithPreUpgradeBackup": true
+    },
+    "flint": {
+      "memory": {
+        "platform": "flint",
+        "version": "3.8.54",
+        "measurements": [
+          {
+            "locale": "de",
+            "language": 0,
+            "payloadBytes": 2540,
+            "storedBytes": 2556,
+            "heapBefore": 7448,
+            "heapDuring": 4904,
+            "stagedBytes": 2540,
+            "heapAfter": 7528
+          },
+          {
+            "locale": "en",
+            "language": 1,
+            "payloadBytes": 2517,
+            "storedBytes": 2533,
+            "heapBefore": 7528,
+            "heapDuring": 5004,
+            "stagedBytes": 2517,
+            "heapAfter": 7528
+          },
+          {
+            "locale": "es",
+            "language": 2,
+            "payloadBytes": 2538,
+            "storedBytes": 2554,
+            "heapBefore": 7528,
+            "heapDuring": 4984,
+            "stagedBytes": 2538,
+            "heapAfter": 7528
+          },
+          {
+            "locale": "fr",
+            "language": 3,
+            "payloadBytes": 2542,
+            "storedBytes": 2558,
+            "heapBefore": 7528,
+            "heapDuring": 4980,
+            "stagedBytes": 2542,
+            "heapAfter": 7528
+          },
+          {
+            "locale": "it",
+            "language": 4,
+            "payloadBytes": 2500,
+            "storedBytes": 2516,
+            "heapBefore": 7528,
+            "heapDuring": 5024,
+            "stagedBytes": 2500,
+            "heapAfter": 7528
+          },
+          {
+            "locale": "pt",
+            "language": 5,
+            "payloadBytes": 2419,
+            "storedBytes": 2435,
+            "heapBefore": 7528,
+            "heapDuring": 5104,
+            "stagedBytes": 2419,
+            "heapAfter": 7528
+          },
+          {
+            "locale": "nl",
+            "language": 6,
+            "payloadBytes": 2551,
+            "storedBytes": 2567,
+            "heapBefore": 7528,
+            "heapDuring": 4972,
+            "stagedBytes": 2551,
+            "heapAfter": 7528
+          },
+          {
+            "locale": "pl",
+            "language": 7,
+            "payloadBytes": 2551,
+            "storedBytes": 2567,
+            "heapBefore": 7528,
+            "heapDuring": 4972,
+            "stagedBytes": 2551,
+            "heapAfter": 7528
+          },
+          {
+            "locale": "da",
+            "language": 8,
+            "payloadBytes": 2437,
+            "storedBytes": 2453,
+            "heapBefore": 7528,
+            "heapDuring": 5084,
+            "stagedBytes": 2437,
+            "heapAfter": 7528
+          },
+          {
+            "locale": "sv",
+            "language": 9,
+            "payloadBytes": 2470,
+            "storedBytes": 2486,
+            "heapBefore": 7528,
+            "heapDuring": 5052,
+            "stagedBytes": 2470,
+            "heapAfter": 7528
+          },
+          {
+            "locale": "fi",
+            "language": 10,
+            "payloadBytes": 2545,
+            "storedBytes": 2561,
+            "heapBefore": 7528,
+            "heapDuring": 4976,
+            "stagedBytes": 2545,
+            "heapAfter": 7528
+          },
+          {
+            "locale": "cs",
+            "language": 11,
+            "payloadBytes": 2450,
+            "storedBytes": 2466,
+            "heapBefore": 7528,
+            "heapDuring": 5072,
+            "stagedBytes": 2450,
+            "heapAfter": 7528
+          },
+          {
+            "locale": "hu",
+            "language": 12,
+            "payloadBytes": 2552,
+            "storedBytes": 2568,
+            "heapBefore": 7528,
+            "heapDuring": 4972,
+            "stagedBytes": 2552,
+            "heapAfter": 7528
+          },
+          {
+            "locale": "ro",
+            "language": 13,
+            "payloadBytes": 2519,
+            "storedBytes": 2535,
+            "heapBefore": 7528,
+            "heapDuring": 5004,
+            "stagedBytes": 2519,
+            "heapAfter": 7528
+          },
+          {
+            "locale": "sk",
+            "language": 14,
+            "payloadBytes": 2492,
+            "storedBytes": 2508,
+            "heapBefore": 7528,
+            "heapDuring": 5032,
+            "stagedBytes": 2492,
+            "heapAfter": 7528
+          },
+          {
+            "locale": "hr",
+            "language": 15,
+            "payloadBytes": 2536,
+            "storedBytes": 2552,
+            "heapBefore": 7528,
+            "heapDuring": 4988,
+            "stagedBytes": 2536,
+            "heapAfter": 7528
+          },
+          {
+            "locale": "sl",
+            "language": 16,
+            "payloadBytes": 2548,
+            "storedBytes": 2564,
+            "heapBefore": 7528,
+            "heapDuring": 4976,
+            "stagedBytes": 2548,
+            "heapAfter": 7528
+          },
+          {
+            "locale": "et",
+            "language": 17,
+            "payloadBytes": 2542,
+            "storedBytes": 2558,
+            "heapBefore": 7528,
+            "heapDuring": 4980,
+            "stagedBytes": 2542,
+            "heapAfter": 7528
+          },
+          {
+            "locale": "es-XX",
+            "language": 42,
+            "payloadBytes": 2536,
+            "storedBytes": 2552,
+            "heapBefore": 7528,
+            "heapDuring": 4988,
+            "stagedBytes": 2536,
+            "heapAfter": 7528
+          },
+          {
+            "locale": "de",
+            "language": 0,
+            "payloadBytes": 2540,
+            "storedBytes": 2556,
+            "heapBefore": 7528,
+            "heapDuring": 4984,
+            "stagedBytes": 2540,
+            "heapAfter": 7528
+          }
+        ],
+        "appDataPreserved": true,
+        "newLanguageWithoutBuild": true
+      },
+      "storage": {
+        "appBytes": 26,
+        "compactRecords": 1,
+        "quotaBytes": 1048576,
+        "compact": true
+      },
+      "finalDataComparedWithPreUpgradeBackup": true
+    },
+    "basalt": {
+      "memory": {
+        "platform": "basalt",
+        "version": "3.8.54",
+        "measurements": [
+          {
+            "locale": "de",
+            "language": 0,
+            "payloadBytes": 2540,
+            "storedBytes": 2556,
+            "heapBefore": 7584,
+            "heapDuring": 5040,
+            "stagedBytes": 2540,
+            "heapAfter": 7664
+          },
+          {
+            "locale": "en",
+            "language": 1,
+            "payloadBytes": 2517,
+            "storedBytes": 2533,
+            "heapBefore": 7664,
+            "heapDuring": 5140,
+            "stagedBytes": 2517,
+            "heapAfter": 7664
+          },
+          {
+            "locale": "es",
+            "language": 2,
+            "payloadBytes": 2538,
+            "storedBytes": 2554,
+            "heapBefore": 7664,
+            "heapDuring": 5120,
+            "stagedBytes": 2538,
+            "heapAfter": 7664
+          },
+          {
+            "locale": "fr",
+            "language": 3,
+            "payloadBytes": 2542,
+            "storedBytes": 2558,
+            "heapBefore": 7664,
+            "heapDuring": 5116,
+            "stagedBytes": 2542,
+            "heapAfter": 7664
+          },
+          {
+            "locale": "it",
+            "language": 4,
+            "payloadBytes": 2500,
+            "storedBytes": 2516,
+            "heapBefore": 7664,
+            "heapDuring": 5160,
+            "stagedBytes": 2500,
+            "heapAfter": 7664
+          },
+          {
+            "locale": "pt",
+            "language": 5,
+            "payloadBytes": 2419,
+            "storedBytes": 2435,
+            "heapBefore": 7664,
+            "heapDuring": 5240,
+            "stagedBytes": 2419,
+            "heapAfter": 7664
+          },
+          {
+            "locale": "nl",
+            "language": 6,
+            "payloadBytes": 2551,
+            "storedBytes": 2567,
+            "heapBefore": 7664,
+            "heapDuring": 5108,
+            "stagedBytes": 2551,
+            "heapAfter": 7664
+          },
+          {
+            "locale": "pl",
+            "language": 7,
+            "payloadBytes": 2551,
+            "storedBytes": 2567,
+            "heapBefore": 7664,
+            "heapDuring": 5108,
+            "stagedBytes": 2551,
+            "heapAfter": 7664
+          },
+          {
+            "locale": "da",
+            "language": 8,
+            "payloadBytes": 2437,
+            "storedBytes": 2453,
+            "heapBefore": 7664,
+            "heapDuring": 5220,
+            "stagedBytes": 2437,
+            "heapAfter": 7664
+          },
+          {
+            "locale": "sv",
+            "language": 9,
+            "payloadBytes": 2470,
+            "storedBytes": 2486,
+            "heapBefore": 7664,
+            "heapDuring": 5188,
+            "stagedBytes": 2470,
+            "heapAfter": 7664
+          },
+          {
+            "locale": "fi",
+            "language": 10,
+            "payloadBytes": 2545,
+            "storedBytes": 2561,
+            "heapBefore": 7664,
+            "heapDuring": 5112,
+            "stagedBytes": 2545,
+            "heapAfter": 7664
+          },
+          {
+            "locale": "cs",
+            "language": 11,
+            "payloadBytes": 2450,
+            "storedBytes": 2466,
+            "heapBefore": 7664,
+            "heapDuring": 5208,
+            "stagedBytes": 2450,
+            "heapAfter": 7664
+          },
+          {
+            "locale": "hu",
+            "language": 12,
+            "payloadBytes": 2552,
+            "storedBytes": 2568,
+            "heapBefore": 7664,
+            "heapDuring": 5108,
+            "stagedBytes": 2552,
+            "heapAfter": 7664
+          },
+          {
+            "locale": "ro",
+            "language": 13,
+            "payloadBytes": 2519,
+            "storedBytes": 2535,
+            "heapBefore": 7664,
+            "heapDuring": 5140,
+            "stagedBytes": 2519,
+            "heapAfter": 7664
+          },
+          {
+            "locale": "sk",
+            "language": 14,
+            "payloadBytes": 2492,
+            "storedBytes": 2508,
+            "heapBefore": 7664,
+            "heapDuring": 5168,
+            "stagedBytes": 2492,
+            "heapAfter": 7664
+          },
+          {
+            "locale": "hr",
+            "language": 15,
+            "payloadBytes": 2536,
+            "storedBytes": 2552,
+            "heapBefore": 7664,
+            "heapDuring": 5124,
+            "stagedBytes": 2536,
+            "heapAfter": 7664
+          },
+          {
+            "locale": "sl",
+            "language": 16,
+            "payloadBytes": 2548,
+            "storedBytes": 2564,
+            "heapBefore": 7664,
+            "heapDuring": 5112,
+            "stagedBytes": 2548,
+            "heapAfter": 7664
+          },
+          {
+            "locale": "et",
+            "language": 17,
+            "payloadBytes": 2542,
+            "storedBytes": 2558,
+            "heapBefore": 7664,
+            "heapDuring": 5116,
+            "stagedBytes": 2542,
+            "heapAfter": 7664
+          },
+          {
+            "locale": "es-XX",
+            "language": 42,
+            "payloadBytes": 2536,
+            "storedBytes": 2552,
+            "heapBefore": 7664,
+            "heapDuring": 5124,
+            "stagedBytes": 2536,
+            "heapAfter": 7664
+          },
+          {
+            "locale": "de",
+            "language": 0,
+            "payloadBytes": 2540,
+            "storedBytes": 2556,
+            "heapBefore": 7664,
+            "heapDuring": 5120,
+            "stagedBytes": 2540,
+            "heapAfter": 7664
+          }
+        ],
+        "appDataPreserved": true,
+        "newLanguageWithoutBuild": true
+      },
+      "storage": {
+        "appBytes": 26,
+        "compactRecords": 1,
+        "quotaBytes": 4096,
+        "compact": true
+      },
+      "finalDataComparedWithPreUpgradeBackup": true
+    },
+    "diorite": {
+      "memory": {
+        "platform": "diorite",
+        "version": "3.8.54",
+        "measurements": [
+          {
+            "locale": "de",
+            "language": 0,
+            "payloadBytes": 2540,
+            "storedBytes": 2556,
+            "heapBefore": 7552,
+            "heapDuring": 5008,
+            "stagedBytes": 2540,
+            "heapAfter": 7632
+          },
+          {
+            "locale": "en",
+            "language": 1,
+            "payloadBytes": 2517,
+            "storedBytes": 2533,
+            "heapBefore": 7632,
+            "heapDuring": 5108,
+            "stagedBytes": 2517,
+            "heapAfter": 7632
+          },
+          {
+            "locale": "es",
+            "language": 2,
+            "payloadBytes": 2538,
+            "storedBytes": 2554,
+            "heapBefore": 7632,
+            "heapDuring": 5088,
+            "stagedBytes": 2538,
+            "heapAfter": 7632
+          },
+          {
+            "locale": "fr",
+            "language": 3,
+            "payloadBytes": 2542,
+            "storedBytes": 2558,
+            "heapBefore": 7632,
+            "heapDuring": 5084,
+            "stagedBytes": 2542,
+            "heapAfter": 7632
+          },
+          {
+            "locale": "it",
+            "language": 4,
+            "payloadBytes": 2500,
+            "storedBytes": 2516,
+            "heapBefore": 7632,
+            "heapDuring": 5128,
+            "stagedBytes": 2500,
+            "heapAfter": 7632
+          },
+          {
+            "locale": "pt",
+            "language": 5,
+            "payloadBytes": 2419,
+            "storedBytes": 2435,
+            "heapBefore": 7632,
+            "heapDuring": 5208,
+            "stagedBytes": 2419,
+            "heapAfter": 7632
+          },
+          {
+            "locale": "nl",
+            "language": 6,
+            "payloadBytes": 2551,
+            "storedBytes": 2567,
+            "heapBefore": 7632,
+            "heapDuring": 5076,
+            "stagedBytes": 2551,
+            "heapAfter": 7632
+          },
+          {
+            "locale": "pl",
+            "language": 7,
+            "payloadBytes": 2551,
+            "storedBytes": 2567,
+            "heapBefore": 7632,
+            "heapDuring": 5076,
+            "stagedBytes": 2551,
+            "heapAfter": 7632
+          },
+          {
+            "locale": "da",
+            "language": 8,
+            "payloadBytes": 2437,
+            "storedBytes": 2453,
+            "heapBefore": 7632,
+            "heapDuring": 5188,
+            "stagedBytes": 2437,
+            "heapAfter": 7632
+          },
+          {
+            "locale": "sv",
+            "language": 9,
+            "payloadBytes": 2470,
+            "storedBytes": 2486,
+            "heapBefore": 7632,
+            "heapDuring": 5156,
+            "stagedBytes": 2470,
+            "heapAfter": 7632
+          },
+          {
+            "locale": "fi",
+            "language": 10,
+            "payloadBytes": 2545,
+            "storedBytes": 2561,
+            "heapBefore": 7632,
+            "heapDuring": 5080,
+            "stagedBytes": 2545,
+            "heapAfter": 7632
+          },
+          {
+            "locale": "cs",
+            "language": 11,
+            "payloadBytes": 2450,
+            "storedBytes": 2466,
+            "heapBefore": 7632,
+            "heapDuring": 5176,
+            "stagedBytes": 2450,
+            "heapAfter": 7632
+          },
+          {
+            "locale": "hu",
+            "language": 12,
+            "payloadBytes": 2552,
+            "storedBytes": 2568,
+            "heapBefore": 7632,
+            "heapDuring": 5076,
+            "stagedBytes": 2552,
+            "heapAfter": 7632
+          },
+          {
+            "locale": "ro",
+            "language": 13,
+            "payloadBytes": 2519,
+            "storedBytes": 2535,
+            "heapBefore": 7632,
+            "heapDuring": 5108,
+            "stagedBytes": 2519,
+            "heapAfter": 7632
+          },
+          {
+            "locale": "sk",
+            "language": 14,
+            "payloadBytes": 2492,
+            "storedBytes": 2508,
+            "heapBefore": 7632,
+            "heapDuring": 5136,
+            "stagedBytes": 2492,
+            "heapAfter": 7632
+          },
+          {
+            "locale": "hr",
+            "language": 15,
+            "payloadBytes": 2536,
+            "storedBytes": 2552,
+            "heapBefore": 7632,
+            "heapDuring": 5092,
+            "stagedBytes": 2536,
+            "heapAfter": 7632
+          },
+          {
+            "locale": "sl",
+            "language": 16,
+            "payloadBytes": 2548,
+            "storedBytes": 2564,
+            "heapBefore": 7632,
+            "heapDuring": 5080,
+            "stagedBytes": 2548,
+            "heapAfter": 7632
+          },
+          {
+            "locale": "et",
+            "language": 17,
+            "payloadBytes": 2542,
+            "storedBytes": 2558,
+            "heapBefore": 7632,
+            "heapDuring": 5084,
+            "stagedBytes": 2542,
+            "heapAfter": 7632
+          },
+          {
+            "locale": "es-XX",
+            "language": 42,
+            "payloadBytes": 2536,
+            "storedBytes": 2552,
+            "heapBefore": 7632,
+            "heapDuring": 5092,
+            "stagedBytes": 2536,
+            "heapAfter": 7632
+          },
+          {
+            "locale": "de",
+            "language": 0,
+            "payloadBytes": 2540,
+            "storedBytes": 2556,
+            "heapBefore": 7632,
+            "heapDuring": 5088,
+            "stagedBytes": 2540,
+            "heapAfter": 7632
+          }
+        ],
+        "appDataPreserved": true,
+        "newLanguageWithoutBuild": true
+      },
+      "storage": {
+        "appBytes": 26,
+        "compactRecords": 1,
+        "quotaBytes": 4096,
+        "compact": true
+      },
+      "finalDataComparedWithPreUpgradeBackup": true
+    },
+    "gabbro": {
+      "memory": {
+        "platform": "gabbro",
+        "version": "3.8.54",
+        "measurements": [
+          {
+            "locale": "de",
+            "language": 0,
+            "payloadBytes": 2540,
+            "storedBytes": 2556,
+            "heapBefore": 66520,
+            "heapDuring": 63976,
+            "stagedBytes": 2540,
+            "heapAfter": 66348
+          },
+          {
+            "locale": "en",
+            "language": 1,
+            "payloadBytes": 2517,
+            "storedBytes": 2533,
+            "heapBefore": 66348,
+            "heapDuring": 63824,
+            "stagedBytes": 2517,
+            "heapAfter": 66348
+          },
+          {
+            "locale": "es",
+            "language": 2,
+            "payloadBytes": 2538,
+            "storedBytes": 2554,
+            "heapBefore": 66348,
+            "heapDuring": 63804,
+            "stagedBytes": 2538,
+            "heapAfter": 66348
+          },
+          {
+            "locale": "fr",
+            "language": 3,
+            "payloadBytes": 2542,
+            "storedBytes": 2558,
+            "heapBefore": 66348,
+            "heapDuring": 63800,
+            "stagedBytes": 2542,
+            "heapAfter": 66348
+          },
+          {
+            "locale": "it",
+            "language": 4,
+            "payloadBytes": 2500,
+            "storedBytes": 2516,
+            "heapBefore": 66348,
+            "heapDuring": 63844,
+            "stagedBytes": 2500,
+            "heapAfter": 66348
+          },
+          {
+            "locale": "pt",
+            "language": 5,
+            "payloadBytes": 2419,
+            "storedBytes": 2435,
+            "heapBefore": 66348,
+            "heapDuring": 63924,
+            "stagedBytes": 2419,
+            "heapAfter": 66348
+          },
+          {
+            "locale": "nl",
+            "language": 6,
+            "payloadBytes": 2551,
+            "storedBytes": 2567,
+            "heapBefore": 66348,
+            "heapDuring": 63792,
+            "stagedBytes": 2551,
+            "heapAfter": 66348
+          },
+          {
+            "locale": "pl",
+            "language": 7,
+            "payloadBytes": 2551,
+            "storedBytes": 2567,
+            "heapBefore": 66348,
+            "heapDuring": 63792,
+            "stagedBytes": 2551,
+            "heapAfter": 66348
+          },
+          {
+            "locale": "da",
+            "language": 8,
+            "payloadBytes": 2437,
+            "storedBytes": 2453,
+            "heapBefore": 66348,
+            "heapDuring": 63904,
+            "stagedBytes": 2437,
+            "heapAfter": 66348
+          },
+          {
+            "locale": "sv",
+            "language": 9,
+            "payloadBytes": 2470,
+            "storedBytes": 2486,
+            "heapBefore": 66348,
+            "heapDuring": 63872,
+            "stagedBytes": 2470,
+            "heapAfter": 66348
+          },
+          {
+            "locale": "fi",
+            "language": 10,
+            "payloadBytes": 2545,
+            "storedBytes": 2561,
+            "heapBefore": 66348,
+            "heapDuring": 63796,
+            "stagedBytes": 2545,
+            "heapAfter": 66348
+          },
+          {
+            "locale": "cs",
+            "language": 11,
+            "payloadBytes": 2450,
+            "storedBytes": 2466,
+            "heapBefore": 66348,
+            "heapDuring": 63892,
+            "stagedBytes": 2450,
+            "heapAfter": 66348
+          },
+          {
+            "locale": "hu",
+            "language": 12,
+            "payloadBytes": 2552,
+            "storedBytes": 2568,
+            "heapBefore": 66348,
+            "heapDuring": 63792,
+            "stagedBytes": 2552,
+            "heapAfter": 66348
+          },
+          {
+            "locale": "ro",
+            "language": 13,
+            "payloadBytes": 2519,
+            "storedBytes": 2535,
+            "heapBefore": 66348,
+            "heapDuring": 63824,
+            "stagedBytes": 2519,
+            "heapAfter": 66348
+          },
+          {
+            "locale": "sk",
+            "language": 14,
+            "payloadBytes": 2492,
+            "storedBytes": 2508,
+            "heapBefore": 66348,
+            "heapDuring": 63852,
+            "stagedBytes": 2492,
+            "heapAfter": 66348
+          },
+          {
+            "locale": "hr",
+            "language": 15,
+            "payloadBytes": 2536,
+            "storedBytes": 2552,
+            "heapBefore": 66348,
+            "heapDuring": 63808,
+            "stagedBytes": 2536,
+            "heapAfter": 66348
+          },
+          {
+            "locale": "sl",
+            "language": 16,
+            "payloadBytes": 2548,
+            "storedBytes": 2564,
+            "heapBefore": 66348,
+            "heapDuring": 63796,
+            "stagedBytes": 2548,
+            "heapAfter": 66348
+          },
+          {
+            "locale": "et",
+            "language": 17,
+            "payloadBytes": 2542,
+            "storedBytes": 2558,
+            "heapBefore": 66348,
+            "heapDuring": 63800,
+            "stagedBytes": 2542,
+            "heapAfter": 66348
+          },
+          {
+            "locale": "es-XX",
+            "language": 42,
+            "payloadBytes": 2536,
+            "storedBytes": 2552,
+            "heapBefore": 66348,
+            "heapDuring": 63808,
+            "stagedBytes": 2536,
+            "heapAfter": 66348
+          },
+          {
+            "locale": "de",
+            "language": 0,
+            "payloadBytes": 2540,
+            "storedBytes": 2556,
+            "heapBefore": 66348,
+            "heapDuring": 63804,
+            "stagedBytes": 2540,
+            "heapAfter": 66348
+          }
+        ],
+        "appDataPreserved": true,
+        "newLanguageWithoutBuild": true
+      },
+      "storage": {
+        "appBytes": 26,
+        "compactRecords": 1,
+        "quotaBytes": 1048576,
+        "compact": true
+      },
+      "finalDataComparedWithPreUpgradeBackup": true
+    },
+    "chalk": {
+      "memory": {
+        "platform": "chalk",
+        "version": "3.8.54",
+        "measurements": [
+          {
+            "locale": "de",
+            "language": 0,
+            "payloadBytes": 2540,
+            "storedBytes": 2556,
+            "heapBefore": 4240,
+            "heapDuring": 1696,
+            "stagedBytes": 2540,
+            "heapAfter": 4096
+          },
+          {
+            "locale": "en",
+            "language": 1,
+            "payloadBytes": 2517,
+            "storedBytes": 2533,
+            "heapBefore": 4096,
+            "heapDuring": 1572,
+            "stagedBytes": 2517,
+            "heapAfter": 4096
+          },
+          {
+            "locale": "es",
+            "language": 2,
+            "payloadBytes": 2538,
+            "storedBytes": 2554,
+            "heapBefore": 4096,
+            "heapDuring": 1552,
+            "stagedBytes": 2538,
+            "heapAfter": 4096
+          },
+          {
+            "locale": "fr",
+            "language": 3,
+            "payloadBytes": 2542,
+            "storedBytes": 2558,
+            "heapBefore": 4096,
+            "heapDuring": 1548,
+            "stagedBytes": 2542,
+            "heapAfter": 4096
+          },
+          {
+            "locale": "it",
+            "language": 4,
+            "payloadBytes": 2500,
+            "storedBytes": 2516,
+            "heapBefore": 4096,
+            "heapDuring": 1592,
+            "stagedBytes": 2500,
+            "heapAfter": 4096
+          },
+          {
+            "locale": "pt",
+            "language": 5,
+            "payloadBytes": 2419,
+            "storedBytes": 2435,
+            "heapBefore": 4096,
+            "heapDuring": 1672,
+            "stagedBytes": 2419,
+            "heapAfter": 4096
+          },
+          {
+            "locale": "nl",
+            "language": 6,
+            "payloadBytes": 2551,
+            "storedBytes": 2567,
+            "heapBefore": 4096,
+            "heapDuring": 1540,
+            "stagedBytes": 2551,
+            "heapAfter": 4096
+          },
+          {
+            "locale": "pl",
+            "language": 7,
+            "payloadBytes": 2551,
+            "storedBytes": 2567,
+            "heapBefore": 4096,
+            "heapDuring": 1540,
+            "stagedBytes": 2551,
+            "heapAfter": 4096
+          },
+          {
+            "locale": "da",
+            "language": 8,
+            "payloadBytes": 2437,
+            "storedBytes": 2453,
+            "heapBefore": 4096,
+            "heapDuring": 1652,
+            "stagedBytes": 2437,
+            "heapAfter": 4096
+          },
+          {
+            "locale": "sv",
+            "language": 9,
+            "payloadBytes": 2470,
+            "storedBytes": 2486,
+            "heapBefore": 4096,
+            "heapDuring": 1620,
+            "stagedBytes": 2470,
+            "heapAfter": 4096
+          },
+          {
+            "locale": "fi",
+            "language": 10,
+            "payloadBytes": 2545,
+            "storedBytes": 2561,
+            "heapBefore": 4096,
+            "heapDuring": 1544,
+            "stagedBytes": 2545,
+            "heapAfter": 4096
+          },
+          {
+            "locale": "cs",
+            "language": 11,
+            "payloadBytes": 2450,
+            "storedBytes": 2466,
+            "heapBefore": 4096,
+            "heapDuring": 1640,
+            "stagedBytes": 2450,
+            "heapAfter": 4096
+          },
+          {
+            "locale": "hu",
+            "language": 12,
+            "payloadBytes": 2552,
+            "storedBytes": 2568,
+            "heapBefore": 4096,
+            "heapDuring": 1540,
+            "stagedBytes": 2552,
+            "heapAfter": 4096
+          },
+          {
+            "locale": "ro",
+            "language": 13,
+            "payloadBytes": 2519,
+            "storedBytes": 2535,
+            "heapBefore": 4096,
+            "heapDuring": 1572,
+            "stagedBytes": 2519,
+            "heapAfter": 4096
+          },
+          {
+            "locale": "sk",
+            "language": 14,
+            "payloadBytes": 2492,
+            "storedBytes": 2508,
+            "heapBefore": 4096,
+            "heapDuring": 1600,
+            "stagedBytes": 2492,
+            "heapAfter": 4096
+          },
+          {
+            "locale": "hr",
+            "language": 15,
+            "payloadBytes": 2536,
+            "storedBytes": 2552,
+            "heapBefore": 4096,
+            "heapDuring": 1556,
+            "stagedBytes": 2536,
+            "heapAfter": 4096
+          },
+          {
+            "locale": "sl",
+            "language": 16,
+            "payloadBytes": 2548,
+            "storedBytes": 2564,
+            "heapBefore": 4096,
+            "heapDuring": 1544,
+            "stagedBytes": 2548,
+            "heapAfter": 4096
+          },
+          {
+            "locale": "et",
+            "language": 17,
+            "payloadBytes": 2542,
+            "storedBytes": 2558,
+            "heapBefore": 4096,
+            "heapDuring": 1548,
+            "stagedBytes": 2542,
+            "heapAfter": 4096
+          },
+          {
+            "locale": "es-XX",
+            "language": 42,
+            "payloadBytes": 2536,
+            "storedBytes": 2552,
+            "heapBefore": 4096,
+            "heapDuring": 1556,
+            "stagedBytes": 2536,
+            "heapAfter": 4096
+          },
+          {
+            "locale": "de",
+            "language": 0,
+            "payloadBytes": 2540,
+            "storedBytes": 2556,
+            "heapBefore": 4096,
+            "heapDuring": 1552,
+            "stagedBytes": 2540,
+            "heapAfter": 4096
+          }
+        ],
+        "appDataPreserved": true,
+        "newLanguageWithoutBuild": true
+      },
+      "storage": {
+        "appBytes": 26,
+        "compactRecords": 1,
+        "quotaBytes": 4096,
+        "compact": true
+      },
+      "finalDataComparedWithPreUpgradeBackup": true
+    }
+  },
+  "notes": [
+    "Shared resource grows by 15,672 bytes per target. SDK RAM grows by eight bytes on Time 2 and sixteen bytes on the other five targets.",
+    "Heap samples omit transient stack peaks. One selected packet persists; maximum payload is 2,552 bytes, or 2,568 including metadata.",
+    "All pre-upgrade appointments, counts, theory topics, remainders, class/profile and selected language were compared and preserved."
+  ],
+  "fontProbe": {
+    "platforms": 6,
+    "fontVariants": 7,
+    "screenshots": 84,
+    "requiredGlyphsRendered": true,
+    "customFontsAdded": false
+  },
+  "phoneIntegration": {
+    "realGitHubAllEighteenPackets": true,
+    "productionPhoneToNativeAllEighteenLanguages": true,
+    "offlineRestart": true,
+    "old3853PacketToNewCodecBootstrap": true,
+    "old3853ReturnPreservesAppData": true
+  }
+}

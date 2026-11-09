@@ -44,7 +44,7 @@ def generate():
         (folder/'tools/language-packets.json').write_text(json.dumps(dict(packs=packets),separators=(',',':'))+'\n')
         metadata=dict(appVersion=version,baseURL='https://raw.githubusercontent.com/Traumlewis/Driving-license-planner-for-Pebble/main/Packs/App/Languages/',settingsBaseURL='https://raw.githubusercontent.com/Traumlewis/Driving-license-planner-for-Pebble/main/Packs/App/Languages/',watch=compat)
         (folder/'src/pkjs/lang-pack.js').write_text('module.exports = '+json.dumps(metadata,separators=(',',':'))+';\n')
-        late=dict(sources[[s['language'] for s in sources].index(2)],locale='es-XX',name='Prueba',language=17);test_packets=packets+[encode(late)];test_sources={s['language']:s for s in sources};test_sources[17]=late
+        late=dict(sources[[s['language'] for s in sources].index(2)],locale='es-XX',name='Prueba',language=42);test_packets=packets+[encode(late)];test_sources={s['language']:s for s in sources};test_sources[42]=late
         fixture=['static const unsigned char fixture_codec[]={'+','.join(map(str,raw+b''.join(struct.pack('<HH',r['maxBytes'],r['signature']) for r in schema)))+'};','static const unsigned fixture_ids[]={'+','.join(str(p['id'])+'u' for p in test_packets)+'};','static const unsigned fixture_sizes[]={'+','.join(str(p['size']) for p in test_packets)+'};',f'static const char *fixture_chunks[{len(test_packets)}][21]={{']
         for p in test_packets:fixture.append('{'+','.join(json.dumps(c) for c in p['chunks'])+',0},')
         fixture+=['};','static const unsigned fixture_languages[]={'+','.join(str(p['language']) for p in test_packets)+'};',f'static const char *fixture_pairs[][{len(test_packets)+1}]={{']

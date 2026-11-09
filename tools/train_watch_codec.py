@@ -6,7 +6,7 @@ import argparse, collections, heapq, itertools, json
 ROOT = Path(__file__).resolve().parents[1]
 
 def train(limit=8192, frequency_scale=1024, weights=None, locales=None):
-    if not 1<=limit<=8192 or not 1<=frequency_scale<=1024: raise ValueError("Invalid codec training limits")
+    if not 1<=limit<=16384 or not 1<=frequency_scale<=1024: raise ValueError("Invalid codec training limits")
     sources = [json.loads(p.read_text()) for p in sorted((ROOT/'Packs/App/Languages').glob('*/watch-source.json'))]
     if locales is not None:
         chosen=set(locales)
@@ -51,7 +51,7 @@ def train(limit=8192, frequency_scale=1024, weights=None, locales=None):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, required=True, help='A NEW codec filename; never overwrite a published codec')
-    parser.add_argument('--limit',type=int,default=8192,help='Maximum merge count, at most 8192')
+    parser.add_argument('--limit',type=int,default=8192,help='Maximum merge count, at most 16384')
     parser.add_argument('--frequency-scale',type=int,default=1024,help='Weight actual tokens relative to unused fallback tokens')
     parser.add_argument('--weights',type=Path,help='Optional locale weights for a deliberately balanced shared book')
     parser.add_argument('--locales',help='Comma-separated frozen training locales for reproducibility')

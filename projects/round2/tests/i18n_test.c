@@ -40,5 +40,5 @@ int main(void){
  fail_after=2;int result=0;for(unsigned p=0;p<parts(0);p++)result=language_pack_receive(fixture_ids[0],p,parts(0),fixture_chunks[0][p]);assert(result==-3);assert(!language_pack_ready()&&!language_pack_staged());
  language_pack_init();assert(!language_pack_ready());fail_after=-1;install(0);verify(0);
  records[0][0]^=1;language_pack_init();assert(!language_pack_ready());install(1);verify(1);
- printf("PASS language swap: one generic fourteen-language pack, %u/%u bytes, interrupted/corrupt transfer preserves old language, commit recovery and 4KB quota with 1500 app bytes\n",fixture_sizes[0]+16,fixture_sizes[1]+16);
+ printf("PASS language swap: one generic eighteen-language pack, %u/%u bytes, interrupted/corrupt transfer preserves old language, commit recovery and 4KB quota with 1500 app bytes\n",fixture_sizes[0]+16,fixture_sizes[1]+16);
 }

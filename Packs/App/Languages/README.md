@@ -14,7 +14,7 @@ The settings-v1 schema retains its trainingCountry DE compatibility field. Curre
 
 See [directory migration](../../../docs/DEV-3.8.47.md) and [format and behavior](../../../docs/DEV-3.8.46.md). Use 3.8.47 or newer for this download path. Repository updates do not publish a GitHub Release.
 
-Available settings languages: Deutsch, English, Español, Français, Italiano, Português, Nederlands, Polski, Dansk, Svenska, Suomi, Čeština, Magyar and Română. Spanish/French are phone-only on 3.8.47; watch support depends on the compatible LP4 catalogue. Germany’s training rules remain unchanged.
+Available settings languages: Deutsch, English, Español, Français, Italiano, Português, Nederlands, Polski, Dansk, Svenska, Suomi, Čeština, Magyar, Română, Slovenčina, Hrvatski, Slovenščina and Eesti. Spanish/French are phone-only on 3.8.47; watch support depends on the compatible LP4 catalogue. Germany’s training rules remain unchanged.
 
 ## Watch packets (3.8.48+)
 
@@ -35,3 +35,7 @@ Dansk (`da`, watch ID 8) and Svenska (`sv`, ID 9) now include full phone setting
 ## Finnish, Czech, Hungarian and Romanian (3.8.53+)
 
 Suomi (`fi`, watch ID 10), Čeština (`cs`, ID 11), Magyar (`hu`, ID 12) and Română (`ro`, ID 13) have complete settings and 296 watch texts. Watch support requires the 3.8.53 DEV PBW and frozen v5 shared dictionary. The LP4 limit remains 2,560 bytes and all five compatibility variants remain published. Seven system-font variants were probed for the needed characters on all six platforms. See [packet/memory results and testing](../../../docs/DEV-3.8.53.md).
+
+## Slovak, Croatian, Slovenian and Estonian (3.8.54+)
+
+Slovenčina (`sk`, watch ID 14), Hrvatski (`hr`, ID 15), Slovenščina (`sl`, ID 16) and Eesti (`et`, ID 17) have complete phone settings and 296 watch texts. Watch support requires the 3.8.54 DEV PBW and frozen v6 shared dictionary. All eighteen packets stay within 2,560 bytes. Existing variants remain frozen; the selected packet is the only one stored on the watch. See [sizes, memory and verification](../../../docs/DEV-3.8.54.md).

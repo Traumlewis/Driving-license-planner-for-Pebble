@@ -1,3 +1,11 @@
+# 3.8.54 (development)
+
+- Add complete Slovak, Croatian, Slovenian and Estonian phone/watch translations downloaded from GitHub.
+- Extend and freeze shared codec v6. Keep LP4, the 2,560-byte limit and one selected packet; retain all older variants. All eighteen packets fit in 2,419–2,552 bytes.
+- Probe required characters in seven system-font variants on six platforms. Retain existing fonts, layouts and compact user data.
+- Use test-only language ID 42 now that Estonian uses real ID 17; match lab download adapters to the unchanged production catalogue budget.
+- Combined DEV PBW and source/data update only; no GitHub Release.
+
 # 3.8.53 (development)
 
 - Add full Finnish, Czech, Hungarian and Romanian phone/watch translations downloaded from GitHub.
