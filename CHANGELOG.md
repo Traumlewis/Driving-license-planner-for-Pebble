@@ -1,5 +1,14 @@
 # Changelog
 
+## 3.8.44 — Development: remote menu-language packets
+
+- Download the selected DE/EN menu packet from versioned `Packs/German/Languages` files on GitHub; remove full packets from the bundled phone source.
+- Validate compatibility, SHA-256 and CRC; retain one verified phone cache and one active watch packet.
+- Reuse the current cache offline and preserve the previous language after failed downloads; show download/transfer/error status in phone settings.
+- Verify real public HTTPS → production phone client → native transfer and data preservation on all six emulators. Longer explanations and fallback text remain bundled; no additional native RAM saving is claimed.
+- Source update and test PBW only; no GitHub Release publication.
+
+
 ## 3.8.43 — Development language-swap experiment
 
 - Replace the persisted DE/EN menu packet when changing languages; the inactive packet stays on the phone and is transferred again when selected.

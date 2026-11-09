@@ -2,7 +2,7 @@
 
 Driving lessons, reminders and German licence progress on your wrist.
 
-**Development 3.8.43 · Latest public release: 3.8.4 · Developer: Traumlewis**
+**Development 3.8.44 · Latest public release: 3.8.4 · Developer: Traumlewis**
 
 ![Driving Planner](store/banner.png)
 
@@ -35,7 +35,7 @@ One PBW contains all six platforms. Touch controls are available on Time 2 and R
 
 Open `release/Fahrschul-Planer-v3.8.4.pbw` with the Pebble app and install over an existing copy. Keep the existing installation to retain data; do not uninstall first. The application UUID and storage format remain unchanged.
 
-Release 3.8.4 restores progress bars for counters without a fixed legal minimum: empty at zero units and full from one whole unit. Circular-display scrolling fixes from 3.8.3 remain included. The public package uses version 3.8.4 and developer Traumlewis. Current development source uses 3.8.43; see [the language-swap test and memory results](docs/DEV-3.8.43.md).
+Release 3.8.4 restores progress bars for counters without a fixed legal minimum: empty at zero units and full from one whole unit. Circular-display scrolling fixes from 3.8.3 remain included. The public package uses version 3.8.4 and developer Traumlewis. Current development source uses 3.8.44; see [remote language downloads and testing](docs/DEV-3.8.44.md). The selected menu language is downloaded from GitHub and retained as the sole phone/watch packet; initial installation and uncached language changes require Internet access.
 
 ## Build
 
@@ -47,7 +47,7 @@ python3 tools/build_all.py
 python3 tools/build_all.py --pebble /path/to/pebble
 ```
 
-Current development version is 3.8.43; continue with 3.8.44, 3.8.45, etc. Test build example: `python3 tools/build_all.py --output "/tmp/Fahrschul-Planer-v3.8.43(DEV).pbw"`.
+Current development version is 3.8.44; continue with 3.8.45, 3.8.46, etc. Test build example: `python3 tools/build_all.py --output "/tmp/Fahrschul-Planer-v3.8.44(DEV).pbw"`.
 
 Edit `release.json` to change the version. `tools/sync_release.py` updates each package, visible guide versions, DE/EN translations and the credits footer before building. It regenerates `VERSION`. Do not update watch versions individually.
 

@@ -11,9 +11,7 @@ def export():
         folder=ROOT/'projects'/name
         if json.loads((folder/'package.json').read_text())['version']!=version:
             raise ValueError('Synchronize project versions before exporting language packets')
-        source=(folder/'src/pkjs/lang-pack.js').read_text().strip()
-        if not source.startswith('module.exports = '):raise ValueError('Unexpected packet module format')
-        data=json.loads(source[len('module.exports = '):].rstrip(';'))
+        data=json.loads((folder/'tools/language-packets.json').read_text())
         if catalogue is None:catalogue=data
         elif data!=catalogue:raise ValueError('Device projects contain different language packets')
     base=ROOT/'Packs/German/Languages';target=base/version;target.mkdir(parents=True,exist_ok=True)

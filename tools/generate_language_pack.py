@@ -86,7 +86,15 @@ def generate():
   lines+=['default:return "...";}}',runtime]
   (folder/'src/c/i18n.c').write_text('\n'.join(lines)+'\n')
   (folder/'resources/data').mkdir(exist_ok=True);(folder/'resources/data/language-codec.bin').write_bytes(codec)
-  (folder/'src/pkjs/lang-pack.js').write_text('module.exports = '+json.dumps(dict(packs=packets),separators=(',',':'))+';\n')
+  (folder/'tools/language-packets.json').write_text(json.dumps(dict(packs=packets),separators=(',',':'))+'\n')
+  descriptors=[]
+  for packet in packets:
+   raw=(json.dumps(packet,ensure_ascii=False,indent=2)+'\n').encode();locale='de' if packet['language']==0 else 'en'
+   descriptors.append({k:packet[k] for k in ['language','id','crc','size']})
+   descriptors[-1].update(locale=locale,file=locale+'.json',sha256=hashlib.sha256(raw).hexdigest())
+  version=json.loads((ROOT/'release.json').read_text())['version']
+  metadata=dict(appVersion=version,baseURL='https://raw.githubusercontent.com/Traumlewis/Driving-license-planner-for-Pebble/main/Packs/German/Languages/',packs=descriptors)
+  (folder/'src/pkjs/lang-pack.js').write_text('module.exports = '+json.dumps(metadata,separators=(',',':'))+';\n')
   fixture=['static const unsigned char fixture_codec[]={'+','.join(map(str,codec))+'};','static const unsigned fixture_ids[]={'+','.join(str(p['id'])+'u' for p in packets)+'};','static const unsigned fixture_sizes[]={'+','.join(str(p['size']) for p in packets)+'};','static const char *fixture_chunks[2][20]={']
   for p in packets:fixture.append('{'+','.join(json.dumps(x) for x in p['chunks'])+',0},')
   fixture+=['};','static const char *fixture_pairs[][3]={']

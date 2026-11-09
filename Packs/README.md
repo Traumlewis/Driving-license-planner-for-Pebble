@@ -7,7 +7,7 @@ Packs/
 └── German/
     └── Languages/
         ├── index.json
-        └── 3.8.43/
+        └── 3.8.44/
             ├── manifest.json
             ├── de.json
             └── en.json
