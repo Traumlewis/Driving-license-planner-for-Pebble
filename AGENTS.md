@@ -1,7 +1,7 @@
 # Project preferences
 
 - Maintain all six platforms through the five device projects. Use release.json and tools/sync_release.py for versions and credits.
-- The current development version is 3.8.55; continue 3.8.56, 3.8.57, etc., following the owner’s version numbering.
+- The current release version is 3.8.55, explicitly approved by the owner on 2026-11-10; continue development at 3.8.56, 3.8.57, etc., following the owner’s version numbering.
 - Source updates to GitHub are authorized. Create or publish a GitHub Release, or promote a test build to a normal release, only when the owner explicitly requests it. Source pushes must not trigger release publication.
 - Provide a ready-to-test combined PBW after app changes. Test filenames must include (DEV). Use tools/build_all.py --output to keep test binaries outside the tracked release/ directory.
 - Preserve user appointments, theory checkboxes, counters and extra minutes during updates. Normal release developer is Traumlewis; credits remain (Idee by Traumlewis | Code by Codex).
@@ -21,3 +21,5 @@
 - LP5 uses seven frozen resource-backed prefix-code books over shared BPE tokens. The packet chooses its book in header byte 3; the encoder picks the smallest result and expands uncoded intermediate tokens to coded children. Every book covers all bytes. Keep the 24-byte header, 2,560-byte cap and 16-byte persistence metadata; never retrain during registration. See docs/DEV-3.8.55.md for the explicit v7 migration and canonical grouped training recipe.
 
 - Current-only language support policy: explicitly authorized by the owner after 3.8.55. tools/export_language_packs.py removes non-current watch compatibility variants after successful export. Keep all 24 current settings/source/watch packs and the frozen v7 codec/schema. Historical training files are developer references, not live compatibility packs. No app/PBW version change is needed for catalogue cleanup; the existing 3.8.55 DEV PBW remains valid. See docs/language-pack-support.md.
+
+- Release 3.8.55 promotes the exact tested DEV PBW bytes under the regular filename; SHA256 a42d6790c7f9e715c3d739d8e4dc853e4db8a4bb822ed0b73f64c86b7fa4bea9. Source pushes remain unable to publish a release. A temporary, version-specific create-branch workflow is used only for the owner-authorized 3.8.55 publication because the connected tools lack workflow dispatch; remove that temporary workflow from main after publication. Keep the normal workflow_dispatch-only release workflow for future requests.

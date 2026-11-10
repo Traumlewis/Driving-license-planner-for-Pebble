@@ -1,4 +1,16 @@
-# 3.8.54 (development)
+# Changelog
+
+## 3.8.55 — Release (2026-11-10)
+
+- Promote the tested six-platform build to a regular release, developer Traumlewis, with PBW/source/store downloads and SHA-256 checksums.
+- Add all 24 official EU interface languages for phone settings and full watch menus/explanations, downloaded from GitHub. Germany remains the training jurisdiction.
+- Introduce the frozen LP5/v7 resource with seven shared codebooks, one selected watch packet, offline reuse and Greek/Cyrillic script fonts. Compatible text edits and language registrations remain data-only.
+- Integrate compact appointment/progress storage and resumable migration while preserving records, theory checkboxes, protected totals, manual additions, class/profile and language.
+- Use whole-unit editors for practical lesson types without a statutory minimum; hide extra-minute hold actions for those counters. Required practical lessons retain five-minute steps.
+- Retire obsolete hosted language variants; keep only the current compatibility catalogue and all 24 current languages.
+- Verify six native emulator platforms, every translation, transfer/offline recovery, glyph coverage, packet limits and original-data preservation. Publish the exact tested PBW bytes; DEV is absent from the release filename.
+
+## 3.8.54 (development)
 
 - Add complete Slovak, Croatian, Slovenian and Estonian phone/watch translations downloaded from GitHub.
 - Extend and freeze shared codec v6. Keep LP4, the 2,560-byte limit and one selected packet; retain all older variants. All eighteen packets fit in 2,419–2,552 bytes.
@@ -6,28 +18,28 @@
 - Use test-only language ID 42 now that Estonian uses real ID 17; match lab download adapters to the unchanged production catalogue budget.
 - Combined DEV PBW and source/data update only; no GitHub Release.
 
-# 3.8.53 (development)
+## 3.8.53 (development)
 
 - Add full Finnish, Czech, Hungarian and Romanian phone/watch translations downloaded from GitHub.
 - Extend the frozen shared v5 dictionary; keep LP4, the 2,560-byte limit, one selected packet and all historical codec variants.
 - Probe required diacritics in seven existing Gothic font variants on all six platforms; retain the original display designs and fonts.
 - Preserve user data and validate native language replacement/offline restart, phone actions and memory. Combined DEV PBW and source/data only; no GitHub Release.
 
-# 3.8.52 (development)
+## 3.8.52 (development)
 
 - Add complete Danish and Swedish phone/watch translations, downloaded from GitHub.
 - Extend and freeze the shared v4 dictionary with explicit locale weights. All ten full packets fit the unchanged 2,560-byte LP4 limit; retain all earlier compatibility variants.
 - Keep one selected language packet, compact user data and six supported platforms. Record packet/memory measurements and native offline/migration verification.
 - Combined DEV PBW and source/data update only; no GitHub Release.
 
-# 3.8.51 (development)
+## 3.8.51 (development)
 
 - Enable Italian, European Portuguese, Dutch and Polish watch menus and explanations, downloaded from GitHub alongside DE/EN/ES/FR.
 - Expand the frozen shared dictionary in an explicitly authorized codec migration. Keep the LP4 receiver, 2,560-byte limit and one selected packet; retain older build catalogues.
 - All eight complete payloads fit in 2,169–2,489 bytes. SDK application RAM is unchanged; resources grow by 16,064 bytes per platform.
 - Preserve compact appointments/progress, class/profile and language settings. Source/data update and combined DEV PBW only; no GitHub Release.
 
-# 3.8.50 (development)
+## 3.8.50 (development)
 
 - Store empty appointment slots sparsely and encode appointments, class profiles and progress records compactly. Preserve IDs, transfer tokens, reminders, theory checks, counts and additional minutes.
 - Read raw and compact records together, resume startup migration, and avoid rewriting unchanged values. Retain the existing booking journal and reject malformed compact records without overwriting them.
@@ -35,21 +47,14 @@
 - Bound short translation and icon caches; reduce Time 2 snapshot allocation after proving maximum-width messages fit. LP4 language packets and all six platforms remain supported.
 - Source update only; no GitHub Release.
 
-# 3.8.49 (development)
+## 3.8.49 (development)
 
 - Complete French phone settings and 296 watch texts, including explanations, downloaded from GitHub.
 - Extend the shared codec resource while retaining the 2,560-byte watch-packet limit and one selected packet. French needs the new DEV PBW; the previous build retains its original compatible packet catalogue.
 - Preserve appointments, counters, theory checks, class/profile, extra minutes and reminder settings. Source/data update only; no GitHub Release.
 - French packet: 2,407 payload bytes / 2,423 persisted bytes. Shared resource grows by 4,896 bytes; native RAM usage is unchanged or slightly lower.
 
-# Changelog
 
-## 3.8.55 (development)
-
-- Add Latvian, Lithuanian, Maltese, Irish, Greek and Bulgarian phone/watch translations, completing all 24 official EU languages. Germany remains the training jurisdiction.
-- Bundle resource-backed Greek/Cyrillic fonts with bounded lazy descriptors. Keep existing Latin-language design and fonts.
-- Explicitly migrate to frozen codec v7 while preserving all older downloadable variants. Keep only the selected LP5 watch packet with seven shared codebooks; retain the 2,560-byte size cap and compact application data.
-- Verify six native targets, transfer/offline recovery, selected-pack storage, glyph coverage and pre-upgrade data preservation. Source/data and DEV PBW only; no GitHub Release.
 
 ## 3.8.48 — Development: generic watch language receiver
 

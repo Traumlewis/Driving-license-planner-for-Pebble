@@ -2,7 +2,7 @@
 
 At the owner’s explicit request after development 3.8.55, development and hosted language downloads support only the current application. The live catalogue contains one watch compatibility variant: **37bc2f9e-869b4728**, format **LP5/shared-bpe-v1**, schema **935079838**, codec **2258323240**, seven codebooks.
 
-All 24 current phone settings packets, editable watch sources and compressed watch packets remain. Their contents, hashes and identities are unchanged by this cleanup. The installed **3.8.55 DEV PBW remains valid**; no app version bump, new binary or GitHub Release is required.
+All 24 current phone settings packets, editable watch sources and compressed watch packets remain. Their contents, hashes and identities are unchanged by this cleanup. The installed **3.8.55 PBW remains valid**. The regular release uses the same tested native bytes as its DEV build; the earlier catalogue cleanup did not require an app version bump or rebuild.
 
 ## Retired downloads
 

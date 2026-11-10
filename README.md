@@ -2,11 +2,11 @@
 
 Driving lessons, reminders and German licence progress on your wrist.
 
-**Development 3.8.54 · Latest public release: 3.8.4 · Developer: Traumlewis**
+**Release 3.8.55 · Developer: Traumlewis**
 
 ![Driving Planner](store/banner.png)
 
-[Download the latest GitHub Release](https://github.com/Traumlewis/Driving-license-planner-for-Pebble/releases/latest) · [PBW in this repository](release/Fahrschul-Planer-v3.8.4.pbw) · [English store description](store/description-en.md) · [Deutsche Beschreibung](store/description-de.md)
+[Download the latest GitHub Release](https://github.com/Traumlewis/Driving-license-planner-for-Pebble/releases/latest) · [PBW in this repository](release/Fahrschul-Planer-v3.8.55.pbw) · [English store description](store/description-en.md) · [Deutsche Beschreibung](store/description-de.md)
 
 ## Features
 
@@ -33,9 +33,11 @@ One PBW contains all six platforms. Touch controls are available on Time 2 and R
 
 ## Install
 
-Open `release/Fahrschul-Planer-v3.8.4.pbw` with the Pebble app and install over an existing copy. Keep the existing installation to retain data; do not uninstall first. The application UUID and storage format remain unchanged.
+Open `release/Fahrschul-Planer-v3.8.55.pbw` with the Pebble app and install over an existing copy. Keep the existing installation to retain data; do not uninstall first. The application UUID is unchanged. Existing records migrate automatically to compact storage.
 
-Release 3.8.4 restores progress bars for counters without a fixed legal minimum: empty at zero units and full from one whole unit. Circular-display scrolling fixes from 3.8.3 remain included. The public package uses version 3.8.4 and developer Traumlewis. Current development source uses 3.8.55; see [twenty-four EU languages, fonts, memory and testing](docs/DEV-3.8.55.md). The selected watch language, including menus and explanations, is downloaded from GitHub and retained as the sole phone/watch packet; initial installation and uncached language changes require Internet access.
+Release 3.8.55 brings 24 downloadable EU interface languages to the phone and watch, compact storage and whole-unit editors for practical lesson types without a statutory minimum. Germany remains the training jurisdiction. Open the watch app and phone settings with Internet and Bluetooth connected for the first language download; apply the selected language to the watch. Afterwards, the selected watch language and lesson management work offline. Only the current language-package compatibility variant is hosted. See [release notes](release-notes/v3.8.55.md), [language support policy](docs/language-pack-support.md) and [technical verification](docs/DEV-3.8.55.md).
+
+Install over the existing app to retain appointments, theory checks and progress. Downgrading to a pre-3.8.50 build requires the legacy-storage restore helper described in [storage migration](docs/DEV-3.8.50.md).
 
 ## Build
 
@@ -47,7 +49,7 @@ python3 tools/build_all.py
 python3 tools/build_all.py --pebble /path/to/pebble
 ```
 
-Current development version is 3.8.48; continue with 3.8.49, 3.8.50, etc. Test build example: `python3 tools/build_all.py --output "/tmp/Fahrschul-Planer-v3.8.48(DEV).pbw"`.
+Next development version: 3.8.56. Test builds use the third version component and `(DEV)` only in their filename, for example `python3 tools/build_all.py --output "/tmp/Fahrschul-Planer-v3.8.56(DEV).pbw"`.
 
 Edit `release.json` to change the version. `tools/sync_release.py` updates each package, visible guide versions, DE/EN translations and the credits footer before building. It regenerates `VERSION`. Do not update watch versions individually.
 

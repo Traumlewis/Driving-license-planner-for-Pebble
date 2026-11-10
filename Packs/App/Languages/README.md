@@ -1,6 +1,6 @@
 # Current phone and watch languages
 
-Only the current compatibility variant is hosted. Current development app: **3.8.55**; watch format **LP5/shared-bpe-v1**, key **37bc2f9e-869b4728**. The owner explicitly retired the older download variants; see [support policy](../../../docs/language-pack-support.md).
+Only the current compatibility variant is hosted. Current release: **3.8.55**; watch format **LP5/shared-bpe-v1**, key **37bc2f9e-869b4728**. The owner explicitly retired the older download variants; see [support policy](../../../docs/language-pack-support.md).
 
 The catalogue `index.json` supplies both the dynamic settings-language list and the current watch-language descriptors. Each of the 24 languages has:
 
